@@ -1,7 +1,7 @@
 Sequence Diagram da fare:
 
-1) Login
-2) GoToHome (aka GetPlaylists)
+1) Login (Ale)
+2) GoToHome (aka GetPlaylists) (Ale)
 3) GetPLTracks
 4) GetTrackDetails
 5) UploadTrack
@@ -12,3 +12,5 @@ Sequence Diagram da fare:
 Proposta:
 Uno fa login, l'altro logout.
 I "get" sono 3 (2-3-4), i "create/add" sono 3 (5-6-7). Uno fa 2 get e 1 create, l'altro fa 2 create e 1 get.
+
+Quando uno comincia a fare un diagram, può segnare il suo nome accanto al diagram da fare, modificando questo file.
