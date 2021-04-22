@@ -1,0 +1,14 @@
+Sequence Diagram da fare:
+
+1) Login
+2) GoToHome (aka GetPlaylists)
+3) GetPLTracks
+4) GetTrackDetails
+5) UploadTrack
+6) CreatePL
+7) AddToPL
+8) Logout
+
+Proposta:
+Uno fa login, l'altro logout.
+I "get" sono 3 (2-3-4), i "create/add" sono 3 (5-6-7). Uno fa 2 get e 1 create, l'altro fa 2 create e 1 get.
