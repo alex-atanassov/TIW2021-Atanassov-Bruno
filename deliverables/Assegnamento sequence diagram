@@ -4,7 +4,7 @@ Sequence Diagram da fare:
 2) GoToHome (aka GetPlaylists) (Ale)
 3) GetPLTracks
 4) GetTrackDetails
-5) UploadTrack
+5) UploadTrack (Ale)
 6) CreatePL
 7) AddToPL
 8) Logout
