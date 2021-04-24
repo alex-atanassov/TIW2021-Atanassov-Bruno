@@ -5,9 +5,9 @@ Sequence Diagram da fare:
 3) GetPLTracks
 4) GetTrackDetails
 5) UploadTrack (Ale)
-6) CreatePL
+6) CreatePL(Gio)
 7) AddToPL
-8) Logout
+8) Logout(Gio)
 
 Proposta:
 Uno fa login, l'altro logout.
