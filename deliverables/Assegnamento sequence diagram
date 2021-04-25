@@ -6,7 +6,7 @@ Sequence Diagram da fare:
 4) GetTrackDetails
 5) UploadTrack (Ale)
 6) CreatePL(Gio)
-7) AddToPL
+7) AddToPL (Ale)
 8) Logout(Gio)
 
 Proposta:
