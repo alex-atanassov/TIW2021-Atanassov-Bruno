@@ -26,6 +26,8 @@ public class UploadTrack extends HttpServlet {
 		connection = ConnectionHandler.getConnection(getServletContext());
 	}
 	
+	//doGet (formBean forward)
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// If the user is not logged in (not present in session) redirect to the login
