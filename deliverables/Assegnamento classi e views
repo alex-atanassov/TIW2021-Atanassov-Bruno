@@ -2,13 +2,13 @@ Beans:
 User (Gio)
 Playlist
 Track (Ale)
-Album
+Album (Ale)
 
 DAO:
 UserDAO (Gio)
 PlaylistDAO
 TrackDAO (Ale)
-AlbumDAO
+AlbumDAO (Ale)
 
 Controller:
 1) Login (Ale)
