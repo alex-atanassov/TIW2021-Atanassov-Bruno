@@ -1,12 +1,13 @@
 package it.polimi.tiw.beans;
 
-import java.time.Year;
+import java.sql.Blob;
 
 public class Album {
 	private int id;
 	private String name;
-	private Year year;
-	//image
+	private String artist;
+	private /*Date*/ int year;
+	private Blob image;
 	
 	public int getId() {
 		return id;
@@ -20,11 +21,23 @@ public class Album {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Year getYear() {
+	public int getYear() {
 		return year;
 	}
-	public void setYear(Year year) {
+	public void setYear(int year) {
 		this.year = year;
+	}
+	public Blob getImage() {
+		return image;
+	}
+	public void setImage(Blob image) {
+		this.image = image;
+	}
+	public String getArtist() {
+		return artist;
+	}
+	public void setArtist(String artist) {
+		this.artist = artist;
 	}
 
 }

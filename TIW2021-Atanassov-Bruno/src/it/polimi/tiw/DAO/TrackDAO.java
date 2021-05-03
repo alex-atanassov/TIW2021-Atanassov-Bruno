@@ -5,13 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import it.polimi.tiw.beans.Album;
-import it.polimi.tiw.beans.Genre;
 import it.polimi.tiw.beans.Track;
 
 public class TrackDAO {
@@ -34,8 +30,9 @@ public class TrackDAO {
 			while (result.next()) {
 				Track track = new Track();
 				track.setTitle(result.getString("title"));
-				//track.setAlbum(result.getString("album"));
-				//track.setGenre(result.getDate("date"));
+				track.setAlbum(result.getInt("album"));
+				track.setGenre(result.getString("genre"));
+				//set file
 				tracks.add(track);
 			}
 		} catch (SQLException e) {
@@ -70,10 +67,10 @@ public class TrackDAO {
 			pstatement.setInt(1, id);
 			result = pstatement.executeQuery();
 			while (result.next()) {
-				track = new Album();
+				track = new Track();
 				track.setId(result.getInt("id"));
-				track.setName(result.getString("name"));
-				//album.setYear(result.getDate("year"));
+				track.setTitle(result.getString("title"));
+				track.setAlbum(result.getInt("album"));
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e);
@@ -90,15 +87,15 @@ public class TrackDAO {
 				if (pstatement != null) {
 					pstatement.close();
 				}
-			} catch (Exception e1) {
+			} catch (Exception e) {
 				throw new SQLException("Cannot close statement");
 			}
 		}
 		return track;
 	}
 	
-	public int createTrack(String title, int albumid, String genre, Blob file) throws SQLException {
-		String query = "INSERT into track (title, album, genre, file)   VALUES(?, ?, ?, ?)";
+	public int uploadTrack(String title, int albumid, String genre, Blob file, int user) throws SQLException {
+		String query = "INSERT into track (title, album, genre, file)   VALUES(?, ?, ?, ?, ?)";
 
 		int code = 0;
 		PreparedStatement pstatement = null;
@@ -106,8 +103,9 @@ public class TrackDAO {
 			pstatement = connection.prepareStatement(query);
 			pstatement.setString(1, title);
 			pstatement.setInt(2, albumid);
-			//pstatement.setObject(3, d.toInstant().atZone(ZoneId.of("Europe/Rome")).toLocalDate());
+			pstatement.setString(3, genre);
 			pstatement.setBlob(4, file);
+			pstatement.setInt(5,  user);
 			code = pstatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new SQLException(e);
@@ -117,7 +115,7 @@ public class TrackDAO {
 					pstatement.close();
 				}
 			} catch (Exception e) {
-
+				throw new SQLException("Cannot close statement");
 			}
 		}
 		return code;

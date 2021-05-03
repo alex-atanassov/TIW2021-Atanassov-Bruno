@@ -4,10 +4,10 @@ import java.sql.Blob;
 
 public class Track {
 	private int id;
-	private User user;
+	private int userid;
 	private String title;
-	private Album album;
-	private Genre genre;
+	private int albumid;
+	private String genre;
 	private Blob file;
 	
 	public int getId() {
@@ -26,20 +26,20 @@ public class Track {
 		this.title = title;
 	}
 	
-	public Album getAlbum() {
-		return album;
+	public int getAlbum() {
+		return albumid;
 	}
 	
-	public void setAlbum(Album album) {
-		this.album = album;
+	public void setAlbum(int album) {
+		this.albumid = album;
 	}
 
-	public User getUser() {
-		return user;
+	public int getUser() {
+		return userid;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUser(int user) {
+		this.userid = user;
 	}
 
 	public Blob getFile() {
@@ -48,6 +48,14 @@ public class Track {
 
 	public void setFile(Blob file) {
 		this.file = file;
+	}
+
+	public String getGenre() {
+		return genre;
+	}
+
+	public void setGenre(String genre) {
+		this.genre = genre;
 	}
 	
 }

@@ -4,12 +4,18 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.tiw.DAO.PlaylistDAO;
 import it.polimi.tiw.DAO.TrackDAO;
@@ -21,6 +27,7 @@ import it.polimi.tiw.utils.ConnectionHandler;
 public class AddTrackToPlaylist extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
+	private TemplateEngine templateEngine;
 
 	//public AddTrackToPlaylist() {
 	//	super();
@@ -28,7 +35,13 @@ public class AddTrackToPlaylist extends HttpServlet {
 	
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
-	}
+		ServletContext servletContext = getServletContext();
+		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
+		templateResolver.setTemplateMode(TemplateMode.HTML);
+		this.templateEngine = new TemplateEngine();
+		this.templateEngine.setTemplateResolver(templateResolver);
+		templateResolver.setSuffix(".html");
+		}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -55,7 +68,6 @@ public class AddTrackToPlaylist extends HttpServlet {
 			track = tDAO.findTrackById(trackid);
 			playlist = pDAO.findPlaylistById(playlistid);
 			if (track == null || playlist == null) {
-				//response.sendError(HttpServletResponse.SC_NOT_FOUND, "Track does not exists");
 				isBadRequest = true;
 			} else {
 				tDAO.addTrackToPlaylist(trackid, playlistid);
@@ -68,13 +80,17 @@ public class AddTrackToPlaylist extends HttpServlet {
 			return;
 		}
 	
-		//...
-		String ctxpath = getServletContext().getContextPath();
+		ServletContext servletContext = getServletContext();
+		String ctxpath = servletContext.getContextPath();
+		String path;
 		if(!isBadRequest) {
-			String path = ctxpath + "/GetPlaylistTracks?playlistid=" + playlistid;
+			path = ctxpath + "/GetPlaylistTracks?playlistid=" + playlistid;
 			response.sendRedirect(path);
 		} else {
-			//forward with error flag
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			ctx.setVariable("errorMsg", "Invalid track or playlist.");
+			path = ctxpath + "/Playlist.html";
+			templateEngine.process(path, ctx, response.getWriter());
 		}
 	}
 
