@@ -1,5 +1,6 @@
 package it.polimi.tiw.DAO;
 
+import java.io.IOException;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.Part;
 
 import it.polimi.tiw.beans.Track;
 
@@ -32,7 +35,7 @@ public class TrackDAO {
 				track.setTitle(result.getString("title"));
 				track.setAlbum(result.getInt("album"));
 				track.setGenre(result.getString("genre"));
-				//set file
+//				track.setFile(result.getBytes("player"));
 				tracks.add(track);
 			}
 		} catch (SQLException e) {
@@ -94,8 +97,8 @@ public class TrackDAO {
 		return track;
 	}
 	
-	public int uploadTrack(String title, int albumid, String genre, Blob file, int user) throws SQLException {
-		String query = "INSERT into track (title, album, genre, file)   VALUES(?, ?, ?, ?, ?)";
+	public int uploadTrack(String title, int albumid, String genre, Part file, int user) throws SQLException {
+		String query = "INSERT into track (title, album, genre, file, user)   VALUES(?, ?, ?, ?, ?)";
 
 		int code = 0;
 		PreparedStatement pstatement = null;
@@ -104,11 +107,14 @@ public class TrackDAO {
 			pstatement.setString(1, title);
 			pstatement.setInt(2, albumid);
 			pstatement.setString(3, genre);
-			pstatement.setBlob(4, file);
+			pstatement.setBlob(4, file.getInputStream());
 			pstatement.setInt(5,  user);
 			code = pstatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new SQLException(e);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			try {
 				if (pstatement != null) {

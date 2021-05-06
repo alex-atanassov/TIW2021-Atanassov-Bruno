@@ -1,10 +1,13 @@
 package it.polimi.tiw.DAO;
 
+import java.io.IOException;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import javax.servlet.http.Part;
 
 import it.polimi.tiw.beans.Album;
 
@@ -54,8 +57,8 @@ public class AlbumDAO {
 		return album;
 	}
 	
-	public int createAlbum(String name, String artist, int year, Blob image, int user) throws SQLException {
-		String query = "INSERT into album (name, artist, year, image) VALUES(?, ?, ?, ?, ?)";
+	public int createAlbum(String name, String artist, int year, Part image, int user) throws SQLException {
+		String query = "INSERT into album (name, artist, year, image, user) VALUES(?, ?, ?, ?, ?)";
 		int code = 0;
 		PreparedStatement pstatement = null;
 		try {
@@ -63,11 +66,14 @@ public class AlbumDAO {
 			pstatement.setString(1, name);
 			pstatement.setString(2, artist);
 			pstatement.setInt(3, year);
-			pstatement.setBlob(4, image);
+			pstatement.setBlob(4, image.getInputStream());
 			pstatement.setInt(5,  user);
 			code = pstatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new SQLException(e);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			try {
 				if (pstatement != null) {

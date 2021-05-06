@@ -45,11 +45,6 @@ public class UploadTrack extends HttpServlet {
 			throws ServletException, IOException {
 		
 		HttpSession session = request.getSession();
-		if (session.isNew() || session.getAttribute("user") == null) {
-			String loginpath = getServletContext().getContextPath() + "/index.html";
-			response.sendRedirect(loginpath);
-			return;
-		}
 		
 		boolean isBadRequest = false;
 		
@@ -80,12 +75,12 @@ public class UploadTrack extends HttpServlet {
 					int album;
 					int userid = ((User) session.getAttribute("user")).getId();
 					if(albumid == null) {
-						aDAO.createAlbum(albumName, artist, Integer.parseInt(year), null, userid);	//BLOB
+						aDAO.createAlbum(albumName, artist, Integer.parseInt(year), albumimg, userid);
 						album = aDAO.findNewAlbum(userid);
 					}
 					else album = Integer.parseInt(albumid);
 					
-					tDAO.uploadTrack(title, album, genre, null, userid);	//BLOB
+					tDAO.uploadTrack(title, album, genre, file, userid);
 				}
 			} catch (NumberFormatException e) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid parameters");

@@ -6,7 +6,7 @@ public class Album {
 	private int id;
 	private String name;
 	private String artist;
-	private /*Date*/ int year;
+	private int year;
 	private Blob image;
 	
 	public int getId() {
