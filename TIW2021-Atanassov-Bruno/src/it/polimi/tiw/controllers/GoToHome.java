@@ -54,7 +54,7 @@ public class GoToHome extends HttpServlet {
 		List<Playlist> playlists = new ArrayList<Playlist>();
 
 		try {
-			playlists = playlistDAO.findPlaylistsByUser(user.getId());
+			playlists = playlistDAO.findPlaylistsByUser(user);
 		} catch (SQLException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover playlists");
 			return;
