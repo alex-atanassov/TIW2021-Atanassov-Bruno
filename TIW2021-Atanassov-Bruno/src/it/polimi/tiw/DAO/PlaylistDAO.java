@@ -132,7 +132,8 @@ public class PlaylistDAO {
 			while (result.next()) {
 				Playlist playlist= new Playlist();
 				playlist.setTitle(result.getString("title"));
-				playlist.setUser(user);
+				//playlist.setUser(user);
+				playlist.setDate(result.getDate("date"));
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e);

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -22,6 +23,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import it.polimi.tiw.DAO.PlaylistDAO;
 import it.polimi.tiw.beans.Playlist;
 import it.polimi.tiw.beans.User;
+import it.polimi.tiw.beansform.TrackForm;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/Home")
@@ -44,7 +46,7 @@ public class GoToHome extends HttpServlet {
 		connection = ConnectionHandler.getConnection(getServletContext());
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
@@ -56,8 +58,13 @@ public class GoToHome extends HttpServlet {
 		try {
 			playlists = playlistDAO.findPlaylistsByUser(user);
 		} catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover playlists");
-			return;
+			//response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover playlists");
+			Playlist pl = new Playlist();
+			pl.setTitle("A");
+			pl.setDate(Calendar.getInstance().getTime());
+			playlists = new ArrayList<Playlist>();
+			playlists.add(pl);
+			//return;
 		}
 
 		// Redirect to the Home page and add missions to the parameters
@@ -65,6 +72,7 @@ public class GoToHome extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		ctx.setVariable("playlists", playlists);
+		ctx.setVariable("trackForm", new TrackForm());
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 	

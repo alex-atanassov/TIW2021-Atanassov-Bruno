@@ -51,13 +51,14 @@ public class UploadTrack extends HttpServlet {
 		String title = request.getParameter("title");
 		String genre = request.getParameter("genre");
 		Part file = request.getPart("file");
+		String albumchoice = request.getParameter("album");
 		String albumid = request.getParameter("albumid");
 		String albumName = request.getParameter("albumName");
 		String artist = request.getParameter("artist");
 		String year = request.getParameter("year");
 		Part albumimg = request.getPart("image");
 		
-		TrackForm trackForm = new TrackForm(title, genre, albumid, albumName, artist, year, albumimg, file);
+		TrackForm trackForm = new TrackForm(title, genre, albumchoice, albumid, albumName, artist, year, albumimg, file);
 		
 		if (trackForm.isValid()) {
 			AlbumDAO aDAO = new AlbumDAO(connection);
@@ -69,7 +70,7 @@ public class UploadTrack extends HttpServlet {
 					isBadRequest = true;
 				}
 				else if(albumid != null && aDAO.findAlbumById(Integer.parseInt(albumid) /*Ocio al formato*/) == null) {
-					trackForm.setAlbumidError("Invalid existing album choice.");
+					trackForm.setAlbumIdError("Invalid existing album choice.");
 					isBadRequest = true;
 				} else {
 					int album;

@@ -1,0 +1,7 @@
+table, th, tr {
+  border: 1px solid black;
+}
+
+.indented {
+	text-indent: 25px;
+}

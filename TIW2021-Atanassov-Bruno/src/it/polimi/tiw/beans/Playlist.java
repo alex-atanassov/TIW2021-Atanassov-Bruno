@@ -3,13 +3,13 @@ package it.polimi.tiw.beans;
 import java.util.Date;
 
 public class Playlist {
-	private String Title;
+	private String title;
 	private User user;
 	private int id;
 	private Date date;
 	
-	public void setTitle(String Title) {
-		this.Title = Title;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	
 	public void setUser(User user) {
@@ -20,12 +20,12 @@ public class Playlist {
 		this.id = id; 
 	}
 	
-	public void setdate(Date date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 	
 	public String getTitle() {
-		return Title;
+		return title;
 	}
 	
 	public User getOwner() {
@@ -36,7 +36,7 @@ public class Playlist {
 		return id;
 	}
 	
-	public Date getdate() {
+	public Date getDate() {
 		return date;
 	}
 }
