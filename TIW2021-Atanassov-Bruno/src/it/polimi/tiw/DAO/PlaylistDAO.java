@@ -1,10 +1,12 @@
 package it.polimi.tiw.DAO;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import it.polimi.tiw.beans.Playlist;
@@ -16,6 +18,31 @@ public class PlaylistDAO {
 
 	public PlaylistDAO(Connection connection) {
 		this.connection = connection;
+	}
+	
+	public int createPlaylist(String title, int user, Date date) throws SQLException{
+		String query = "INSERT into Playlist (title, userid, date)   VALUES(?, ?, ?)";
+
+		int code = 0;
+		PreparedStatement pstatement = null;
+		try {
+			pstatement = connection.prepareStatement(query);
+			pstatement.setString(1, title);
+			pstatement.setInt(2, user);
+			pstatement.setDate(3, (java.sql.Date) date);
+			code = pstatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new SQLException(e);
+		} finally {
+			try {
+				if (pstatement != null) {
+					pstatement.close();
+				}
+			} catch (Exception e) {
+				throw new SQLException("Cannot close statement");
+			}
+		}
+		return code;
 	}
 	
 	public Playlist findPlaylistByTitle(String Title) throws SQLException {

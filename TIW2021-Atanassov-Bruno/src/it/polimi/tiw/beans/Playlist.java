@@ -1,17 +1,15 @@
 package it.polimi.tiw.beans;
 
+import java.util.Date;
+
 public class Playlist {
 	private String Title;
-	private Date Data;
 	private User user;
 	private int id;
+	private Date date;
 	
 	public void setTitle(String Title) {
 		this.Title = Title;
-	}
-	
-	public void setDate(Date Data) {
-		this.Data=Data;
 	}
 	
 	public void setUser(User user) {
@@ -22,12 +20,12 @@ public class Playlist {
 		this.id = id; 
 	}
 	
-	public String getTitle() {
-		return Title;
+	public void setdate(Date date) {
+		this.date = date;
 	}
 	
-	public Date getData() {
-		return Data;
+	public String getTitle() {
+		return Title;
 	}
 	
 	public User getOwner() {
@@ -36,5 +34,9 @@ public class Playlist {
 	
 	public int getid() {
 		return id;
+	}
+	
+	public Date getdate() {
+		return date;
 	}
 }
