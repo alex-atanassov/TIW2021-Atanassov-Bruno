@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.ServletContext;
@@ -59,21 +61,20 @@ public class CreatePlaylist extends HttpServlet {
 		
 		boolean isBadRequest = false;
 		
-		String title = request.getParameter("title");
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");		
+		String title = request.getParameter("title");	
 		try {
 			if(title==null) {
 				isBadRequest = true;
 			}else {
 			PlaylistDAO pDAO = new PlaylistDAO(connection);
 
-			Date startDate = (Date) sdf.parse(request.getParameter("date"));
+			Date startDate = Calendar.getInstance().getTime();
 			int userid = ((User) session.getAttribute("user")).getId();
 			pDAO.createPlaylist(title,userid,startDate);
 				} 
 		}catch (Exception e) {
 			e.printStackTrace();
-			}
+		}
 		
 		ServletContext servletContext = getServletContext();
 		String ctxpath = servletContext.getContextPath();
@@ -83,8 +84,10 @@ public class CreatePlaylist extends HttpServlet {
 			response.sendRedirect(path);
 		} else {
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-			ctx.setVariable("errorMsg", "Invalid track or playlist.");
-			path = ctxpath + "/Playlist.html";
+			ctx.setVariable("playlistErrorMsg", "Invalid playlist name.");
+			ctx.setVariable("playlists", new ArrayList<>());
+			ctx.setVariable("trackForm", new TrackForm());
+			path = "/WEB-INF/Home.html";
 			templateEngine.process(path, ctx, response.getWriter());
 		}
 	}

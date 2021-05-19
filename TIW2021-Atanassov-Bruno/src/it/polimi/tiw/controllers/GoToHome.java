@@ -59,22 +59,27 @@ public class GoToHome extends HttpServlet {
 		try {
 			playlists = playlistDAO.findPlaylistsByUser(user);
 		} catch (SQLException e) {
-			//response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover playlists");
-			Playlist pl = new Playlist();
-			pl.setTitle("A");
-			pl.setDate(new SimpleDateFormat( "yyyy-MM-dd" ).format(Calendar.getInstance().getTime()));
-			playlists = new ArrayList<Playlist>();
-			playlists.add(pl);
-			//return;
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover playlists");
+//			Playlist pl = new Playlist();
+//			pl.setTitle("A");
+//			pl.setDate(new SimpleDateFormat( "yyyy-MM-dd" ).format(Calendar.getInstance().getTime()));
+//			playlists = new ArrayList<Playlist>();
+//			playlists.add(pl);
+			return;
 		}
 
-		// Redirect to the Home page and add missions to the parameters
+		// Redirect to the Home page
 		String path = "/WEB-INF/Home.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		ctx.setVariable("playlists", playlists);
 		ctx.setVariable("trackForm", new TrackForm());
 		templateEngine.process(path, ctx, response.getWriter());
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doGet(request, response);
 	}
 	
 	public void destroy() {

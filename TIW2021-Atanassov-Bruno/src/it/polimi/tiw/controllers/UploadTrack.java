@@ -3,6 +3,7 @@ package it.polimi.tiw.controllers;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -103,7 +104,8 @@ public class UploadTrack extends HttpServlet {
 		} else {
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 			ctx.setVariable("trackForm", trackForm);
-			path = ctxpath + "/Home.html";
+			ctx.setVariable("playlists", new ArrayList<>());
+			path = "/WEB-INF/Home.html";
 			templateEngine.process(path, ctx, response.getWriter());
 		}
 	}

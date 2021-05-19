@@ -22,7 +22,7 @@ public class PlaylistDAO {
 	}
 	
 	public int createPlaylist(String title, int user, Date date) throws SQLException{
-		String query = "INSERT into Playlist (title, userid, date)   VALUES(?, ?, ?)";
+		String query = "INSERT into playlist (name, userid, date)   VALUES(?, ?, ?)";
 
 		int code = 0;
 		PreparedStatement pstatement = null;
@@ -30,7 +30,7 @@ public class PlaylistDAO {
 			pstatement = connection.prepareStatement(query);
 			pstatement.setString(1, title);
 			pstatement.setInt(2, user);
-			pstatement.setDate(3, (java.sql.Date) date);
+			pstatement.setDate(3, new java.sql.Date(date.getTime()));
 			code = pstatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new SQLException(e);
@@ -123,7 +123,7 @@ public class PlaylistDAO {
 		
 		List<Playlist> playlists = new ArrayList<Playlist>();
 		//TODO check query
-		String query = "SELECT * FROM Playlist where user = ?";
+		String query = "SELECT * FROM playlist where userid = ?";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
 		try {
@@ -132,9 +132,10 @@ public class PlaylistDAO {
 			result = pstatement.executeQuery();
 			while (result.next()) {
 				Playlist playlist= new Playlist();
-				playlist.setTitle(result.getString("title"));
+				playlist.setTitle(result.getString("name"));
 				//playlist.setUser(user);
 				playlist.setDate(new SimpleDateFormat( "yyyy-MM-dd" ).format(result.getDate("date")));
+				playlists.add(playlist);
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e);
