@@ -39,8 +39,7 @@
 			<fieldset>
 				<p>
 					Name: <input type="text" name="name" required />
-					<span th:if="${playlistErrorMsg} != null" style="color:red"><br>${playlistErrorMsg}</span>
-					<!-- TODO move style to the css -->
+					<span th:if="${playlistErrorMsg} != null" class="error"><br>${playlistErrorMsg}</span>
 				</p>
 				<input type="submit" name="Create playlist">
 			</fieldset>
@@ -53,7 +52,7 @@
 			<fieldset>
 				<p>
 					Title: <input type="text" name="title" required />
-					<span th:if="${trackForm.titleError} != null" style="color:red"><br>${trackForm.titleError}</span> 
+					<span th:if="${trackForm.titleError} != null" class="error"><br>${trackForm.titleError}</span> 
 				</p>
 				<p> Genre: 
 					<select name="genre" >
@@ -62,7 +61,7 @@
 						<option value="2">Rock</option>
 						<option value="3">EDM</option>
 				    </select>
-				    <span th:if="${trackForm.genreError} != null" style="color:red"><br>${trackForm.genreError}</span> 
+				    <span th:if="${trackForm.genreError} != null" class="error"><br>${trackForm.genreError}</span> 
 				</p>
 				<div>
 				    <input type="radio" id="1" name="album" value="1" checked required>
@@ -72,7 +71,7 @@
 						<select name="albumid"><!--th:value="${trackForm.albumId}"-->
 							<option th:each="a : ${albums}" th:value="${a.id}" th:text="${a.name}"></option>
 						</select>
-						<span th:if="${trackForm.albumIdError} != null" style="color:red"><br>${trackForm.albumIdError}</span> 
+						<span th:if="${trackForm.albumIdError} != null" class="error"><br>${trackForm.albumIdError}</span> 
 					</p>
 					<input type="radio" id="2" name="album" value="2">
 					<label for="2">Insert new album</label>
@@ -80,25 +79,25 @@
 				
 					<p class="indented">
 						Name: <input type="text" name="title" th:value="${trackForm.albumName}" />
-						<span th:if="${trackForm.albumNameError} != null" style="color:red"><br>${trackForm.albumNameError}</span> 
+						<span th:if="${trackForm.albumNameError} != null" class="error"><br>${trackForm.albumNameError}</span> 
 					</p>
 					<p class="indented">
 						Artist: <input type="text" name="artist" th:value="${trackForm.albumArtist}" />
-						<span th:if="${trackForm.albumArtistError} != null" style="color:red"><br>${trackForm.albumArtistError}</span> 
+						<span th:if="${trackForm.albumArtistError} != null" class="error"><br>${trackForm.albumArtistError}</span> 
 					</p>
 					<p class="indented">
 					  	Year: <input type="number" name="year" min="1800" max="#dates.year(#dates.createNow())" th:value="${trackForm.albumYear}" />
-					  	<span th:if="${trackForm.albumYearError} != null" style="color:red"><br>${trackForm.albumYearError}</span> 
+					  	<span th:if="${trackForm.albumYearError} != null" class="error"><br>${trackForm.albumYearError}</span> 
 					</p>
 					<p class="indented">
 					  	Image: <input type="file" name="file" accept="image/*" th:value="${trackForm.albumImage}" />
-					  	<span th:if="${trackForm.albumImageError} != null" style="color:red"><br>${trackForm.albumImageError}</span> 
+					  	<span th:if="${trackForm.albumImageError} != null" class="error"><br>${trackForm.albumImageError}</span> 
 					</p>
-					<span th:if="${trackForm.albumChoiceError} != null" style="color:red"><br>${trackForm.albumChoiceError}</span>
+					<span th:if="${trackForm.albumChoiceError} != null" class="error"><br>${trackForm.albumChoiceError}</span>
 				</div>
 				<p>
 					Audio file: <input type="file" name="file" accept="audio/*" th:value="${trackForm.audio}" required/>
-					<span th:if="${trackForm.audioError} != null" style="color:red"><br>${trackForm.audioError}</span> 
+					<span th:if="${trackForm.audioError} != null" class="error"><br>${trackForm.audioError}</span> 
 				</p>
     			<br>
 				<input type="submit" name="Upload track">

@@ -3,6 +3,7 @@ package it.polimi.tiw.controllers;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -61,7 +62,7 @@ public class GoToHome extends HttpServlet {
 			//response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover playlists");
 			Playlist pl = new Playlist();
 			pl.setTitle("A");
-			pl.setDate(Calendar.getInstance().getTime());
+			pl.setDate(new SimpleDateFormat( "yyyy-MM-dd" ).format(Calendar.getInstance().getTime()));
 			playlists = new ArrayList<Playlist>();
 			playlists.add(pl);
 			//return;

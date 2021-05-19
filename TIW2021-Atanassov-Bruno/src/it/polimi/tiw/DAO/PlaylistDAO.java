@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -133,7 +134,7 @@ public class PlaylistDAO {
 				Playlist playlist= new Playlist();
 				playlist.setTitle(result.getString("title"));
 				//playlist.setUser(user);
-				playlist.setDate(result.getDate("date"));
+				playlist.setDate(new SimpleDateFormat( "yyyy-MM-dd" ).format(result.getDate("date")));
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e);

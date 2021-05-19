@@ -1,12 +1,10 @@
 package it.polimi.tiw.beans;
 
-import java.util.Date;
-
 public class Playlist {
 	private String title;
 	private User user;
 	private int id;
-	private Date date;
+	private String date;
 	
 	public void setTitle(String title) {
 		this.title = title;
@@ -20,7 +18,7 @@ public class Playlist {
 		this.id = id; 
 	}
 	
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 	
@@ -36,7 +34,7 @@ public class Playlist {
 		return id;
 	}
 	
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 }
