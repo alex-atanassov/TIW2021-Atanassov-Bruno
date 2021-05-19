@@ -77,6 +77,7 @@ public class UploadTrack extends HttpServlet {
 					int userid = ((User) session.getAttribute("user")).getId();
 					if(albumid == null) {
 						aDAO.createAlbum(albumName, artist, Integer.parseInt(year), albumimg, userid);
+						// TODO duplicate albumName+artist
 						album = aDAO.findNewAlbum(userid);
 					}
 					else album = Integer.parseInt(albumid);
