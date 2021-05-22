@@ -38,7 +38,7 @@
 		<form action="#" th:action="@{/CreatePlaylist}" method="POST">
 			<fieldset>
 				<p>
-					Name: <input type="text" name="title" required />
+					Name: <input type="text" name="playlistTitle" required />
 					<span th:if="${playlistErrorMsg} != null" class="error" th:text="${playlistErrorMsg}"><br></span>
 				</p>
 				<input type="submit" name="Create playlist">
@@ -51,7 +51,7 @@
 		<form action="#" th:action="@{/UploadTrack}" method="POST" enctype="multipart/form-data">
 			<fieldset>
 				<p>
-					Title: <input type="text" name="title" required />
+					Title: <input type="text" name="trackTitle" required />
 					<span th:if="${trackForm.titleError} != null" class="error" th:text="${trackForm.titleError}"><br></span> 
 				</p>
 				<p> Genre: 
@@ -68,7 +68,7 @@
 					<label for="1">From existing album</label>
 					<br>
 					<p class="indented"> Album:
-						<select name="albumid"><!--th:value="${trackForm.albumId}"-->
+						<select name="albumId"><!--th:value="${trackForm.albumId}"-->
 							<option th:each="a : ${albums}" th:value="${a.id}" th:text="${a.name}"></option>
 						</select>
 						<span th:if="${trackForm.albumIdError} != null" class="error" th:text="${trackForm.albumIdError}"><br></span> 
@@ -78,25 +78,25 @@
 					<br>
 				
 					<p class="indented">
-						Name: <input type="text" name="title" th:value="${trackForm.albumName}" />
+						Name: <input type="text" name="albumName" th:value="${trackForm.albumName}" />
 						<span th:if="${trackForm.albumNameError} != null" class="error" th:text="${trackForm.albumNameError}"><br></span> 
 					</p>
 					<p class="indented">
-						Artist: <input type="text" name="artist" th:value="${trackForm.albumArtist}" />
+						Artist: <input type="text" name="albumArtist" th:value="${trackForm.albumArtist}" />
 						<span th:if="${trackForm.albumArtistError} != null" class="error" th:text="${trackForm.albumArtistError}"><br></span> 
 					</p>
 					<p class="indented">
-					  	Year: <input type="number" name="year" min="1800" max="#dates.year(#dates.createNow())" th:value="${trackForm.albumYear}" />
+					  	Year: <input type="number" name="albumYear" min="1800" max="#dates.year(#dates.createNow())" th:value="${trackForm.albumYear}" />
 					  	<span th:if="${trackForm.albumYearError} != null" class="error" th:text="${trackForm.albumYearError}"><br></span> 
 					</p>
 					<p class="indented">
-					  	Image: <input type="file" name="file" accept="image/*" th:value="${trackForm.albumImage}" />
+					  	Image: <input type="file" name="albumImage" accept="image/*" th:value="${trackForm.albumImage}" />
 					  	<span th:if="${trackForm.albumImageError} != null" class="error" th:text="${trackForm.albumImageError}"><br></span> 
 					</p>
 					<span th:if="${trackForm.albumChoiceError} != null" class="error" th:text="${trackForm.albumChoiceError}"><br></span>
 				</div>
 				<p>
-					Audio file: <input type="file" name="file" accept="audio/*" th:value="${trackForm.audio}" required/>
+					Audio file: <input type="file" name="audio" accept="audio/*" th:value="${trackForm.audio}" required/>
 					<span th:if="${trackForm.audioError} != null" class="error" th:text="${trackForm.audioError}"><br></span> 
 				</p>
     			<br>

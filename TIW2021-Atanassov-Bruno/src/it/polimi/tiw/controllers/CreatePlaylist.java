@@ -61,7 +61,7 @@ public class CreatePlaylist extends HttpServlet {
 		
 		boolean isBadRequest = false;
 		
-		String title = request.getParameter("title");	
+		String title = request.getParameter("playlistTitle");	
 		try {
 			if(title==null) {
 				isBadRequest = true;

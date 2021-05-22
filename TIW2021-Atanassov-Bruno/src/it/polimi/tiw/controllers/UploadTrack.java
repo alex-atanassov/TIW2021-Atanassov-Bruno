@@ -49,15 +49,17 @@ public class UploadTrack extends HttpServlet {
 		
 		boolean isBadRequest = false;
 		
-		String title = request.getParameter("title");
+		String title = request.getParameter("trackTitle");
 		String genre = request.getParameter("genre");
-		Part file = request.getPart("file");
+		Part file = request.getPart("audio");
 		String albumchoice = request.getParameter("album");
-		String albumid = request.getParameter("albumid");
+		String albumid = request.getParameter("albumId");
 		String albumName = request.getParameter("albumName");
-		String artist = request.getParameter("artist");
-		String year = request.getParameter("year");
+		String artist = request.getParameter("albumArtist");
+		String year = request.getParameter("albumYear");
 		Part albumimg = request.getPart("image");
+		
+		System.out.println(title);
 		
 		TrackForm trackForm = new TrackForm(title, genre, albumchoice, albumid, albumName, artist, year, albumimg, file);
 		
