@@ -21,7 +21,9 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import it.polimi.tiw.DAO.AlbumDAO;
 import it.polimi.tiw.DAO.PlaylistDAO;
+import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.Playlist;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.beansform.TrackForm;
@@ -54,17 +56,21 @@ public class GoToHome extends HttpServlet {
 
 		User user = (User) session.getAttribute("user");
 		PlaylistDAO playlistDAO = new PlaylistDAO(connection);
+		AlbumDAO albumDAO = new AlbumDAO(connection);
 		List<Playlist> playlists = new ArrayList<Playlist>();
+		List<Album> albums = new ArrayList<Album>();
 
 		try {
 			playlists = playlistDAO.findPlaylistsByUser(user);
 		} catch (SQLException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover playlists");
-//			Playlist pl = new Playlist();
-//			pl.setTitle("A");
-//			pl.setDate(new SimpleDateFormat( "yyyy-MM-dd" ).format(Calendar.getInstance().getTime()));
-//			playlists = new ArrayList<Playlist>();
-//			playlists.add(pl);
+			return;
+		}
+		
+		try {
+			albums = albumDAO.findAlbumsByUser(user);
+		} catch (SQLException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover playlists");
 			return;
 		}
 
@@ -73,6 +79,7 @@ public class GoToHome extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		ctx.setVariable("playlists", playlists);
+		ctx.setVariable("albums", albums);
 		ctx.setVariable("trackForm", new TrackForm());
 		templateEngine.process(path, ctx, response.getWriter());
 	}

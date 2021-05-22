@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import it.polimi.tiw.beansform.TrackForm;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/UploadTrack")
+@MultipartConfig
 public class UploadTrack extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
@@ -57,9 +59,8 @@ public class UploadTrack extends HttpServlet {
 		String albumName = request.getParameter("albumName");
 		String artist = request.getParameter("albumArtist");
 		String year = request.getParameter("albumYear");
-		Part albumimg = request.getPart("image");
+		Part albumimg = request.getPart("albumImage");
 		
-		System.out.println(title);
 		
 		TrackForm trackForm = new TrackForm(title, genre, albumchoice, albumid, albumName, artist, year, albumimg, file);
 		
@@ -69,10 +70,12 @@ public class UploadTrack extends HttpServlet {
 			TrackDAO tDAO = new TrackDAO(connection);
 			try {
 				if(gDAO.findGenreByName(genre) == null) {
+					System.out.println(genre);
 					trackForm.setGenreError("Invalid genre.");
 					isBadRequest = true;
 				}
 				else if(albumid != null && aDAO.findAlbumById(Integer.parseInt(albumid) /*Ocio al formato*/) == null) {
+					//TODO use album == 1 instead of albumid != null
 					trackForm.setAlbumIdError("Invalid existing album choice.");
 					isBadRequest = true;
 				} else {
@@ -86,6 +89,7 @@ public class UploadTrack extends HttpServlet {
 					else album = Integer.parseInt(albumid);
 					
 					tDAO.uploadTrack(title, album, genre, file, userid);
+					System.out.println("C");
 				}
 			} catch (NumberFormatException e) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid parameters");
@@ -100,6 +104,7 @@ public class UploadTrack extends HttpServlet {
 		String ctxpath = servletContext.getContextPath();
 		String path;
 		if (!isBadRequest) {
+			System.out.println("INVALID");
 			path = ctxpath + "/Home";
 			response.sendRedirect(path);
 			

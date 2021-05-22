@@ -6,10 +6,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.Part;
 
 import it.polimi.tiw.beans.Album;
+import it.polimi.tiw.beans.User;
 
 public class AlbumDAO {
 	private Connection connection;
@@ -57,8 +60,48 @@ public class AlbumDAO {
 		return album;
 	}
 	
+	public List<Album> findAlbumsByUser(User user) throws SQLException {
+		List<Album> albums = new ArrayList<>();
+		String query = "SELECT * FROM album where userid = ?";
+		ResultSet result = null;
+		PreparedStatement pstatement = null;
+		try {
+			pstatement = connection.prepareStatement(query);
+			pstatement.setInt(1, user.getId());
+			result = pstatement.executeQuery();
+			while (result.next()) {
+				Album album = new Album();
+				album.setId(result.getInt("id"));
+				album.setName(result.getString("name"));
+				album.setYear(result.getInt("year"));
+				album.setArtist(result.getString("artist"));
+				//set img
+				albums.add(album);
+			}
+		} catch (SQLException e) {
+			throw new SQLException(e);
+
+		} finally {
+			try {
+				if (result != null) {
+					result.close();
+				}
+			} catch (Exception e1) {
+				throw new SQLException("Cannot close result");
+			}
+			try {
+				if (pstatement != null) {
+					pstatement.close();
+				}
+			} catch (Exception e1) {
+				throw new SQLException("Cannot close statement");
+			}
+		}
+		return albums;
+	}
+	
 	public int createAlbum(String name, String artist, int year, Part image, int user) throws SQLException {
-		String query = "INSERT into album (name, artist, year, image, user) VALUES(?, ?, ?, ?, ?)";
+		String query = "INSERT into album (name, artist, year, image, userid) VALUES(?, ?, ?, ?, ?)";
 		int code = 0;
 		PreparedStatement pstatement = null;
 		try {
@@ -88,7 +131,7 @@ public class AlbumDAO {
 	
 	public int findNewAlbum(int userid) throws SQLException {
 		int id = -1;
-		String query = "SELECT max(id) as maxid FROM album where user = ?";
+		String query = "SELECT max(id) as maxid FROM album where userid = ?";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
 		try {

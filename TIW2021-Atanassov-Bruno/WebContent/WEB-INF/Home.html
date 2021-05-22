@@ -51,15 +51,15 @@
 		<form action="#" th:action="@{/UploadTrack}" method="POST" enctype="multipart/form-data">
 			<fieldset>
 				<p>
-					Title: <input type="text" name="trackTitle" required />
+					Title: <input type="text" name="trackTitle" th:value="${trackForm.title}" required />
 					<span th:if="${trackForm.titleError} != null" class="error" th:text="${trackForm.titleError}"><br></span> 
 				</p>
 				<p> Genre: 
-					<select name="genre" required>
+					<select name="genre" th:value="${trackForm.genre}" required>
 						<!-- TODO should probably extract from DB instead -->
-					    <option value="1">Pop</option>
-						<option value="2">Rock</option>
-						<option value="3">EDM</option>
+					    <option value="Pop">Pop</option>
+						<option value="Rock">Rock</option>
+						<option value="EDM">EDM</option>
 				    </select>
 				    <span th:if="${trackForm.genreError} != null" class="error" th:text="${trackForm.genreError}"><br></span> 
 				</p>
@@ -69,7 +69,7 @@
 					<br>
 					<p class="indented"> Album:
 						<select name="albumId"><!--th:value="${trackForm.albumId}"-->
-							<option th:each="a : ${albums}" th:value="${a.id}" th:text="${a.name}"></option>
+							<option th:each="a : ${albums}" th:value="${a.id}" th:text="${a.name} + ' (by ' + ${a.artist} + ')'"></option>
 						</select>
 						<span th:if="${trackForm.albumIdError} != null" class="error" th:text="${trackForm.albumIdError}"><br></span> 
 					</p>

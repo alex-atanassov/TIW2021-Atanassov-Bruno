@@ -123,7 +123,7 @@ public class PlaylistDAO {
 		
 		List<Playlist> playlists = new ArrayList<Playlist>();
 		//TODO check query
-		String query = "SELECT * FROM playlist where userid = ?";
+		String query = "SELECT * FROM playlist where userid = ? order by date desc";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
 		try {

@@ -46,9 +46,9 @@ public class TrackForm {
 
 
 	public boolean isValid() {
-		return titleError != null || genreError != null || audioError != null ||
+		return !(titleError != null || genreError != null || audioError != null ||
 				albumChoiceError != null || albumIdError != null || albumNameError != null ||
-				albumArtistError != null || albumYearError != null || albumImageError != null;
+				albumArtistError != null || albumYearError != null || albumImageError != null);
 	}
 	
 	public String getTitle() {
@@ -126,12 +126,16 @@ public class TrackForm {
 	public void setAlbumArtist(String artist) {
 		this.albumArtist = artist;
 		if (albumChoiceNumber == 2 && (albumArtist == null || albumArtist.isEmpty())) {
-			this.setAlbumNameError("An artist name is required");
+			this.setAlbumArtistError("An artist name is required");
 		} else {
-			this.setAlbumNameError(null);
+			this.setAlbumArtistError(null);
 		}
 	}
 
+
+	private void setAlbumArtistError(String artistError) {
+		this.albumArtistError = artistError;
+	}
 
 	public String getAlbumYear() {
 		return albumYear;
@@ -178,7 +182,6 @@ public class TrackForm {
 				this.setAlbumImageError("An image for the new album is required");
 			} else {
 				String contentType = albumImage.getContentType();
-				System.out.println("Type " + contentType);
 	
 				if (!contentType.startsWith("image")) {
 					this.setAlbumImageError("File must be an image");
@@ -202,11 +205,10 @@ public class TrackForm {
 
 	public void setAudio(Part audio) {
 		this.audio = audio;
-		if (albumImage == null || albumImage.getSize() <= 0) {
+		if (audio == null || audio.getSize() <= 0) {
 			this.setAudioError("An audio file is required");
 		} else {
-			String contentType = albumImage.getContentType();
-			System.out.println("Type " + contentType);
+			String contentType = audio.getContentType();
 
 			if (!contentType.startsWith("audio")) {
 				this.setAudioError("File must be an audio");
