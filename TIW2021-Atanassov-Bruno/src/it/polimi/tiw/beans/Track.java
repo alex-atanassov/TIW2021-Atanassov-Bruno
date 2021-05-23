@@ -1,14 +1,12 @@
 package it.polimi.tiw.beans;
 
-import java.sql.Blob;
-
 public class Track {
 	private int id;
 	private int userid;
 	private String title;
 	private int albumid;
 	private String genre;
-	private Blob file;
+	private String file;
 	
 	public int getId() {
 		return id;
@@ -42,11 +40,11 @@ public class Track {
 		this.userid = user;
 	}
 
-	public Blob getFile() {
+	public String getFile() {
 		return file;
 	}
 
-	public void setFile(Blob file) {
+	public void setFile(String file) {
 		this.file = file;
 	}
 

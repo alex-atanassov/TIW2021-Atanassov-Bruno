@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.servlet.http.Part;
@@ -36,7 +37,10 @@ public class AlbumDAO {
 				album.setName(result.getString("name"));
 				album.setYear(result.getInt("year"));
 				album.setArtist(result.getString("artist"));
-				//set img
+				
+				byte[] imgData = result.getBytes("image");
+				String encodedImg = Base64.getEncoder().encodeToString(imgData);
+				album.setImage(encodedImg);
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e);

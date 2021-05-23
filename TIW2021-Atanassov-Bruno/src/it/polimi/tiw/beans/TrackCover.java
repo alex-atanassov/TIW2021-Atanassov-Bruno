@@ -4,8 +4,7 @@ public class TrackCover {
 	int userid;
 	int id;
 	String title;
-
-	// image
+	String image;
 	
 	public int getId() {
 		return id;
@@ -25,4 +24,11 @@ public class TrackCover {
 	public void setUserid(int userid) {
 		this.userid = userid;
 	}
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
+	
 }

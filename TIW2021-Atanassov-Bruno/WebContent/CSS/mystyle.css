@@ -11,6 +11,6 @@ table, th, tr, td {
 }
 
 div.row {
-  height: 100px;
+  height: 400px;
   overflow: hidden;
 }

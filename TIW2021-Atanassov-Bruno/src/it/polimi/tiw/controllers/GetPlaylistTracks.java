@@ -20,7 +20,7 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import it.polimi.tiw.DAO.TrackDAO;
+import it.polimi.tiw.DAO.TrackCoverDAO;
 import it.polimi.tiw.beans.TrackCover;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.utils.ConnectionHandler;
@@ -48,14 +48,16 @@ public class GetPlaylistTracks extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException  {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
-		TrackDAO tDAO= new TrackDAO(connection);
+		TrackCoverDAO tDAO= new TrackCoverDAO(connection);
 		List<TrackCover> tracks = new ArrayList<TrackCover>();
 		List<TrackCover> userTracks = new ArrayList<TrackCover>();
 		Integer playlistid = null;
 		
 		try {
+			// All user tracks, selectable to be added to the playlist
 			userTracks = tDAO.findTracksByUser(user);
 			playlistid = Integer.parseInt(request.getParameter("playlistid"));
+			// The covers of the tracks in this playlist
 			tracks = tDAO.findTracksByPlaylist(playlistid);
 			if (tracks == null) {						
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -71,6 +73,7 @@ public class GetPlaylistTracks extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid parameters");
 			return;	
 		} catch(SQLException e) {
+			e.printStackTrace();
 			response.sendError(500, "Database access failed");
 		}
 		String path = "/WEB-INF/Playlist.html";
