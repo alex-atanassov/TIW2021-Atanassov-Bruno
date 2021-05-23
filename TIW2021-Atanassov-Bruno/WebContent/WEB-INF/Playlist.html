@@ -11,24 +11,34 @@
 	<h1>Your tracks in this playlist</h1>
 		<!-- p th:text="${'Welcome back ' + session.user.name + ' ' + session.user.surname}"></p-->
 
-	<div th:switch="${tracks.size() &gt; 0}">
-		<table th:case="true">
-			<tbody>
-				<tr th:each="i : ${#numbers.sequence( 0, (tracks.size() - 1) / 5)}">
-					<td th:each="j : ${#numbers.sequence( 0, 5 > tracks.size() - 5 * i ? tracks.size() - 5 * i - 1 : 4)}">
-						<span th:text="${tracks[5 * i + j].title}"></span><br>
-						<!-- img src="data:image/jpg;base64,${album.base64Image}" width="240" height="300"/--><br>
-						<span th:href="@{/GetTrackDetails(trackid=${tracks[5 * i + j].id})}">Play</span>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+	<div th:switch="${tracks.size() &gt; 0}" th:with="max=${(tracks.size() - 1) / 5}">
+		<div th:case="true" class = "row">
+			<table th:each="i : ${#numbers.sequence(0, max)}" th:id="${i}">
+				<tbody>
+					<tr>
+						<td th:each="j : ${#numbers.sequence( 0, 5 > tracks.size() - 5 * i ? tracks.size() - 5 * i - 1 : 4)}">
+							<span th:text="${tracks[5 * i + j].title}"></span><br>
+							<!-- img src="data:image/jpg;base64,${album.base64Image}" width="240" height="300"/--><br>
+							<span th:href="@{/GetTrackDetails(trackid=${tracks[5 * i + j].id})}">Play</span>
+						</td>
+					</tr>
+					<tr>
+						<td><a th:if="${i &gt; 0}" th:href="'#' + ${i - 1}"><button th:if="true" value="Previous" >Previous</button></a></td>
+		    			<td><a th:if="${i &lt; max}" th:href="'#' + ${i + 1}"><button th:if="true" value="Next" >Next</button></a></td>
+		    		</tr>
+				</tbody>
+			</table>
+			</div>
 		<p th:case="*">This playlist does not contain any tracks yet.</p>
 	</div>
 	
-	<input th:if="true" type="button" value="Previous">
-	<input th:if="true" type="button" value="Next">
-	
+	<!-- div class="prevNext" th:with="max=${(tracks.size() - 1) / 5}">
+	    <div th:each="i : ${#numbers.sequence(0, max)}" >
+	    	<a th:if="${i &gt; 0}" th:href="'#' + ${i - 1}"><button th:if="true" value="Previous" >Previous</button></a>
+	    	<a th:if="${i &lt; max}" th:href="'#' + ${i + 1}"><button th:if="true" value="Next" >Next</button></a>
+	    </div>
+  	</div-->
+
 	<div>
 		<p>Add a track to this playlist</p>
 		<form action="#" th:action="@{/AddTrackToPlaylist}" method="POST">

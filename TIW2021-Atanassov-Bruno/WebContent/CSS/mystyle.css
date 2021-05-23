@@ -1,4 +1,4 @@
-table, th, tr {
+table, th, tr, td {
 	border: 1px solid black;
 }
 
@@ -8,4 +8,9 @@ table, th, tr {
 
 .error {
 	color: red;
+}
+
+div.row {
+  height: 91px;
+  overflow: hidden;
 }
