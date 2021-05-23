@@ -1,10 +1,10 @@
 package it.polimi.tiw.beans;
 
 public class TrackCover {
-	int userid;
-	int id;
-	String title;
-	String image;
+	private int userid;
+	private int id;
+	private String title;
+	private String image;
 	
 	public int getId() {
 		return id;

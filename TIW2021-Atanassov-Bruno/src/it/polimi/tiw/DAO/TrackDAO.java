@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Base64;
 
 import javax.servlet.http.Part;
 
@@ -33,6 +34,10 @@ public class TrackDAO {
 				track.setAlbum(result.getInt("albumid"));
 				track.setGenre(result.getString("genre"));
 				track.setUser(result.getInt("userid"));
+				
+				byte[] data = result.getBytes("audio");
+				String encoded = Base64.getEncoder().encodeToString(data);
+				track.setAudio(encoded);
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e);
