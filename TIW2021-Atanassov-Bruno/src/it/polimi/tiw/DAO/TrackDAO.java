@@ -113,6 +113,8 @@ public class TrackDAO {
 				track.setId(result.getInt("id"));
 				track.setTitle(result.getString("title"));
 				track.setAlbum(result.getInt("albumid"));
+				track.setGenre(result.getString("genre"));
+				track.setUser(result.getInt("userid"));
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e);

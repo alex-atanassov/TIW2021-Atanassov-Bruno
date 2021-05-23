@@ -13,37 +13,31 @@
 
 	<div th:switch="${tracks.size() &gt; 0}" th:with="max=${(tracks.size() - 1) / 5}">
 		<div th:case="true" class = "row">
-			<table th:each="i : ${#numbers.sequence(0, max)}" th:id="${i}">
-				<tbody>
-					<tr>
-						<td th:each="j : ${#numbers.sequence( 0, 5 > tracks.size() - 5 * i ? tracks.size() - 5 * i - 1 : 4)}">
-							<span th:text="${tracks[5 * i + j].title}"></span><br>
-							<!-- img src="data:image/jpg;base64,${album.base64Image}" width="240" height="300"/--><br>
-							<span th:href="@{/GetTrackDetails(trackid=${tracks[5 * i + j].id})}">Play</span>
-						</td>
-					</tr>
-					<tr>
-						<td><a th:if="${i &gt; 0}" th:href="'#' + ${i - 1}"><button th:if="true" value="Previous" >Previous</button></a></td>
-		    			<td><a th:if="${i &lt; max}" th:href="'#' + ${i + 1}"><button th:if="true" value="Next" >Next</button></a></td>
-		    		</tr>
-				</tbody>
-			</table>
+			<div th:each="i : ${#numbers.sequence(0, max)}" th:id="${i}">
+				<table>
+					<tbody>
+						<tr>
+							<td th:each="j : ${#numbers.sequence( 0, 5 > tracks.size() - 5 * i ? tracks.size() - 5 * i - 1 : 4)}">
+								<span th:text="${tracks[5 * i + j].title}"></span><br>
+								<!-- img src="data:image/jpg;base64,${album.base64Image}" width="240" height="300"/--><br>
+								<a th:href="@{/GetTrackDetails(trackid=${tracks[5 * i + j].id})}">Play</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<a th:if="${i &gt; 0}" th:href="'#' + ${i - 1}"><button th:if="true" value="Previous" >Previous</button></a>
+			    <a th:if="${i &lt; max}" th:href="'#' + ${i + 1}"><button th:if="true" value="Next" >Next</button></a>
+			    <br><br>
 			</div>
+		</div>
 		<p th:case="*">This playlist does not contain any tracks yet.</p>
 	</div>
 	
-	<!-- div class="prevNext" th:with="max=${(tracks.size() - 1) / 5}">
-	    <div th:each="i : ${#numbers.sequence(0, max)}" >
-	    	<a th:if="${i &gt; 0}" th:href="'#' + ${i - 1}"><button th:if="true" value="Previous" >Previous</button></a>
-	    	<a th:if="${i &lt; max}" th:href="'#' + ${i + 1}"><button th:if="true" value="Next" >Next</button></a>
-	    </div>
-  	</div-->
-
 	<div>
 		<p>Add a track to this playlist</p>
 		<form action="#" th:action="@{/AddTrackToPlaylist}" method="POST">
 			<fieldset>
-				<select name="trackid"><!--th:value="${trackForm.albumId}"-->
+				<select name="trackid">
 					<option th:each="t : ${userTracks}" th:value="${t.id}" th:text="${t.title}"></option>
 				</select>
 				<span th:if="${errorMsg} != null" class="error" th:text="${errorMsg}"><br></span>
