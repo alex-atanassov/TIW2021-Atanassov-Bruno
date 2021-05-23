@@ -42,7 +42,7 @@ public class UploadTrack extends HttpServlet {
 		this.templateEngine = new TemplateEngine();
 		this.templateEngine.setTemplateResolver(templateResolver);
 		templateResolver.setSuffix(".html");
-		}
+	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -61,7 +61,6 @@ public class UploadTrack extends HttpServlet {
 		String year = request.getParameter("albumYear");
 		Part albumimg = request.getPart("albumImage");
 		
-		
 		TrackForm trackForm = new TrackForm(title, genre, albumchoice, albumid, albumName, artist, year, albumimg, file);
 		
 		if (trackForm.isValid()) {
@@ -70,7 +69,6 @@ public class UploadTrack extends HttpServlet {
 			TrackDAO tDAO = new TrackDAO(connection);
 			try {
 				if(gDAO.findGenreByName(genre) == null) {
-					System.out.println(genre);
 					trackForm.setGenreError("Invalid genre.");
 					isBadRequest = true;
 				}
@@ -89,7 +87,6 @@ public class UploadTrack extends HttpServlet {
 					else album = Integer.parseInt(albumid);
 					
 					tDAO.uploadTrack(title, album, genre, file, userid);
-					System.out.println("C");
 				}
 			} catch (NumberFormatException e) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid parameters");
@@ -104,13 +101,15 @@ public class UploadTrack extends HttpServlet {
 		String ctxpath = servletContext.getContextPath();
 		String path;
 		if (!isBadRequest) {
-			System.out.println("INVALID");
 			path = ctxpath + "/Home";
 			response.sendRedirect(path);
 			
 		} else {
+			// TODO do not forward
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			// TODO how to pass trackForm through redirect - cookies or session
 			ctx.setVariable("trackForm", trackForm);
+			// TODO empty playlist
 			ctx.setVariable("playlists", new ArrayList<>());
 			path = "/WEB-INF/Home.html";
 			templateEngine.process(path, ctx, response.getWriter());

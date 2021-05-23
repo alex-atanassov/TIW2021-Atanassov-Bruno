@@ -94,8 +94,8 @@ public class PlaylistDAO {
 			result = pstatement.executeQuery();
 			while (result.next()) {
 				playlist = new Playlist();
-				playlist.setid(result.getInt("id"));
-				playlist.setTitle(result.getString("title"));
+				playlist.setId(result.getInt("id"));
+				playlist.setTitle(result.getString("name"));
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e);
@@ -132,6 +132,7 @@ public class PlaylistDAO {
 			result = pstatement.executeQuery();
 			while (result.next()) {
 				Playlist playlist= new Playlist();
+				playlist.setId(result.getInt("id"));
 				playlist.setTitle(result.getString("name"));
 				//playlist.setUser(user);
 				playlist.setDate(new SimpleDateFormat( "yyyy-MM-dd" ).format(result.getDate("date")));

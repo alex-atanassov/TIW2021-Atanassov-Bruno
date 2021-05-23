@@ -12,6 +12,8 @@ import java.util.List;
 import javax.servlet.http.Part;
 
 import it.polimi.tiw.beans.Track;
+import it.polimi.tiw.beans.TrackCover;
+import it.polimi.tiw.beans.User;
 
 public class TrackDAO {
 	private Connection connection;
@@ -20,10 +22,10 @@ public class TrackDAO {
 		this.connection = connection;
 	}
 
-	public List<Track> findTracksByPlaylist(int playlistId) throws SQLException {
-		List<Track> tracks = new ArrayList<Track>();
-		String query = "SELECT title, album, genre, player FROM track WHERE id in "
-				+ "( SELECT trackid FROM aggregation WHERE playlistid = ? )";
+	public List<TrackCover> findTracksByPlaylist(int playlistId) throws SQLException {
+		List<TrackCover> tracks = new ArrayList<TrackCover>();
+		String query = "SELECT id, title, userid FROM track WHERE id in "
+				+ "( SELECT trackid FROM playlist_containment WHERE playlistid = ? )";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
 		try {
@@ -31,11 +33,48 @@ public class TrackDAO {
 			pstatement.setInt(1, playlistId);
 			result = pstatement.executeQuery();
 			while (result.next()) {
-				Track track = new Track();
+				TrackCover track = new TrackCover();
 				track.setTitle(result.getString("title"));
-				track.setAlbum(result.getInt("album"));
-				track.setGenre(result.getString("genre"));
-//				track.setFile(result.getBytes("player"));
+				track.setId(result.getInt("id"));
+				track.setUserid(result.getInt("userid"));
+				tracks.add(track);
+			}
+		} catch (SQLException e) {
+			throw new SQLException(e);
+
+		} finally {
+			try {
+				if (result != null) {
+					result.close();
+				}
+			} catch (Exception e1) {
+				throw new SQLException("Cannot close result");
+			}
+			try {
+				if (pstatement != null) {
+					pstatement.close();
+				}
+			} catch (Exception e1) {
+				throw new SQLException("Cannot close statement");
+			}
+		}
+		return tracks;
+	}
+	
+	public List<TrackCover> findTracksByUser(User user) throws SQLException {
+		List<TrackCover> tracks = new ArrayList<TrackCover>();
+		String query = "SELECT id, title FROM track WHERE userid = ?";
+		ResultSet result = null;
+		PreparedStatement pstatement = null;
+		try {
+			pstatement = connection.prepareStatement(query);
+			pstatement.setInt(1, user.getId());
+			result = pstatement.executeQuery();
+			while (result.next()) {
+				TrackCover track = new TrackCover();
+				track.setTitle(result.getString("title"));
+				track.setId(result.getInt("id"));
+//				track.setUserid(result.getInt("userid"));
 				tracks.add(track);
 			}
 		} catch (SQLException e) {
@@ -73,7 +112,7 @@ public class TrackDAO {
 				track = new Track();
 				track.setId(result.getInt("id"));
 				track.setTitle(result.getString("title"));
-				track.setAlbum(result.getInt("album"));
+				track.setAlbum(result.getInt("albumid"));
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e);
@@ -129,7 +168,7 @@ public class TrackDAO {
 	}
 	
 	public int addTrackToPlaylist(int trackid, int playlistid) throws SQLException {
-		String query = "INSERT into aggregation (playlistid, trackid)   VALUES(?, ?)";
+		String query = "INSERT into playlist_containment (playlistid, trackid)   VALUES(?, ?)";
 
 		int code = 0;
 		PreparedStatement pstatement = null;

@@ -3,6 +3,7 @@ package it.polimi.tiw.controllers;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -65,6 +66,7 @@ public class AddTrackToPlaylist extends HttpServlet {
 				tDAO.addTrackToPlaylist(trackid, playlistid);
 			}
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid parameters");
 			return;
 		} catch (SQLException e) {
@@ -81,7 +83,9 @@ public class AddTrackToPlaylist extends HttpServlet {
 		} else {
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 			ctx.setVariable("errorMsg", "Invalid track or playlist.");
-			path = ctxpath + "/Playlist.html";
+			ctx.setVariable("tracks", new ArrayList<>());
+			ctx.setVariable("userTracks", new ArrayList<>());
+			path = "/WEB-INF/Playlist.html";
 			templateEngine.process(path, ctx, response.getWriter());
 		}
 	}

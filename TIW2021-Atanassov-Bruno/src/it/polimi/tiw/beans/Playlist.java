@@ -14,7 +14,7 @@ public class Playlist {
 		this.user = user;
 	}
 	
-	public void setid(int id) {
+	public void setId(int id) {
 		this.id = id; 
 	}
 	
@@ -30,7 +30,7 @@ public class Playlist {
 		return user;
 	}
 	
-	public int getid() {
+	public int getId() {
 		return id;
 	}
 	

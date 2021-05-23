@@ -21,7 +21,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.tiw.DAO.TrackDAO;
-import it.polimi.tiw.beans.Track;
+import it.polimi.tiw.beans.TrackCover;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.utils.ConnectionHandler;
 
@@ -43,17 +43,18 @@ public class GetPlaylistTracks extends HttpServlet {
 		this.templateEngine = new TemplateEngine();
 		this.templateEngine.setTemplateResolver(templateResolver);
 		templateResolver.setSuffix(".html");
-		}
+	}
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException  {
-		//TODO fix cast
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException  {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		TrackDAO tDAO= new TrackDAO(connection);
-		List<Track> tracks = new ArrayList<Track>();
+		List<TrackCover> tracks = new ArrayList<TrackCover>();
+		List<TrackCover> userTracks = new ArrayList<TrackCover>();
 		Integer playlistid = null;
 		
 		try {
+			userTracks = tDAO.findTracksByUser(user);
 			playlistid = Integer.parseInt(request.getParameter("playlistid"));
 			tracks = tDAO.findTracksByPlaylist(playlistid);
 			if (tracks == null) {						
@@ -61,19 +62,24 @@ public class GetPlaylistTracks extends HttpServlet {
 				response.getWriter().println("Resource not found");
 				return;
 			}
-			if (((Track) tracks).getUser() != user.getId()) {
+			if (tracks.stream().anyMatch(t -> t.getUserid() != user.getId())) {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				response.getWriter().println("User not allowed");
 				return;
 			}
-		}catch(SQLException e) {
+		} catch(NumberFormatException e) {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid parameters");
+			return;	
+		} catch(SQLException e) {
 			response.sendError(500, "Database access failed");
 		}
 		String path = "/WEB-INF/Playlist.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		ctx.setVariable("topics", tracks);
-		templateEngine.process(path, ctx, ((ServletResponse) request).getWriter());
+		ctx.setVariable("tracks", tracks);
+		ctx.setVariable("userTracks", userTracks);
+		ctx.setVariable("playlistid", playlistid);
+		templateEngine.process(path, ctx, response.getWriter());
 	}
 	
 	public void destroy() {
