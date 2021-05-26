@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -55,7 +56,7 @@ public class CreatePlaylist extends HttpServlet {
 		templateResolver.setSuffix(".html");
 		}
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
 		HttpSession session = request.getSession();
 		
@@ -78,11 +79,16 @@ public class CreatePlaylist extends HttpServlet {
 		
 		ServletContext servletContext = getServletContext();
 		String ctxpath = servletContext.getContextPath();
-		String path = ctxpath + "/Home" ;
-		if(isBadRequest) {
-			path += "?playlistErrorMsg=Invalid+playlist+name." ;
+		String path;
+		if(!isBadRequest) {
+			path = ctxpath + "/Home" ;
+			response.sendRedirect(path);
+		} else {
+			path = "/Home" ;
+			request.setAttribute("playlistErrorMsg", "Invalid playlist name.");
+			RequestDispatcher dispatcher = request.getRequestDispatcher(path);
+			dispatcher.forward(request, response);
 		}
-		response.sendRedirect(path);
 	}
 	
 	public void destroy() {
