@@ -21,8 +21,9 @@ public class TrackCoverDAO {
 	public List<TrackCover> findTracksByPlaylist(int playlistId) throws SQLException {
 		List<TrackCover> tracks = new ArrayList<TrackCover>();
 		String query = "SELECT track.id, title, track.userid, image "
-				+ "FROM track join album on track.albumid = album.id "
-				+ "WHERE track.id in ( SELECT trackid FROM playlist_containment WHERE playlistid = ? )";
+				+ "FROM track JOIN album ON track.albumid = album.id "
+				+ "WHERE track.id in ( SELECT trackid FROM playlist_containment WHERE playlistid = ? )"
+				+ "order by album.year desc";	//TODO check this row
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
 		try {

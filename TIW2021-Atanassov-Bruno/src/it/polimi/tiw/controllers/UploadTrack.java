@@ -3,7 +3,6 @@ package it.polimi.tiw.controllers;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -72,19 +70,18 @@ public class UploadTrack extends HttpServlet {
 					trackForm.setGenreError("Invalid genre.");
 					isBadRequest = true;
 				}
-				else if(albumid != null && aDAO.findAlbumById(Integer.parseInt(albumid) /*Ocio al formato*/) == null) {
+				else if(Integer.parseInt(albumchoice) == 1 && aDAO.findAlbumById(Integer.parseInt(albumid) /*Ocio al formato*/) == null) {
 					//TODO use album == 1 instead of albumid != null
 					trackForm.setAlbumIdError("Invalid existing album choice.");
 					isBadRequest = true;
 				} else {
 					int album;
 					int userid = ((User) session.getAttribute("user")).getId();
-					if(albumid == null) {
-						aDAO.createAlbum(albumName, artist, Integer.parseInt(year), albumimg, userid);
+					if(Integer.parseInt(albumchoice) == 2) {
+						album = aDAO.createAlbum(albumName, artist, Integer.parseInt(year), albumimg, userid);
 						// TODO duplicate albumName+artist
-						album = aDAO.findNewAlbum(userid);
 					}
-					else album = Integer.parseInt(albumid);
+					else album = Integer.parseInt(albumid);	//TODO else if - else
 					
 					tDAO.uploadTrack(title, album, genre, file, userid);
 				}
@@ -94,26 +91,20 @@ public class UploadTrack extends HttpServlet {
 			} catch (SQLException e) {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue with DB");
 				return;
+			} catch (IOException e) {
+				// TODO handle
 			}
 		} else isBadRequest = true;
 		
 		ServletContext servletContext = getServletContext();
 		String ctxpath = servletContext.getContextPath();
 		String path;
-		if (!isBadRequest) {
-			path = ctxpath + "/Home";
-			response.sendRedirect(path);
-			
-		} else {
-			// TODO do not forward
-			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-			// TODO how to pass trackForm through redirect - cookies or session
-			ctx.setVariable("trackForm", trackForm);
-			// TODO empty playlist
-			ctx.setVariable("playlists", new ArrayList<>());
-			path = "/WEB-INF/Home.html";
-			templateEngine.process(path, ctx, response.getWriter());
+		
+		if (isBadRequest) {
+			session.setAttribute("trackForm", trackForm);			
 		}
+		path = ctxpath + "/Home";
+		response.sendRedirect(path);
 	}
 	
 	public void destroy() {

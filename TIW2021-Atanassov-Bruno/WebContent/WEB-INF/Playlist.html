@@ -9,7 +9,6 @@
 <body>
 
 	<h1>Your tracks in this playlist</h1>
-		<!-- p th:text="${'Welcome back ' + session.user.name + ' ' + session.user.surname}"></p-->
 
 	<div th:switch="${tracks.size() &gt; 0}" th:with="max=${(tracks.size() - 1) / 5}">
 		<div th:case="true" class = "row">
@@ -19,15 +18,15 @@
 						<tr>
 							<td th:each="j : ${#numbers.sequence( 0, 5 > tracks.size() - 5 * i ? tracks.size() - 5 * i - 1 : 4)}">
 								<span th:text="${tracks[5 * i + j].title}"></span><br>
-								<img th:src="'data:image/jpg;base64,' + ${tracks[5 * i + j].image}" width="240" height="300"/><br>
+								<img th:src="'data:image/*;base64,' + ${tracks[5 * i + j].image}" width="240" height="300"/><br>
 								<a th:href="@{/GetTrackDetails(trackid=${tracks[5 * i + j].id})}">Play</a>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 				<br>
-				<a th:if="${i &gt; 0}" th:href="'#' + ${i - 1}"><button th:if="true" value="Previous" >Previous</button></a>
-			    <a th:if="${i &lt; max}" th:href="'#' + ${i + 1}"><button th:if="true" value="Next" >Next</button></a>
+				<a th:if="${i &gt; 0}" th:href="'#' + ${i - 1}"><button value="Previous" >Previous</button></a>
+			    <a th:if="${i &lt; max}" th:href="'#' + ${i + 1}"><button value="Next" >Next</button></a>
 			    <br><br>
 			</div>
 		</div>

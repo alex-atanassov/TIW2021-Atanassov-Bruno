@@ -55,7 +55,7 @@ public class CreatePlaylist extends HttpServlet {
 		templateResolver.setSuffix(".html");
 		}
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
 		HttpSession session = request.getSession();
 		
@@ -63,7 +63,7 @@ public class CreatePlaylist extends HttpServlet {
 		
 		String title = request.getParameter("playlistTitle");	
 		try {
-			if(title==null) {
+			if(title==null || title.isEmpty()) {
 				isBadRequest = true;
 			}else {
 			PlaylistDAO pDAO = new PlaylistDAO(connection);
@@ -78,18 +78,11 @@ public class CreatePlaylist extends HttpServlet {
 		
 		ServletContext servletContext = getServletContext();
 		String ctxpath = servletContext.getContextPath();
-		String path;
-		if(!isBadRequest) {
-			path = ctxpath + "/Home" ;
-			response.sendRedirect(path);
-		} else {
-			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-			ctx.setVariable("playlistErrorMsg", "Invalid playlist name.");
-			ctx.setVariable("playlists", new ArrayList<>());
-			ctx.setVariable("trackForm", new TrackForm());
-			path = "/WEB-INF/Home.html";
-			templateEngine.process(path, ctx, response.getWriter());
+		String path = ctxpath + "/Home" ;
+		if(isBadRequest) {
+			path += "?playlistErrorMsg=Invalid+playlist+name." ;
 		}
+		response.sendRedirect(path);
 	}
 	
 	public void destroy() {

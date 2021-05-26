@@ -43,7 +43,7 @@ public class GoToHome extends HttpServlet {
 		templateResolver.setTemplateMode(TemplateMode.HTML);
 		this.templateEngine = new TemplateEngine();
 		this.templateEngine.setTemplateResolver(templateResolver);
-		templateResolver.setSuffix(".html");
+//		templateResolver.setSuffix(".html");
 		connection = ConnectionHandler.getConnection(getServletContext());
 	}
 
@@ -71,14 +71,22 @@ public class GoToHome extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover playlists");
 			return;
 		}
+		
+		TrackForm trackForm = (TrackForm) session.getAttribute("trackForm");
+		if(trackForm == null) trackForm = new TrackForm();
 
 		// Redirect to the Home page
 		String path = "/WEB-INF/Home.html";
+//		if(session.getAttribute("trackForm") != null)
+//			path += "#form2";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		ctx.setVariable("playlists", playlists);
 		ctx.setVariable("albums", albums);
-		ctx.setVariable("trackForm", new TrackForm());
+		ctx.setVariable("trackForm", trackForm);
+		
+		session.removeAttribute("trackForm");
+		
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 	
