@@ -12,8 +12,8 @@ public class TrackForm {
 	private String albumName;
 	private String albumArtist;
 	private String albumYear;
-	private Part albumImage;
-	private Part audio;
+//	private Part albumImage;
+//	private Part audio;
 	
 	private int albumChoiceNumber = 0;
 	
@@ -50,10 +50,6 @@ public class TrackForm {
 				albumChoiceError != null || albumIdError != null || albumNameError != null ||
 				albumArtistError != null || albumYearError != null || albumImageError != null);
 	}
-	
-	public String getTitle() {
-		return title;
-	}
 
 
 	public void setTitle(String title) {
@@ -64,13 +60,7 @@ public class TrackForm {
 			this.titleError = null;
 		}
 	}
-
-
-	public String getGenre() {
-		return genre;
-	}
-
-
+	
 	public void setGenre(String genre) {
 		this.genre = genre;
 		if (genre == null || genre.isEmpty()) {
@@ -80,13 +70,7 @@ public class TrackForm {
 			this.setGenreError(null);
 		}
 	}
-
-
-	public String getAlbumid() {
-		return albumId;
-	}
-
-
+	
 	public void setAlbumId(String albumid) {
 		this.albumId = albumid;
 		if (albumChoiceNumber == 1 && (albumId == null || albumId.isEmpty())) {
@@ -96,13 +80,7 @@ public class TrackForm {
 			this.setAlbumIdError(null);
 		}
 	}
-
-
-	public String getAlbumName() {
-		return albumName;
-	}
-
-
+	
 	public void setAlbumName(String albumName) {
 		this.albumName = albumName;
 		if (albumChoiceNumber == 2 && (albumName == null || albumName.isEmpty())) {
@@ -111,18 +89,7 @@ public class TrackForm {
 			this.setAlbumNameError(null);
 		}
 	}
-
-
-	private void setAlbumNameError(String albumNameError) {
-		this.albumNameError = albumNameError;
-	}
-
-
-	public String getAlbumArtist() {
-		return albumArtist;
-	}
-
-
+	
 	public void setAlbumArtist(String artist) {
 		this.albumArtist = artist;
 		if (albumChoiceNumber == 2 && (albumArtist == null || albumArtist.isEmpty())) {
@@ -131,16 +98,6 @@ public class TrackForm {
 			this.setAlbumArtistError(null);
 		}
 	}
-
-
-	private void setAlbumArtistError(String artistError) {
-		this.albumArtistError = artistError;
-	}
-
-	public String getAlbumYear() {
-		return albumYear;
-	}
-
 
 	public void setAlbumYear(String albumYear) {
 		this.albumYear = albumYear;
@@ -164,17 +121,9 @@ public class TrackForm {
 			this.setAlbumYearError(null);
 		}
 	}
-
-	private void setAlbumYearError(String yearError) {
-		this.albumYearError = yearError;
-	}
-
-	public Part getAlbumImage() {
-		return albumImage;
-	}
-
+	
 	public void setAlbumImage(Part albumImage) {
-		this.albumImage = albumImage;
+//		this.albumImage = albumImage;
 		
 		if(albumChoiceNumber == 2) {
 			if (albumImage == null || albumImage.getSize() <= 0) {
@@ -192,18 +141,9 @@ public class TrackForm {
 			this.setAlbumImageError(null);
 		}
 	}
-
-	private void setAlbumImageError(String albumImageError) {
-		this.albumImageError = albumImageError;
-	}
-
-	public Part getAudio() {
-		return audio;
-	}
-
-
+	
 	public void setAudio(Part audio) {
-		this.audio = audio;
+//		this.audio = audio;
 		if (audio == null || audio.getSize() <= 0) {
 			this.setAudioError("An audio file is required");
 		} else {
@@ -216,7 +156,81 @@ public class TrackForm {
 			}
 		}
 	}
+	
+	public void setAlbumChoice(String albumChoice) {
+		this.albumChoice = albumChoice;
+		
+		int choice;
+		try {
+			choice = Integer.parseInt(albumChoice);
+		} catch (NumberFormatException e) {
+			this.setAlbumChoiceError("Please choose between an existing album or a new one");
+			return;
+		}
+		
+		if (choice != 1 && choice != 2)
+			this.setAlbumChoiceError("Please choose between an existing album or a new one");
+		else {
+			albumChoiceNumber = choice;
+			this.setAlbumChoiceError(null);
+		}
+	}
+	
+	public String getTitle() {
+		return title;
+	}
 
+	public String getGenre() {
+		return genre;
+	}
+
+	public String getAlbumid() {
+		return albumId;
+	}
+
+	public String getAlbumName() {
+		return albumName;
+	}
+
+	private void setAlbumNameError(String albumNameError) {
+		this.albumNameError = albumNameError;
+	}
+
+
+	public String getAlbumArtist() {
+		return albumArtist;
+	}
+
+
+
+
+
+	private void setAlbumArtistError(String artistError) {
+		this.albumArtistError = artistError;
+	}
+
+	public String getAlbumYear() {
+		return albumYear;
+	}
+
+
+	private void setAlbumYearError(String yearError) {
+		this.albumYearError = yearError;
+	}
+
+//	public Part getAlbumImage() {
+//		return albumImage;
+//	}
+
+
+
+	private void setAlbumImageError(String albumImageError) {
+		this.albumImageError = albumImageError;
+	}
+
+//	public Part getAudio() {
+//		return audio;
+//	}
 
 	private void setAudioError(String audioError) {
 		this.audioError = audioError;
@@ -287,23 +301,5 @@ public class TrackForm {
 	}
 
 
-	public void setAlbumChoice(String albumChoice) {
-		this.albumChoice = albumChoice;
-		
-		int choice;
-		try {
-			choice = Integer.parseInt(albumChoice);
-		} catch (NumberFormatException e) {
-			this.setAlbumChoiceError("Please choose between an existing album or a new one");
-			return;
-		}
-		
-		if (choice != 1 && choice != 2)
-			this.setAlbumChoiceError("Please choose between an existing album or a new one");
-		else {
-			albumChoiceNumber = choice;
-			this.setAlbumChoiceError(null);
-		}
-	}
 
 }
