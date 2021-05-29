@@ -51,6 +51,7 @@ public class GoToHome extends HttpServlet {
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
+		String playlistErrorMsg = request.getParameter("playlistErrorMsg");
 
 		User user = (User) session.getAttribute("user");
 		PlaylistDAO playlistDAO = new PlaylistDAO(connection);
@@ -68,7 +69,7 @@ public class GoToHome extends HttpServlet {
 		try {
 			albums = albumDAO.findAlbumsByUser(user);
 		} catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover playlists");
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover albums");
 			return;
 		}
 		
@@ -84,6 +85,7 @@ public class GoToHome extends HttpServlet {
 		ctx.setVariable("playlists", playlists);
 		ctx.setVariable("albums", albums);
 		ctx.setVariable("trackForm", trackForm);
+		ctx.setVariable("playlistErrorMsg", playlistErrorMsg);
 		
 		session.removeAttribute("trackForm");
 		

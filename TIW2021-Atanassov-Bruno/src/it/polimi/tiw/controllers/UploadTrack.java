@@ -67,11 +67,10 @@ public class UploadTrack extends HttpServlet {
 			TrackDAO tDAO = new TrackDAO(connection);
 			try {
 				if(gDAO.findGenreByName(genre) == null) {
-					trackForm.setGenreError("Invalid genre.");
+					trackForm.setGenreError("Invalid genre.");	//TODO set genre to null?
 					isBadRequest = true;
 				}
 				else if(Integer.parseInt(albumchoice) == 1 && aDAO.findAlbumById(Integer.parseInt(albumid) /*Ocio al formato*/) == null) {
-					//TODO use album == 1 instead of albumid != null
 					trackForm.setAlbumIdError("Invalid existing album choice.");
 					isBadRequest = true;
 				} else {

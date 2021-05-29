@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +48,7 @@ public class GetPlaylistTracks extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		TrackCoverDAO tDAO= new TrackCoverDAO(connection);
-		List<TrackCover> tracks = new ArrayList<TrackCover>();
+		List<TrackCover> playlistTracks = new ArrayList<TrackCover>();
 		List<TrackCover> userTracks = new ArrayList<TrackCover>();
 		Integer playlistid = null;
 		
@@ -58,13 +57,13 @@ public class GetPlaylistTracks extends HttpServlet {
 			userTracks = tDAO.findTracksByUser(user);
 			playlistid = Integer.parseInt(request.getParameter("playlistid"));
 			// The covers of the tracks in this playlist
-			tracks = tDAO.findTracksByPlaylist(playlistid);
-			if (tracks == null) {						
+			playlistTracks = tDAO.findTracksByPlaylist(playlistid);
+			if (playlistTracks == null) {						
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				response.getWriter().println("Resource not found");
 				return;
 			}
-			if (tracks.stream().anyMatch(t -> t.getUserid() != user.getId())) {
+			if (playlistTracks.stream().anyMatch(t -> t.getUserid() != user.getId())) {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				response.getWriter().println("User not allowed");
 				return;
@@ -76,12 +75,17 @@ public class GetPlaylistTracks extends HttpServlet {
 			e.printStackTrace();
 			response.sendError(500, "Database access failed");
 		}
+		
+		session.setAttribute("playlistid", playlistid);
+		//TODO replace w/ cookies?
+		
 		String path = "/WEB-INF/Playlist.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		ctx.setVariable("tracks", tracks);
+		ctx.setVariable("tracks", playlistTracks);
 		ctx.setVariable("userTracks", userTracks);
 		ctx.setVariable("playlistid", playlistid);
+		ctx.setVariable("errorMsg", request.getParameter("errorMsg"));
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 	

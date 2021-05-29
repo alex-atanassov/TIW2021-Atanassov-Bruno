@@ -3,13 +3,7 @@ package it.polimi.tiw.controllers;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,23 +11,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import it.polimi.tiw.DAO.AlbumDAO;
-import it.polimi.tiw.DAO.GenreDAO;
 import it.polimi.tiw.DAO.PlaylistDAO;
-import it.polimi.tiw.DAO.TrackDAO;
-import it.polimi.tiw.DAO.UserDAO;
-import it.polimi.tiw.beans.Playlist;
-import it.polimi.tiw.beans.Track;
 import it.polimi.tiw.beans.User;
-import it.polimi.tiw.beansform.TrackForm;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/CreatePlaylist")
@@ -54,9 +38,9 @@ public class CreatePlaylist extends HttpServlet {
 		this.templateEngine = new TemplateEngine();
 		this.templateEngine.setTemplateResolver(templateResolver);
 		templateResolver.setSuffix(".html");
-		}
+	}
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
 		HttpSession session = request.getSession();
 		
@@ -69,9 +53,9 @@ public class CreatePlaylist extends HttpServlet {
 			}else {
 			PlaylistDAO pDAO = new PlaylistDAO(connection);
 
-			Date startDate = Calendar.getInstance().getTime();
+//			Date startDate = Calendar.getInstance().getTime();
 			int userid = ((User) session.getAttribute("user")).getId();
-			pDAO.createPlaylist(title,userid,startDate);
+			pDAO.createPlaylist(title,userid);
 				} 
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -79,16 +63,11 @@ public class CreatePlaylist extends HttpServlet {
 		
 		ServletContext servletContext = getServletContext();
 		String ctxpath = servletContext.getContextPath();
-		String path;
-		if(!isBadRequest) {
-			path = ctxpath + "/Home" ;
-			response.sendRedirect(path);
-		} else {
-			path = "/Home" ;
-			request.setAttribute("playlistErrorMsg", "Invalid playlist name.");
-			RequestDispatcher dispatcher = request.getRequestDispatcher(path);
-			dispatcher.forward(request, response);
+		String path = ctxpath + "/Home" ;
+		if(isBadRequest) {
+			path += "?playlistErrorMsg=Invalid+playlist+name" ;
 		}
+		response.sendRedirect(path);
 	}
 	
 	public void destroy() {

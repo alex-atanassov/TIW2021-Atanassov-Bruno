@@ -37,11 +37,14 @@
 		<p>Add a track to this playlist</p>
 		<form action="#" th:action="@{/AddTrackToPlaylist}" method="POST">
 			<fieldset>
-				<select name="trackid">
-					<option th:each="t : ${userTracks}" th:value="${t.id}" th:text="${t.title}"></option>
-				</select>
-				<span th:if="${errorMsg} != null" class="error" th:text="${errorMsg}"><br></span>
-				<input type="hidden" name="playlistid" th:value="${playlistid}">
+				<p>
+					Track to add:
+					<select name="trackid">
+						<option th:each="t : ${userTracks}" th:value="${t.id}" th:text="${t.title}"></option>
+					</select>
+					<span th:if="${errorMsg} != null" class="error" th:text="${errorMsg}"><br></span>
+					<!-- input type="hidden" name="playlistid" th:value="${playlistid}"-->
+				</p>
 				<input type="submit" name="Add track">
 			</fieldset>
 		</form>
