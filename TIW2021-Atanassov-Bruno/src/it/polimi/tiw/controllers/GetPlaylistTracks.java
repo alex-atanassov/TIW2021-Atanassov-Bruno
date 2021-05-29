@@ -19,7 +19,9 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import it.polimi.tiw.DAO.PlaylistDAO;
 import it.polimi.tiw.DAO.TrackCoverDAO;
+import it.polimi.tiw.beans.Playlist;
 import it.polimi.tiw.beans.TrackCover;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.utils.ConnectionHandler;
@@ -51,12 +53,14 @@ public class GetPlaylistTracks extends HttpServlet {
 		List<TrackCover> playlistTracks = new ArrayList<TrackCover>();
 		List<TrackCover> userTracks = new ArrayList<TrackCover>();
 		Integer playlistid = null;
+		Playlist playlist = null;
 		
 		try {
 			// All user tracks, selectable to be added to the playlist
 			userTracks = tDAO.findTracksByUser(user);
 			playlistid = Integer.parseInt(request.getParameter("playlistid"));
 			// The covers of the tracks in this playlist
+			playlist = new PlaylistDAO(connection).findPlaylistById(playlistid);
 			playlistTracks = tDAO.findTracksByPlaylist(playlistid);
 			if (playlistTracks == null) {						
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -85,7 +89,7 @@ public class GetPlaylistTracks extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		ctx.setVariable("tracks", playlistTracks);
 		ctx.setVariable("userTracks", userTracks);
-		ctx.setVariable("playlistid", playlistid);
+		ctx.setVariable("playlist", playlist);
 		ctx.setVariable("errorMsg", request.getAttribute("errorMsg"));
 		templateEngine.process(path, ctx, response.getWriter());
 	}

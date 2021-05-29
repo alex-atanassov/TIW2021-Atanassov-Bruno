@@ -8,7 +8,7 @@
 </head>
 <body>
 
-	<h1>Your tracks in this playlist</h1>
+	<h1 th:text="'Playlist: ' + ${playlist.title}"></h1>
 
 	<div th:switch="${tracks.size() &gt; 0}" th:with="max=${(tracks.size() - 1) / 5}">
 		<div th:case="true" class = "row">
