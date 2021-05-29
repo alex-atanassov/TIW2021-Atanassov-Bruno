@@ -78,6 +78,7 @@ public class GetPlaylistTracks extends HttpServlet {
 		
 		session.setAttribute("playlistid", playlistid);
 		//TODO replace w/ cookies?
+		//TODO after AddToPL gets re-executed
 		
 		String path = "/WEB-INF/Playlist.html";
 		ServletContext servletContext = getServletContext();
@@ -85,7 +86,7 @@ public class GetPlaylistTracks extends HttpServlet {
 		ctx.setVariable("tracks", playlistTracks);
 		ctx.setVariable("userTracks", userTracks);
 		ctx.setVariable("playlistid", playlistid);
-		ctx.setVariable("errorMsg", request.getParameter("errorMsg"));
+		ctx.setVariable("errorMsg", request.getAttribute("errorMsg"));
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 	
