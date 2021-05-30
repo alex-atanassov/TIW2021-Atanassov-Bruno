@@ -51,7 +51,7 @@ public class GoToHome extends HttpServlet {
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
-		String playlistErrorMsg = (String) request.getAttribute("playlistErrorMsg");
+		String playlistErrorMsg = request.getParameter("playlistErrorMsg");
 
 		User user = (User) session.getAttribute("user");
 		PlaylistDAO playlistDAO = new PlaylistDAO(connection);

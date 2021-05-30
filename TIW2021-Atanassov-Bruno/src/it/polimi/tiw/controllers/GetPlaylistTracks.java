@@ -90,7 +90,7 @@ public class GetPlaylistTracks extends HttpServlet {
 		ctx.setVariable("tracks", playlistTracks);
 		ctx.setVariable("userTracks", userTracks);
 		ctx.setVariable("playlist", playlist);
-		ctx.setVariable("errorMsg", request.getAttribute("errorMsg"));
+		ctx.setVariable("errorMsg", request.getParameter("errorMsg"));
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 	

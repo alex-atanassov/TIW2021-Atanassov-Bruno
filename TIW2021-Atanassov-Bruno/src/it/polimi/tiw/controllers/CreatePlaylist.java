@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,8 +40,7 @@ public class CreatePlaylist extends HttpServlet {
 		templateResolver.setSuffix(".html");
 	}
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
 		HttpSession session = request.getSession();
 		
@@ -63,14 +61,13 @@ public class CreatePlaylist extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-
-		String path = "/Home" ;
-		
-		if(isBadRequest)
-			request.setAttribute("playlistErrorMsg", "Invalid playlist name");
-		RequestDispatcher dispatcher = request.getRequestDispatcher(path);
-		dispatcher.forward(request, response);
-		
+		ServletContext servletContext = getServletContext();
+		String ctxpath = servletContext.getContextPath();
+		String path = ctxpath + "/Home" ;
+		if(isBadRequest) {
+			path += "?playlistErrorMsg=Invalid+playlist+name" ;
+		}
+		response.sendRedirect(path);
 	}
 	
 	public void destroy() {
