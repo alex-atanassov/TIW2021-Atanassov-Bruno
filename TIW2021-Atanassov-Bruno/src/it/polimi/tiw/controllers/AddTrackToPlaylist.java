@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -36,7 +35,7 @@ public class AddTrackToPlaylist extends HttpServlet {
 		templateResolver.setSuffix(".html");
 	}
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		Integer playlistid = null;
@@ -52,25 +51,28 @@ public class AddTrackToPlaylist extends HttpServlet {
 			Track track = null;
 
 			track = tDAO.findTrackById(trackid);
+			//TODO check user is owner, and that playlist exists
 			if (track == null) {
-				errorMsg = "Invalid track input";
+				errorMsg = "Invalid track parameter";
 			} else {
 				tDAO.addTrackToPlaylist(trackid, playlistid);
 			}
 		} catch (NumberFormatException e) {
-			errorMsg = "Invalid parameters";
+			errorMsg = "Invalid track or playlist";
 		} catch (SQLException e) {
 			e.printStackTrace();
 			errorMsg = "Issue with DB";
 		}
 	
-		String path = "/GetPlaylistTracks?playlistid=" + playlistid;
+		ServletContext servletContext = getServletContext();
+		String ctxpath = servletContext.getContextPath();
+		String path = ctxpath + "/GetPlaylistTracks?playlistid=" + playlistid;
 		
 		if(errorMsg != null) {
-			request.setAttribute("errorMsg", errorMsg);
+			errorMsg.replaceAll(" ", "+");
+			path += "&errorMsg=" + errorMsg;
 		}
-		RequestDispatcher dispatcher = request.getRequestDispatcher(path);
-		dispatcher.forward(request, response);
+		response.sendRedirect(path);	
 				
 	}
 

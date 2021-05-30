@@ -56,6 +56,7 @@ public class PlaylistDAO {
 				playlist = new Playlist();
 				playlist.setId(result.getInt("id"));
 				playlist.setTitle(result.getString("name"));
+				playlist.setUser(result.getInt("userid"));
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e);

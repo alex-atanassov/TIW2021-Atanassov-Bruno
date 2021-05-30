@@ -67,7 +67,7 @@ public class GetPlaylistTracks extends HttpServlet {
 				response.getWriter().println("Resource not found");
 				return;
 			}
-			if (playlistTracks.stream().anyMatch(t -> t.getUserid() != user.getId())) {
+			if (playlist.getUser() != user.getId()) {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				response.getWriter().println("User not allowed");
 				return;
@@ -81,8 +81,6 @@ public class GetPlaylistTracks extends HttpServlet {
 		}
 		
 		session.setAttribute("playlistid", playlistid);
-		//TODO replace w/ cookies?
-		//TODO after AddToPL gets re-executed
 		
 		String path = "/WEB-INF/Playlist.html";
 		ServletContext servletContext = getServletContext();
@@ -90,7 +88,7 @@ public class GetPlaylistTracks extends HttpServlet {
 		ctx.setVariable("tracks", playlistTracks);
 		ctx.setVariable("userTracks", userTracks);
 		ctx.setVariable("playlist", playlist);
-		ctx.setVariable("errorMsg", request.getAttribute("errorMsg"));
+		ctx.setVariable("errorMsg", request.getParameter("errorMsg"));
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 	
