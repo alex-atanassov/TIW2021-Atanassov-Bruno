@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,7 +36,7 @@ public class AddTrackToPlaylist extends HttpServlet {
 		templateResolver.setSuffix(".html");
 	}
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		Integer playlistid = null;
@@ -59,19 +60,18 @@ public class AddTrackToPlaylist extends HttpServlet {
 		} catch (NumberFormatException e) {
 			errorMsg = "Invalid parameters";
 		} catch (SQLException e) {
+			e.printStackTrace();
 			errorMsg = "Issue with DB";
 		}
 	
-		ServletContext servletContext = getServletContext();
-		String ctxpath = servletContext.getContextPath();
-		String path = ctxpath + "/GetPlaylistTracks?playlistid=" + playlistid;
+		String path = "/GetPlaylistTracks?playlistid=" + playlistid;
 		
 		if(errorMsg != null) {
-			errorMsg.replaceAll(" ", "+");
-			path += "&errorMsg=" + errorMsg;
+			request.setAttribute("errorMsg", errorMsg);
 		}
-		
-		response.sendRedirect(path);			
+		RequestDispatcher dispatcher = request.getRequestDispatcher(path);
+		dispatcher.forward(request, response);
+				
 	}
 
 	public void destroy() {
