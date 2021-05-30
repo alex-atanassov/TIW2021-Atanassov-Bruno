@@ -7,7 +7,9 @@
 	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
 <body>
-
+	<div align="right">
+		<a th:href="@{/Logout}">Logout</a>
+	</div>
 	<h1 th:text="'Playlist: ' + ${playlist.title}"></h1>
 
 	<div th:switch="${tracks.size() &gt; 0}" th:with="max=${(tracks.size() - 1) / 5}">

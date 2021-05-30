@@ -7,6 +7,9 @@
 	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
 <body>
+	<div align="right">
+		<a th:href="@{/Logout}">Logout</a>
+	</div>
 	<h1>Track player</h1>
 	<div>
 		<p th:text="${'Title: ' + track.title}" />
