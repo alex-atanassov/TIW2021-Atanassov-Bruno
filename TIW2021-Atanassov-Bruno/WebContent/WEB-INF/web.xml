@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
 http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 	version="4.0">
-  <display-name>TIW2021-Atanassov-Bruno</display-name>
+  <display-name>TIW2021-Atanassov-Bruno-HTML</display-name>
   <context-param>
     <param-name>dbUrl</param-name>
     <param-value>jdbc:mysql://localhost:3306/project_db?serverTimezone=UTC</param-value>
@@ -20,20 +21,20 @@ http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
     <param-name>dbDriver</param-name>
     <param-value>com.mysql.cj.jdbc.Driver</param-value>
   </context-param>
-  <filter> 
-      <filter-name>Checker</filter-name>
-      <filter-class>it.polimi.tiw.filters.Checker</filter-class> 
- </filter>
- <filter-mapping> 
-    <filter-name>Checker</filter-name> 
-    <url-pattern>/Home</url-pattern> 
-    <url-pattern>/AddTrackToPlaylist</url-pattern> 
-    <url-pattern>/Logout</url-pattern> 
-    <url-pattern>/CreatePlaylist</url-pattern> 
-    <url-pattern>/GetPlaylistTracks</url-pattern> 
-    <url-pattern>/GetTrackDetails</url-pattern> 
-    <url-pattern>/UploadTrack</url-pattern> 
- </filter-mapping> 
+  <filter>
+    <filter-name>Checker</filter-name>
+    <filter-class>it.polimi.tiw.filters.Checker</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>Checker</filter-name>
+    <url-pattern>/Home</url-pattern>
+    <url-pattern>/AddTrackToPlaylist</url-pattern>
+    <url-pattern>/Logout</url-pattern>
+    <url-pattern>/CreatePlaylist</url-pattern>
+    <url-pattern>/GetPlaylistTracks</url-pattern>
+    <url-pattern>/GetTrackDetails</url-pattern>
+    <url-pattern>/UploadTrack</url-pattern>
+  </filter-mapping>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
