@@ -17,6 +17,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.tiw.DAO.TrackDAO;
 import it.polimi.tiw.beans.Track;
+import it.polimi.tiw.beans.User;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/AddTrackToPlaylist")
@@ -51,8 +52,9 @@ public class AddTrackToPlaylist extends HttpServlet {
 			Track track = null;
 
 			track = tDAO.findTrackById(trackid);
-			//TODO check user is owner, and that playlist exists
-			if (track == null) {
+			
+			// track does not exist, or the owner is another user
+			if (track == null || track.getId() != ((User) request.getSession().getAttribute("user")).getId()) {
 				errorMsg = "Invalid track parameter";
 			} else {
 				tDAO.addTrackToPlaylist(trackid, playlistid);

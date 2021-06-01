@@ -47,7 +47,7 @@ public class UploadTrack extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		
-		boolean isBadRequest = false;
+		boolean isBadRequest = true;
 		
 		String title = request.getParameter("trackTitle");
 		String genre = request.getParameter("genre");
@@ -68,11 +68,9 @@ public class UploadTrack extends HttpServlet {
 			try {
 				if(gDAO.findGenreByName(genre) == null) {
 					trackForm.setGenreError("Invalid genre.");	//TODO set genre to null?
-					isBadRequest = true;
 				}
 				else if(Integer.parseInt(albumchoice) == 1 && aDAO.findAlbumById(Integer.parseInt(albumid) /*Ocio al formato*/) == null) {
 					trackForm.setAlbumIdError("Invalid existing album choice.");
-					isBadRequest = true;
 				} else {
 					int album;
 					int userid = ((User) session.getAttribute("user")).getId();
@@ -83,6 +81,8 @@ public class UploadTrack extends HttpServlet {
 					else album = Integer.parseInt(albumid);	//TODO else if - else
 					
 					tDAO.uploadTrack(title, album, genre, file, userid);
+					
+					isBadRequest = false;
 				}
 			} catch (NumberFormatException e) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid parameters");
@@ -93,7 +93,7 @@ public class UploadTrack extends HttpServlet {
 			} catch (IOException e) {
 				// TODO handle
 			}
-		} else isBadRequest = true;
+		}
 		
 		ServletContext servletContext = getServletContext();
 		String ctxpath = servletContext.getContextPath();
