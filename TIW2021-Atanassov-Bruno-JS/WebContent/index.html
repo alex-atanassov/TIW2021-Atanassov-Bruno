@@ -3,14 +3,18 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Login page</title>
+<script src="utils.js" charset="utf-8" defer></script>
+<script src="loginManagement.js" charset="utf-8" defer></script>
+
 </head>
 <body>
 	<h1>Welcome to the playlist manager</h1>
-	<form action="CheckLogin"
-		method="POST">
-		username: <input type="text" name="username" required> <br>
-		password: <input type="password" name="pwd" required><br> <input
-			type="submit" value="login">
+	
+	<form action="CheckLogin" method="POST">
+		Username: <input type="text" placeholder="Enter Username" name="username" required> <br>
+		Password: <input type="password" placeholder="Enter Password" name="pwd" required><br>
+		<input id="loginbutton" type="button" value="login">
+		<p id="errormessage"></p>
 	</form>
 </body>
 </html>
