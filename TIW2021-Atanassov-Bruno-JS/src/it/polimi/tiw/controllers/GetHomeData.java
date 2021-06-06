@@ -23,11 +23,11 @@ import it.polimi.tiw.dao.PlaylistDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/Home")
-public class GoToHome extends HttpServlet {
+public class GetHomeData extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
 	
-	public GoToHome() {
+	public GetHomeData() {
 		super();
 	}
 
