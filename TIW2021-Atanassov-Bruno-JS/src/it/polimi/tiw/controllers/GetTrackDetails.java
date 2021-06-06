@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.google.gson.Gson;
 
 import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.Track;
@@ -69,15 +70,15 @@ public class GetTrackDetails extends HttpServlet {
 				return;
 			}
 		} catch(SQLException e) {
-			response.sendError(500, "Database access failed");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Database access failed");
+			return;
 		}
 		
-		String path = "/WEB-INF/Player.html";
-		ServletContext servletContext = getServletContext();
-//		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-//		ctx.setVariable("track", track);
-//		ctx.setVariable("album", album);
-//		templateEngine.process(path, ctx, response.getWriter());
+		String json = new Gson().toJson(track);
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(json);
 		
 	}
 	

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -52,15 +51,7 @@ public class CreatePlaylist extends HttpServlet {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		ServletContext servletContext = getServletContext();
-		String ctxpath = servletContext.getContextPath();
-		String path = ctxpath + "/Home" ;
-		if(isBadRequest) {
-			path += "?playlistErrorMsg=Invalid+playlist+name" ;
-		}
-		response.sendRedirect(path);
-		
+				
 	}
 	
 	public void destroy() {

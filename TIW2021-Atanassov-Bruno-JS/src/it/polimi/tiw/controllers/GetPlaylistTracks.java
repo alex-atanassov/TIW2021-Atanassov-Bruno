@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
+
 import it.polimi.tiw.beans.Playlist;
 import it.polimi.tiw.beans.TrackCover;
 import it.polimi.tiw.beans.User;
@@ -61,7 +63,8 @@ public class GetPlaylistTracks extends HttpServlet {
 				return;
 			}
 		} catch(NumberFormatException e) {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid parameters");
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			response.getWriter().println("Invalid parameters");
 			return;	
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -70,14 +73,10 @@ public class GetPlaylistTracks extends HttpServlet {
 		
 		session.setAttribute("playlistid", playlistid);
 		
-		String path = "/WEB-INF/Playlist.html";
-		ServletContext servletContext = getServletContext();
-//		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-//		ctx.setVariable("tracks", playlistTracks);
-//		ctx.setVariable("userTracks", userTracks);
-//		ctx.setVariable("playlist", playlist);
-//		ctx.setVariable("errorMsg", request.getParameter("errorMsg"));
-//		templateEngine.process(path, ctx, response.getWriter());
+//		String json = new Gson().toJson(mission);
+//		response.setContentType("application/json");
+//		response.setCharacterEncoding("UTF-8");
+//		response.getWriter().write(json);
 	}
 	
 	public void destroy() {

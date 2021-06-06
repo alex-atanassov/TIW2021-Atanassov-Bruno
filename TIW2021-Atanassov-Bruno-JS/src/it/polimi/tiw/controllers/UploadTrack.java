@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -84,15 +83,6 @@ public class UploadTrack extends HttpServlet {
 			}
 		}
 		
-		ServletContext servletContext = getServletContext();
-		String ctxpath = servletContext.getContextPath();
-		String path;
-		
-		if (isBadRequest) {
-			session.setAttribute("trackForm", trackForm);			
-		}
-		path = ctxpath + "/Home";
-		response.sendRedirect(path);
 	}
 	
 	public void destroy() {

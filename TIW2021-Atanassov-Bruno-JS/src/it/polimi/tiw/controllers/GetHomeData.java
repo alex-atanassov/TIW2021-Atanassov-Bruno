@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -64,20 +63,6 @@ public class GetHomeData extends HttpServlet {
 		TrackForm trackForm = (TrackForm) session.getAttribute("trackForm");
 		if(trackForm == null) trackForm = new TrackForm();
 
-		// Redirect to the Home page
-		String path = "/WEB-INF/Home.html";
-//		if(session.getAttribute("trackForm") != null)
-//			path += "#form2";
-		ServletContext servletContext = getServletContext();
-//		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-//		ctx.setVariable("playlists", playlists);
-//		ctx.setVariable("albums", albums);
-//		ctx.setVariable("trackForm", trackForm);
-//		ctx.setVariable("playlistErrorMsg", playlistErrorMsg);
-//		
-//		session.removeAttribute("trackForm");
-//		
-//		templateEngine.process(path, ctx, response.getWriter());
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

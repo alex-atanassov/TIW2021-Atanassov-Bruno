@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -56,17 +55,7 @@ public class AddTrackToPlaylist extends HttpServlet {
 			e.printStackTrace();
 			errorMsg = "Issue with DB";
 		}
-	
-		ServletContext servletContext = getServletContext();
-		String ctxpath = servletContext.getContextPath();
-		String path = ctxpath + "/GetPlaylistTracks?playlistid=" + playlistid;
-		
-		if(errorMsg != null) {
-			errorMsg.replaceAll(" ", "+");
-			path += "&errorMsg=" + errorMsg;
-		}
-		response.sendRedirect(path);	
-				
+					
 	}
 
 	public void destroy() {
