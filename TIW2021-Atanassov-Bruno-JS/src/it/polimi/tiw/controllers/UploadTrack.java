@@ -34,9 +34,7 @@ public class UploadTrack extends HttpServlet {
 			throws ServletException, IOException {
 		
 		HttpSession session = request.getSession();
-		
-		boolean isBadRequest = true;
-		
+				
 		String title = request.getParameter("trackTitle");
 		String genre = request.getParameter("genre");
 		Part file = request.getPart("audio");
@@ -70,7 +68,6 @@ public class UploadTrack extends HttpServlet {
 					
 					tDAO.uploadTrack(title, album, genre, file, userid);
 					
-					isBadRequest = false;
 				}
 			} catch (NumberFormatException e) {
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -83,7 +80,7 @@ public class UploadTrack extends HttpServlet {
 			} catch (IOException e) {
 				// TODO handle
 			}
-		}
+		} // TODO else: return errors in form
 		
 	}
 	

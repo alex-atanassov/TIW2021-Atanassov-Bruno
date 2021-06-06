@@ -63,12 +63,14 @@ public class GetTrackDetails extends HttpServlet {
 				response.getWriter().println("User not allowed");
 				return;
 			}
+			// TODO maybe put the following part (till setAlbum) in trackDAO?
 			album = albumDAO.findAlbumById(track.getAlbum());
 			if (album == null) {						
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				response.getWriter().println("Album not found");
 				return;
 			}
+			track.setAlbum(album);
 		} catch(SQLException e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Database access failed");

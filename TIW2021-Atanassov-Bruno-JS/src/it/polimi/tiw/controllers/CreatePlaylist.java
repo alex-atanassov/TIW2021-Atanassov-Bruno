@@ -34,21 +34,21 @@ public class CreatePlaylist extends HttpServlet {
 			throws IOException, ServletException {
 		
 		HttpSession session = request.getSession();
-		
-		boolean isBadRequest = false;
-		
+				
 		String title = request.getParameter("playlistTitle");	
 		try {
 			if(title==null || title.isEmpty()) {
-				isBadRequest = true;
-			}else {
-			PlaylistDAO pDAO = new PlaylistDAO(connection);
-
-//			Date startDate = Calendar.getInstance().getTime();
-			int userid = ((User) session.getAttribute("user")).getId();
-			pDAO.createPlaylist(title,userid);
-				} 
+				response.setStatus(400);
+				response.getWriter().println("Missing playlist title, creation failed");
+				return;
+			} else {
+				PlaylistDAO pDAO = new PlaylistDAO(connection);
+	
+				int userid = ((User) session.getAttribute("user")).getId();
+				pDAO.createPlaylist(title,userid);
+			} 
 		}catch (Exception e) {
+			//TODO SQLException: Issue with DB
 			e.printStackTrace();
 		}
 				

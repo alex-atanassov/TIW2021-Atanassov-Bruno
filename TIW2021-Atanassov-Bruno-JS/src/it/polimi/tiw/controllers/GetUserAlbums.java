@@ -13,22 +13,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
+
 import it.polimi.tiw.beans.Album;
-import it.polimi.tiw.beans.Playlist;
 import it.polimi.tiw.beans.User;
-import it.polimi.tiw.beansform.TrackForm;
 import it.polimi.tiw.dao.AlbumDAO;
-import it.polimi.tiw.dao.PlaylistDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/Home")
-public class GetHomeData extends HttpServlet {
+public class GetUserAlbums extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
-	
-	public GetHomeData() {
-		super();
-	}
 
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
@@ -38,22 +33,11 @@ public class GetHomeData extends HttpServlet {
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
-		String playlistErrorMsg = request.getParameter("playlistErrorMsg");
 
 		User user = (User) session.getAttribute("user");
-		PlaylistDAO playlistDAO = new PlaylistDAO(connection);
 		AlbumDAO albumDAO = new AlbumDAO(connection);
-		List<Playlist> playlists = new ArrayList<Playlist>();
 		List<Album> albums = new ArrayList<Album>();
 
-		try {
-			playlists = playlistDAO.findPlaylistsByUser(user);
-		} catch (SQLException e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Not possible to recover playlists");
-			return;
-		}
-		
 		try {
 			albums = albumDAO.findAlbumsByUser(user);
 		} catch (SQLException e) {
@@ -62,9 +46,11 @@ public class GetHomeData extends HttpServlet {
 			return;
 		}
 		
-		TrackForm trackForm = (TrackForm) session.getAttribute("trackForm");
-		if(trackForm == null) trackForm = new TrackForm();
-
+		String json = new Gson().toJson(albums);
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(json);
+		
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

@@ -32,7 +32,6 @@ public class AddTrackToPlaylist extends HttpServlet {
 		Integer playlistid = null;
 		Integer trackid = null;
 		
-		String errorMsg = null;
 		try {
 			playlistid = (Integer) request.getSession().getAttribute("playlistid");
 			//TODO remove attribute after usage (not in this servlet)
@@ -45,15 +44,21 @@ public class AddTrackToPlaylist extends HttpServlet {
 			
 			// track does not exist, or the owner is another user
 			if (track == null || track.getId() != ((User) request.getSession().getAttribute("user")).getId()) {
-				errorMsg = "Invalid track parameter";
+				response.setStatus(400);
+				response.getWriter().println("Invalid track parameter");
+				return;
 			} else {
 				tDAO.addTrackToPlaylist(trackid, playlistid);
 			}
 		} catch (NumberFormatException e) {
-			errorMsg = "Invalid track or playlist";
+			response.setStatus(400);
+			response.getWriter().println("Invalid track id");
+			return;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			errorMsg = "Issue with DB";
+			response.setStatus(500);
+			response.getWriter().println("Issue with DB");
+			return;
 		}
 					
 	}

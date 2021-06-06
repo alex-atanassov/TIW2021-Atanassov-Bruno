@@ -5,6 +5,7 @@ public class Track {
 	private int userid;
 	private String title;
 	private int albumid;
+	private Album album;
 	private String genre;
 	private String audio;
 	
@@ -79,4 +80,9 @@ public class Track {
 	public void setAudio(String audio) {
 		this.audio = audio;
 	}
+
+	public void setAlbum(Album album) {
+		this.album = album;
+	}
+	
 }
