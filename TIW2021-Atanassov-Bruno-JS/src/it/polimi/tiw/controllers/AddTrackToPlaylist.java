@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import it.polimi.tiw.DAO.TrackDAO;
 import it.polimi.tiw.beans.Track;
 import it.polimi.tiw.beans.User;
+import it.polimi.tiw.dao.TrackDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/AddTrackToPlaylist")

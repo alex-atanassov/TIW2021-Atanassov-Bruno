@@ -1,4 +1,4 @@
-package it.polimi.tiw.DAO;
+package it.polimi.tiw.dao;
 
 import java.io.IOException;
 import java.sql.Connection;

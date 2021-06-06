@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import it.polimi.tiw.beans.User;
-import it.polimi.tiw.DAO.UserDAO;
+import it.polimi.tiw.dao.UserDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/CheckLogin")

@@ -19,12 +19,12 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import it.polimi.tiw.DAO.AlbumDAO;
-import it.polimi.tiw.DAO.PlaylistDAO;
 import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.Playlist;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.beansform.TrackForm;
+import it.polimi.tiw.dao.AlbumDAO;
+import it.polimi.tiw.dao.PlaylistDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/Home")

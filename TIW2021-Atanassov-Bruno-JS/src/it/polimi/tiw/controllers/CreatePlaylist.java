@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import it.polimi.tiw.DAO.PlaylistDAO;
 import it.polimi.tiw.beans.User;
+import it.polimi.tiw.dao.PlaylistDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/CreatePlaylist")

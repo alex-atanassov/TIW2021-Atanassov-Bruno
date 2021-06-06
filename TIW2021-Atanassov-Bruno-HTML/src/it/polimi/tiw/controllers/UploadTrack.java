@@ -18,11 +18,11 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import it.polimi.tiw.DAO.AlbumDAO;
-import it.polimi.tiw.DAO.GenreDAO;
-import it.polimi.tiw.DAO.TrackDAO;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.beansform.TrackForm;
+import it.polimi.tiw.dao.AlbumDAO;
+import it.polimi.tiw.dao.GenreDAO;
+import it.polimi.tiw.dao.TrackDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 
 @WebServlet("/UploadTrack")
