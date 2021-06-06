@@ -49,14 +49,16 @@ public class GetHomeData extends HttpServlet {
 		try {
 			playlists = playlistDAO.findPlaylistsByUser(user);
 		} catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover playlists");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Not possible to recover playlists");
 			return;
 		}
 		
 		try {
 			albums = albumDAO.findAlbumsByUser(user);
 		} catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover albums");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Not possible to recover albums");
 			return;
 		}
 		

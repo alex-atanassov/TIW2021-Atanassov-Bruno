@@ -68,7 +68,9 @@ public class GetPlaylistTracks extends HttpServlet {
 			return;	
 		} catch(SQLException e) {
 			e.printStackTrace();
-			response.sendError(500, "Database access failed");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Database access failed");
+			return;	
 		}
 		
 		session.setAttribute("playlistid", playlistid);

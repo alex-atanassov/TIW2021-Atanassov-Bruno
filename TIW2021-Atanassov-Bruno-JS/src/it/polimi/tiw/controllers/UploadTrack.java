@@ -73,10 +73,12 @@ public class UploadTrack extends HttpServlet {
 					isBadRequest = false;
 				}
 			} catch (NumberFormatException e) {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid parameters");
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				response.getWriter().println("Invalid parameters");
 				return;
 			} catch (SQLException e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue with DB");
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().println("Issue with DB");
 				return;
 			} catch (IOException e) {
 				// TODO handle
