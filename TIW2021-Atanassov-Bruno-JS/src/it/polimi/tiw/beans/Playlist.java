@@ -2,7 +2,7 @@ package it.polimi.tiw.beans;
 
 public class Playlist {
 	private String title;
-	private User user;
+	private int userid;
 	private int id;
 	private String date;
 	
@@ -10,11 +10,11 @@ public class Playlist {
 		this.title = title;
 	}
 	
-	public void setUser(User user) {
-		this.user = user;
+	public void setUser(int userid) {
+		this.userid = userid;
 	}
 	
-	public void setid(int id) {
+	public void setId(int id) {
 		this.id = id; 
 	}
 	
@@ -26,11 +26,11 @@ public class Playlist {
 		return title;
 	}
 	
-	public User getOwner() {
-		return user;
+	public int getUser() {
+		return userid;
 	}
 	
-	public int getid() {
+	public int getId() {
 		return id;
 	}
 	

@@ -8,20 +8,16 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-
-import it.polimi.tiw.DAO.TrackDAO;
-import it.polimi.tiw.beans.Track;
+import it.polimi.tiw.DAO.PlaylistDAO;
+import it.polimi.tiw.DAO.TrackCoverDAO;
+import it.polimi.tiw.beans.Playlist;
+import it.polimi.tiw.beans.TrackCover;
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.utils.ConnectionHandler;
 
@@ -29,7 +25,6 @@ import it.polimi.tiw.utils.ConnectionHandler;
 public class GetPlaylistTracks extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
-	private TemplateEngine templateEngine;
 
 	public GetPlaylistTracks() {
 		super();
@@ -37,43 +32,52 @@ public class GetPlaylistTracks extends HttpServlet {
 	
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
-		ServletContext servletContext = getServletContext();
-		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
-		templateResolver.setTemplateMode(TemplateMode.HTML);
-		this.templateEngine = new TemplateEngine();
-		this.templateEngine.setTemplateResolver(templateResolver);
-		templateResolver.setSuffix(".html");
-		}
+	}
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException  {
-		//TODO fix cast
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException  {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
-		TrackDAO tDAO= new TrackDAO(connection);
-		List<Track> tracks = new ArrayList<Track>();
+		TrackCoverDAO tDAO= new TrackCoverDAO(connection);
+		List<TrackCover> playlistTracks = new ArrayList<TrackCover>();
+		List<TrackCover> userTracks = new ArrayList<TrackCover>();
 		Integer playlistid = null;
+		Playlist playlist = null;
 		
 		try {
+			// All user tracks, selectable to be added to the playlist
+			userTracks = tDAO.findTracksByUser(user);
 			playlistid = Integer.parseInt(request.getParameter("playlistid"));
-			tracks = tDAO.findTracksByPlaylist(playlistid);
-			if (tracks == null) {						
+			// The covers of the tracks in this playlist
+			playlist = new PlaylistDAO(connection).findPlaylistById(playlistid);
+			playlistTracks = tDAO.findTracksByPlaylist(playlistid);
+			if (playlistTracks == null) {						
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				response.getWriter().println("Resource not found");
 				return;
 			}
-			if (((Track) tracks).getUser() != user.getId()) {
+			if (playlist.getUser() != user.getId()) {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				response.getWriter().println("User not allowed");
 				return;
 			}
-		}catch(SQLException e) {
+		} catch(NumberFormatException e) {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid parameters");
+			return;	
+		} catch(SQLException e) {
+			e.printStackTrace();
 			response.sendError(500, "Database access failed");
 		}
+		
+		session.setAttribute("playlistid", playlistid);
+		
 		String path = "/WEB-INF/Playlist.html";
 		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		ctx.setVariable("topics", tracks);
-		templateEngine.process(path, ctx, ((ServletResponse) request).getWriter());
+//		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+//		ctx.setVariable("tracks", playlistTracks);
+//		ctx.setVariable("userTracks", userTracks);
+//		ctx.setVariable("playlist", playlist);
+//		ctx.setVariable("errorMsg", request.getParameter("errorMsg"));
+//		templateEngine.process(path, ctx, response.getWriter());
 	}
 	
 	public void destroy() {

@@ -1,14 +1,12 @@
 package it.polimi.tiw.beans;
 
-import java.sql.Blob;
-
 public class Track {
 	private int id;
 	private int userid;
 	private String title;
 	private int albumid;
 	private String genre;
-	private Blob file;
+	private String audio;
 	
 	public int getId() {
 		return id;
@@ -42,12 +40,12 @@ public class Track {
 		this.userid = user;
 	}
 
-	public Blob getFile() {
-		return file;
+	public String getFile() {
+		return audio;
 	}
 
-	public void setFile(Blob file) {
-		this.file = file;
+	public void setFile(String audio) {
+		this.audio = audio;
 	}
 
 	public String getGenre() {
@@ -57,5 +55,28 @@ public class Track {
 	public void setGenre(String genre) {
 		this.genre = genre;
 	}
-	
+
+	public int getUserid() {
+		return userid;
+	}
+
+	public void setUserid(int userid) {
+		this.userid = userid;
+	}
+
+	public int getAlbumid() {
+		return albumid;
+	}
+
+	public void setAlbumid(int albumid) {
+		this.albumid = albumid;
+	}
+
+	public String getAudio() {
+		return audio;
+	}
+
+	public void setAudio(String audio) {
+		this.audio = audio;
+	}
 }

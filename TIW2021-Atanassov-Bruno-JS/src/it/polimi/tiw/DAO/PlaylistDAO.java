@@ -1,17 +1,14 @@
 package it.polimi.tiw.DAO;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import it.polimi.tiw.beans.Playlist;
-import it.polimi.tiw.beans.Track;
 import it.polimi.tiw.beans.User;
 
 public class PlaylistDAO {
@@ -21,8 +18,8 @@ public class PlaylistDAO {
 		this.connection = connection;
 	}
 	
-	public int createPlaylist(String title, int user, Date date) throws SQLException{
-		String query = "INSERT into playlist (name, userid, date)   VALUES(?, ?, ?)";
+	public int createPlaylist(String title, int user) throws SQLException{
+		String query = "INSERT into playlist (name, userid)   VALUES(?, ?)";
 
 		int code = 0;
 		PreparedStatement pstatement = null;
@@ -30,7 +27,7 @@ public class PlaylistDAO {
 			pstatement = connection.prepareStatement(query);
 			pstatement.setString(1, title);
 			pstatement.setInt(2, user);
-			pstatement.setDate(3, new java.sql.Date(date.getTime()));
+//			pstatement.setDate(3, new java.sql.Date(date.getTime()));
 			code = pstatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new SQLException(e);
@@ -46,43 +43,6 @@ public class PlaylistDAO {
 		return code;
 	}
 	
-	public Playlist findPlaylistByTitle(String Title) throws SQLException {
-		
-		Playlist playlist = null;
-		String query = "SELECT * FROM Playlist where title = ?";
-		ResultSet result = null;
-		PreparedStatement pstatement = null;
-		try {
-			pstatement = connection.prepareStatement(query);
-			//TODO don't if setString is correct
-			pstatement.setString(1, Title);
-			result = pstatement.executeQuery();
-			while (result.next()) {
-				playlist= new Playlist();
-				playlist.setTitle(result.getString("title"));
-			}
-		} catch (SQLException e) {
-			throw new SQLException(e);
-
-		} finally {
-			try {
-				if (result != null) {
-					result.close();
-				}
-			} catch (Exception e1) {
-				throw new SQLException("Cannot close result");
-			}
-			try {
-				if (pstatement != null) {
-					pstatement.close();
-				}
-			} catch (Exception e) {
-				throw new SQLException("Cannot close statement");
-			}
-		}
-		return playlist;
-	}
-	
 	public Playlist findPlaylistById(int id) throws SQLException {
 		Playlist playlist = null;
 		String query = "SELECT * FROM playlist where id = ?";
@@ -94,8 +54,9 @@ public class PlaylistDAO {
 			result = pstatement.executeQuery();
 			while (result.next()) {
 				playlist = new Playlist();
-				playlist.setid(result.getInt("id"));
-				playlist.setTitle(result.getString("title"));
+				playlist.setId(result.getInt("id"));
+				playlist.setTitle(result.getString("name"));
+				playlist.setUser(result.getInt("userid"));
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e);
@@ -123,7 +84,7 @@ public class PlaylistDAO {
 		
 		List<Playlist> playlists = new ArrayList<Playlist>();
 		//TODO check query
-		String query = "SELECT * FROM playlist where userid = ?";
+		String query = "SELECT * FROM playlist where userid = ? order by date desc";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
 		try {
@@ -132,6 +93,7 @@ public class PlaylistDAO {
 			result = pstatement.executeQuery();
 			while (result.next()) {
 				Playlist playlist= new Playlist();
+				playlist.setId(result.getInt("id"));
 				playlist.setTitle(result.getString("name"));
 				//playlist.setUser(user);
 				playlist.setDate(new SimpleDateFormat( "yyyy-MM-dd" ).format(result.getDate("date")));

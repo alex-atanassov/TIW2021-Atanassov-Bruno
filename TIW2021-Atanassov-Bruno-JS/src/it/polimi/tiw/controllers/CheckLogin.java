@@ -12,10 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.tiw.beans.User;
 import it.polimi.tiw.DAO.UserDAO;
@@ -37,7 +33,7 @@ public class CheckLogin extends HttpServlet{
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// obtain and escape params	
+		// obtain and escape params
 		String usrn = null;
 		String pwd = null;
 		try {
@@ -46,12 +42,13 @@ public class CheckLogin extends HttpServlet{
 			if (usrn == null || pwd == null || usrn.isEmpty() || pwd.isEmpty()) {
 				throw new Exception("Missing or empty credential value");
 			}
+
 		} catch (Exception e) {
 			// for debugging only e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing credential value");
 			return;
 		}
-		
+
 		// query db to authenticate for user
 		UserDAO userDao = new UserDAO(connection);
 		User user = null;
@@ -64,15 +61,18 @@ public class CheckLogin extends HttpServlet{
 
 		// If the user exists, add info to the session and go to home page, otherwise
 		// show login page with error message
+
+		String path;
 		if (user == null) {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.getWriter().println("Incorrect credentials");
+			ServletContext servletContext = getServletContext();
+//			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+//			ctx.setVariable("errorMsg", "Incorrect username or password");
+//			path = "/index.html";
+//			templateEngine.process(path, ctx, response.getWriter());
 		} else {
 			request.getSession().setAttribute("user", user);
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().println(usrn);
+			path = getServletContext().getContextPath() + "/Home";
+			response.sendRedirect(path);
 		}
 
 	}
