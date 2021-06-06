@@ -19,39 +19,26 @@
 	<table>
 		<tr>
 			<td>
-				<table id="id_playlistsbody" class="boxed">
+				<table id="playlistscontainer" class="boxed">
 					<thead>
 						<tr>
 							<th>Name</th>
 							<th>Date of creation</th>
-							<th>Link</th>
+							<th>Tracks</th>
+							<th>Reorder</th>
 						</tr>
 					</thead>
-					<tbody id="id_playlistsbody"/>
+					<tbody id="playlistsbody"/>
 				</table>
 			</td>
 			<td>
-				<h1 th:text="'Playlist: ' + ${playlist.title}"></h1>
-				<div th:each="i : ${#numbers.sequence(0, max)}" th:id="${i}">
-					<table>
-						<tbody>
-							<tr>
-								<td th:each="j : ${#numbers.sequence( 0, 5 > tracks.size() - 5 * i ? tracks.size() - 5 * i - 1 : 4)}">
-									<span th:text="${tracks[5 * i + j].title}"></span><br>
-									<img th:src="'data:image/*;base64,' + ${tracks[5 * i + j].image}" width="240" height="300"/><br>
-									<a th:href="@{/GetTrackDetails(trackid=${tracks[5 * i + j].id})}">Play</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<br>
-					<a th:if="${i &gt; 0}" th:href="'#' + ${i - 1}"><button value="Previous" >Previous</button></a>
-				    <a th:if="${i &lt; max}" th:href="'#' + ${i + 1}"><button value="Next" >Next</button></a>
-				    <br><br>
+				<p>Playlist: <span id="playlist_name"></span></p>
+				<div id="track_groups">
+					
 				</div>
 				<div>
 					<p>Add a track to this playlist</p>
-					<form action="#" th:action="@{/AddTrackToPlaylist}" method="POST">
+					<form action="#" id="addtrackform">
 						<fieldset>
 							<p>
 								Track to add:
@@ -69,17 +56,17 @@
 			<td>
 				<h1>Track player</h1>
 				<div>
-					<p th:text="${'Title: ' + track.title}" />
-					<p th:text="${'Genre: ' + track.genre}" />
+					<p id="track_title" />
+					<p id="track_genre" />
 					<br>
-					<p th:text="${'Album: ' + album.name}" />
-					<p th:text="${'Artist: ' + album.artist}" />
-					<p th:text="${'Year: ' + album.year}" />
-					<img th:src="'data:image/*;base64,' + ${album.image}" /><br>
+					<p id="album_name" />
+					<p id="album_artist"/>
+					<p id="album_year" />
+					<img id="album_image" /><br>
 					
 					<audio
 			          controls
-			          th:src="'data:audio/*;base64,' + ${track.audio}"></audio>
+			          id="track_audioplayer"></audio>
 					
 				</div>
 			</td>
@@ -87,7 +74,7 @@
 	</table>
 
 	<p>Create a new playlist here</p>
-	<form action="#" th:action="@{/CreatePlaylist}" method="POST">
+	<form action="#" id="createplaylistform">
 		<fieldset>
 			<p>
 				Name: <input type="text" name="playlistTitle" required />
@@ -98,64 +85,81 @@
 	</form>
 
 	<p>Upload your tracks here</p>
-	<form action="#" th:action="@{/UploadTrack}" method="POST" enctype="multipart/form-data">
+	<form action="#" id="uploadtrackform" enctype="multipart/form-data">
 		<fieldset>
 			<p>
-				Title: <input type="text" name="trackTitle" th:value="${trackForm.title}" required />
+				Title: <input type="text" name="trackTitle" required/>
 				<span th:if="${trackForm.titleError} != null" class="error" th:text="${trackForm.titleError}"><br></span> 
 			</p>
 			<p> Genre: 
 				<select name="genre" required>
 					<!-- TODO should probably extract from DB instead -->
-				    <option value="Pop" th:selected="${trackForm.genre} == 'Pop'">Pop</option>
-					<option value="Rock" th:selected="${trackForm.genre} == 'Rock'">Rock</option>
-					<option value="EDM" th:selected="${trackForm.genre} == 'EDM'">EDM</option>
+				    <option value="Pop">Pop</option>
+					<option value="Rock">Rock</option>
+					<option value="EDM">EDM</option>
 			    </select>
 			    <span th:if="${trackForm.genreError} != null" class="error" th:text="${trackForm.genreError}"><br></span> 
 			</p>
 			<div>
-			    <input type="radio" id="1" name="album" value="1" th:checked="${trackForm.albumChoice == 1 or trackForm.albumChoice == null}" required>
+			    <input type="radio" id="1" name="album" value="1" required>
 				<label for="1">From existing album</label>
 				<br>
 				<p class="indented"> Album:
-					<select name="albumId"><!--th:value="${trackForm.albumId}"-->
-						<option th:each="a : ${albums}" th:value="${a.id}" th:text="${a.name} + ' (by ' + ${a.artist} + ')'" th:selected="${trackForm.albumId} == ${a.id}"></option>
-					</select>
+					<select name="albumId" id="selectalbumid"></select>
 					<span th:if="${trackForm.albumIdError} != null" class="error" th:text="${trackForm.albumIdError}"><br></span> 
 				</p>
-				<input type="radio" id="2" name="album" value="2" th:checked="${trackForm.albumChoice == 2}">
+				<input type="radio" id="2" name="album" value="2">
 				<label for="2">Insert new album</label>
 				<br>
 			
 				<p class="indented">
-					Name: <input type="text" name="albumName" th:value="${trackForm.albumName}" />
-					<span th:if="${trackForm.albumNameError} != null" class="error" th:text="${trackForm.albumNameError}"><br></span> 
+					Name: <input type="text" name="albumName"/>
+					<span th:if="${trackForm.albumNameError} != null" class="error"><br></span> 
 				</p>
 				<p class="indented">
-					Artist: <input type="text" name="albumArtist" th:value="${trackForm.albumArtist}" />
-					<span th:if="${trackForm.albumArtistError} != null" class="error" th:text="${trackForm.albumArtistError}"><br></span> 
+					Artist: <input type="text" name="albumArtist"/>
+					<span th:if="${trackForm.albumArtistError} != null" class="error"><br></span> 
 				</p>
 				<p class="indented">
 				<!-- TODO year does not clear if invalid -->
-				  	Year: <input type="number" name="albumYear" min="1800" max="#dates.year(#dates.createNow())" th:value="${trackForm.albumYear}" />
-				  	<span th:if="${trackForm.albumYearError} != null" class="error" th:text="${trackForm.albumYearError}"><br></span> 
+				  	Year: <input type="number" name="albumYear" min="1800" max="#dates.year(#dates.createNow())"/>
+				  	<span th:if="${trackForm.albumYearError} != null" class="error"><br></span> 
 				</p>
 				<p class="indented">
-				  	Image: <input type="file" name="albumImage" accept="image/*" />
-				  	<span th:if="${trackForm.albumImageError} != null" class="error" th:text="${trackForm.albumImageError}"><br></span> 
+				  	Image: <input type="file" name="albumImage" accept="image/*"/>
+				  	<span th:if="${trackForm.albumImageError} != null" class="error"><br></span> 
 				</p>
-				<span th:if="${trackForm.albumChoiceError} != null" class="error" th:text="${trackForm.albumChoiceError}"><br></span>
+				<span th:if="${trackForm.albumChoiceError} != null" class="error"><br></span>
 			</div>
 			<p>
 				Audio file: <input type="file" name="audio" accept="audio/*" required/>
-				<span th:if="${trackForm.audioError} != null" class="error" th:text="${trackForm.audioError}"><br></span> 
+				<span th:if="${trackForm.audioError} != null" class="error"><br></span> 
 			</p>
    			<br>
-			<input type="submit" name="Upload track">
-			<!-- TODO formbean does not clear -->
-			<input type="reset">
+			<input type="button" name="submit">
+			<input type="button" name="reset">
 		</fieldset>
 	</form>
+	
+	<div id="reorder_modal" class="modal">
+	
+		<div class="modal_content">
+		    <span class="close">&times;</span>
+		    <p>Reorder tracks of playlist: <span id="playlist_name"></span></p>
+		    <table id="modal_table" class="boxed">
+				<thead>
+					<tr>
+						<th>Track</th>
+						<th>Album</th>
+						<th>Artist</th>
+					</tr>
+				</thead>
+				<tbody id="modal_tablebody"/>
+			</table>
+			<input id="reorderbutton" type="button" value="reorder">
+		</div>
+	
+	</div>
 
 </body>
 </html>
