@@ -6,7 +6,7 @@ http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
   <display-name>TIW2021-Atanassov-Bruno</display-name>
   <context-param>
     <param-name>dbUrl</param-name>
-    <param-value>jdbc:mysql://localhost:3306/db_gestione_spese?serverTimezone=UTC</param-value>
+    <param-value>jdbc:mysql://localhost:3306/project_db?serverTimezone=UTC</param-value>
   </context-param>
   <context-param>
     <param-name>dbUser</param-name>

@@ -20,7 +20,7 @@ import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 
-@WebServlet("/Home")
+@WebServlet("/GetUserAlbums")
 public class GetUserAlbums extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;

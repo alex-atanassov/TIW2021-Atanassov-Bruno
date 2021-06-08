@@ -64,7 +64,7 @@ public class GetTrackDetails extends HttpServlet {
 				return;
 			}
 			// TODO maybe put the following part (till setAlbum) in trackDAO?
-			album = albumDAO.findAlbumById(track.getAlbum());
+			album = albumDAO.findAlbumById(track.getAlbumid());
 			if (album == null) {						
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				response.getWriter().println("Album not found");
@@ -82,6 +82,7 @@ public class GetTrackDetails extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(json);
 		
+		System.out.println(json);
 	}
 	
 	public void destroy() {

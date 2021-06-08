@@ -4,8 +4,8 @@ public class Track {
 	private int id;
 	private int userid;
 	private String title;
-	private int albumid;
 	private Album album;
+	private int albumid;
 	private String genre;
 	private String audio;
 	
@@ -23,14 +23,6 @@ public class Track {
 	
 	public void setTitle(String title) {
 		this.title = title;
-	}
-	
-	public int getAlbum() {
-		return albumid;
-	}
-	
-	public void setAlbum(int album) {
-		this.albumid = album;
 	}
 
 	public int getUser() {
@@ -65,14 +57,6 @@ public class Track {
 		this.userid = userid;
 	}
 
-	public int getAlbumid() {
-		return albumid;
-	}
-
-	public void setAlbumid(int albumid) {
-		this.albumid = albumid;
-	}
-
 	public String getAudio() {
 		return audio;
 	}
@@ -83,6 +67,18 @@ public class Track {
 
 	public void setAlbum(Album album) {
 		this.album = album;
+	}
+
+	public Album getAlbum() {
+		return album;
+	}
+
+	public int getAlbumid() {
+		return albumid;
+	}
+
+	public void setAlbumid(int albumid) {
+		this.albumid = albumid;
 	}
 	
 }

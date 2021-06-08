@@ -1,275 +1,369 @@
-	(function() {  
-	
-	 //page components
-	  var Playlist, PlaylistDetails, //maybe also wizard for previous and next
-	    pageOrchestrator = new PageOrchestrator();
+(function() {
 
-	  window.addEventListener("load", () => {
-	    if (sessionStorage.getItem("username") == null) {
-	      window.location.href = "index.html";
-	    } else {
-	      pageOrchestrator.start(); // initialize the components
-	      pageOrchestrator.refresh();
-	    }
-	  }, false);
+    //page components
+    var Playlist, PlaylistDetails, //maybe also wizard for previous and next
+        pageOrchestrator = new PageOrchestrator();
+
+    window.addEventListener("load", () => {
+        if (sessionStorage.getItem("user") == null) {
+            window.location.href = "index.html";
+        } else {
+            pageOrchestrator.start(); // initialize the components
+            pageOrchestrator.refresh();
+        }
+    }, false);
 
 
-	  // Constructors of view components
+    // Constructors of view components
 
-	  function PersonalMessage(_username, messagecontainer) {
-	    this.username = _username;
-	    this.show = function() {
-	      messagecontainer.textContent = this.username;
-	    }
-	  }
+    function PersonalMessage(_user, messagecontainer) {
+        var user = JSON.parse(_user);
+        this.show = function() {
+            messagecontainer.textContent = user.name + " " + user.surname;
+        }
+    }
 
-	  function Playlist(_alert, _listcontainer, _listcontainerbody) {
-	    this.alert = _alert;
-	    this.listcontainer = _listcontainer;
-	    this.listcontainerbody = _listcontainerbody;
+    function Playlists(_alert, _listcontainer, _listcontainerbody, _form) {
+        this.alert = _alert;
+        this.playlistscontainer = _listcontainer;
+        this.playlistsbody = _listcontainerbody;
+        this.createplaylistform = _form;
 
-	    this.reset = function() {
-	      this.listcontainer.style.visibility = "hidden";
-	    }
+        this.reset = function () {
+            this.playlistscontainer.style.visibility = "hidden";
+            this.createplaylistform.style.visibility = "hidden";
+        }
 
-	    this.show = function(next) {
-	    //self per avere riferimento a playlist tramite closure
-	      var self = this;
-	      makeCall("GET", "GetPlaylistData", null,
-	        function(req) {
-	          if (req.readyState == 4) {
-	            var message = req.responseText;
-	            if (req.status == 200) {
-	              var TracksToShow = JSON.parse(req.responseText);
-	              if (TracksToShow.length == 0) {
-	                self.alert.textContent = "No Tracks yet!";
-	                return;
-	              }
-	              self.update(TracksToShow); // self visible by closure
-	              if (next) next(); // show the default element of the list if present
+        this.show = function(next) {
+            //self per avere riferimento a playlist tramite closure
+            var self = this;
+            makeCall("GET", "GetPlaylistsData", null,
+                function(req) {
+                    if (req.readyState == 4) {
+                        var message = req.responseText;
+                        if (req.status == 200) {
+                            var playlistsToShow = JSON.parse(req.responseText);
+                            if (playlistsToShow.length == 0) {
+                                self.alert.textContent = "No playlists available to display.";
+                                return;
+                            }
+                            self.update(playlistsToShow); // self visible by closure
+                            if (next) next(); // show the default element of the list if present
+                        }
+                    } else {
+                        self.alert.textContent = message;
+                    }
+                }
+            );
+        };
+
+
+        this.update = function(arrayPlaylists) {
+            var row, namecell, datecell, linkcell, reordercell, linkanchor, reorderanchor;
+            this.playlistsbody.innerHTML = ""; // empty the table body
+            // build updated list
+            var self = this;
+            arrayPlaylists.forEach(function(playlist) { // self visible here, not this
+                row = document.createElement("tr");
+
+                namecell = document.createElement("td");
+                namecell.textContent = playlist.title;
+                row.appendChild(namecell);
+
+                datecell = document.createElement("td");
+                datecell.textContent = playlist.date;
+                row.appendChild(datecell);
+
+                linkcell = document.createElement("td");
+                linkanchor = document.createElement("a");
+                linkcell.appendChild(linkanchor);
+                linkText = document.createTextNode("Show");
+                linkanchor.appendChild(linkText);
+                //anchor.missionid = mission.id; // make list item clickable
+                linkanchor.setAttribute('playlistid', playlist.id); // set a custom HTML attribute
+                linkanchor.addEventListener("click", (e) => {
+                    // dependency via module parameter
+                    playlistTracks.show(e.target.getAttribute("playlistid"), playlist.title); // the list must know the details container
+                }, false);
+                linkanchor.href = "#";
+                row.appendChild(linkcell);
+
+                reordercell = document.createElement("td");
+                reorderanchor = document.createElement("a");
+                reordercell.appendChild(reorderanchor);
+                linkText = document.createTextNode("Reorder");
+                reorderanchor.appendChild(linkText);
+
+                //anchor.setAttribute('playlist', playlist.id); // set a custom HTML attribute
+                //anchor.addEventListener("click", (e) => {
+                //  playlistTracks.show(e.target.getAttribute("playlistid")); // the list must know the details container
+                //}, false);
+                reorderanchor.href = "#";
+                row.appendChild(reordercell);
+
+                self.playlistsbody.appendChild(row);
+            });
+            this.playlistscontainer.style.visibility = "visible";
+
+        }
+
+        this.autoclick = function (playlistId) {
+            var e = new Event("click");
+            var selector = "a[playlistid='" + playlistId + "']";
+            var anchorToClick =
+                (playlistId) ? document.querySelector(selector) : this.playlistsbody.querySelectorAll("a")[0];
+            if (anchorToClick) anchorToClick.dispatchEvent(e);
+        }
+
+    }
+
+    function PlaylistTracks(options) {
+        this.alert = options['alert'];
+        this.trackscontainer = options['trackscontainer'];
+        this.addform = options['form'];
+		this.playlistname = options['playlistname'];
+
+        this.registerEvents = function (orchestrator) {
+            this.addform.querySelector("input[type='button']").addEventListener('click', (e) => {
+                var form = e.target.closest("form");
+                if (form.checkValidity()) {
+                    var self = this,
+                        playlistToUpdate = form.querySelector("input[type = 'hidden']").value;
+                    makeCall("POST", 'AddTrackToPlaylist', form,
+                        function (req) {
+                            if (req.readyState == 4) {
+                                var message = req.responseText;
+                                if (req.status == 200) {
+                                    orchestrator.refresh(playlistToUpdate);
+                                } else {
+                                    self.alert.textContent = message;
+                                }
+                            }
+                        }
+                    );
+                } else {
+                    form.reportValidity();
+                }
+            });
+        }
+
+
+        //shows Playlist Tracks
+        this.show = function(playlistid, name) {
+            var self = this;
+            this.playlistname.textContent = name;
+            makeCall("GET", "GetPlaylistTracks?playlistid=" + playlistid, null,
+                function (req) {
+                    if (req.readyState == 4) {
+                        var message = req.responseText;
+                        if (req.status == 200) {
+                            var tracksToShow = JSON.parse(req.responseText);
+                            if (tracksToShow.length == 0) {
+                                self.alert.textContent = "This playlist is empty.";
+                                return;
+                            }
+                            self.update(tracksToShow); // self visible by closure
+                            if (playlistid) self.autoclick(); // TODO possibly refactor this line (if (next) next();)
+                        }
+                    } else {
+                        self.alert.textContent = message;
+                    }
+                }
+            );
+        };
+
+
+        this.reset = function () {
+            this.trackscontainer.style.visibility = "hidden";
+            this.addform.style.visibility = "hidden";
+        }
+
+        this.update = function (arrayTracks) {
+            var row, titlecell, imagecell, linkcell, linkanchor, previous, next;
+            this.trackscontainer.innerHTML = "";
+
+            var self = this;
+            for(var i = 0; i <= parseInt((arrayTracks.length - 1) / 5); i += 1) {
+                trackGroup = arrayTracks.slice(5 * i, 5 * i + 5);
+                groupdiv = document.createElement("div");
+                table = document.createElement("table");
+                table.className = "boxed";
+                row = document.createElement("tr");
+                trackGroup.forEach(function (track) { // self visible here, not this
+                    cell = document.createElement("td");
+                    cell.className = "boxed";
+
+                    titlecell = document.createElement("span");
+                    titlecell.textContent = track.title;
+                    cell.appendChild(titlecell);
+                    cell.appendChild(document.createElement("br"));
+
+                    imagecell = document.createElement("img");
+                    imagecell.style.height = '200px';
+                    imagecell.style.width = '160px';
+
+                    imagecell.src = "data:image/*;base64," + track.image;
+                    cell.appendChild(imagecell);
+                    cell.appendChild(document.createElement("br"));
+
+                    linkcell = document.createElement("a");
+                    linkText = document.createTextNode("Play");
+                    linkcell.appendChild(linkText);
+                    cell.appendChild(document.createElement("br"));
+
+                    linkcell.setAttribute('trackid', track.id); // set a custom HTML attribute
+                    linkcell.addEventListener("click", (e) => {
+                        trackDetails.show(e.target.getAttribute("trackid")); // the list must know the details container
+                    }, false);
+                    linkcell.href = "#";
+                    cell.appendChild(linkcell);
+
+                    row.appendChild(cell);
+                });
+                table.appendChild(row);
+                groupdiv.appendChild(table);
+                groupdiv.appendChild(document.createElement("br"));
+
+				if (i > 0) {
+	                previous = document.createElement("button");
+	                previous.innerHTML = "Previous";
+	                previous.addEventListener("click", (e) => {
+	                	e.target.closest("div").hidden = true;
+	                	e.target.closest("div").previousElementSibling.hidden = false;
+	                });
+	                groupdiv.appendChild(previous);
+	                
+	                groupdiv.hidden = true; // hide next elements at the beginning
+                }
+
+				if (i < parseInt((arrayTracks.length - 1) / 5)) {
+	                next = document.createElement("button");
+	                next.innerHTML = "Next";
+	                next.addEventListener("click", (e) => {
+	          			e.target.closest("div").hidden = true;
+	                	e.target.closest("div").nextElementSibling.hidden = false;
+	                });
+	                groupdiv.appendChild(next);
 	            }
-	          } else {
-	            self.alert.textContent = message;
-	          }
-	        }
-	      );
-	    };
+
+                self.trackscontainer.appendChild(groupdiv);
+            }
+            this.trackscontainer.style.visibility = "visible";
+
+        }
+        
+        this.autoclick = function (trackid) {
+            var e = new Event("click");
+            var selector = "#track_groups.a[trackid='" + trackid + "']";
+            var anchorToClick =
+                (trackid) ? document.querySelector(selector) : this.trackscontainer.querySelectorAll("a")[0];
+            if (anchorToClick) anchorToClick.dispatchEvent(e);
+        }
+
+        //here wizard code.js
+    }
+
+    function TrackDetails(options) {
+        this.alert = options['alert'];
+        this.title = options['title'];
+        this.genre = options['genre'];
+        this.albumname = options['albumname'];
+        this.albumartist = options['albumartist'];
+        this.albumyear = options['albumyear'];
+        this.albumimage = options['albumimage'];
+        this.player = options['player'];
+        this.track_player = options['container'];
+
+        this.show = function (trackid) {
+            var self = this;
+            makeCall("GET", "GetTrackDetails?trackid=" + trackid, null,
+                function (req) {
+                    if (req.readyState == 4) {
+                        var message = req.responseText;
+                        if (req.status == 200) {
+                            var track = JSON.parse(req.responseText);
+                            self.update(track); // self is the object on which the function is applied
+
+                            self.track_player.style.visibility = "visible";
+                        } else {
+                            self.alert.textContent = message;
+                        }
+                    }
+                }
+            );
+        };
+
+        this.reset = function () {
+            this.track_player.style.visibility = "hidden";
+        }
+
+        this.update = function (track) {
+            this.title.textContent = track.title;
+            this.genre.textContent = track.genre;
+            this.albumname.textContent = track.album.name;
+            this.albumartist.textContent = track.album.artist;
+            this.albumyear.textContent = track.album.year;
+            this.albumimage.src = "data:image/*;base64," + track.album.image;
+            this.player.src = "data:audio/*;base64," + track.audio;
+        }
+    }
+
+    //TODO TRACKFORM...
 
 
-	    this.update = function(arrayTracks) {
-	      var elem, i, row, destcell, datecell, linkcell, anchor;
-	      this.listcontainerbody.innerHTML = ""; // empty the table body
-	      // build updated list
-	      var self = this;
-	      arrayTracks.forEach(function(mission) { // self visible here, not this
-	        row = document.createElement("tr");
-	        destcell = document.createElement("td");
-	        destcell.textContent = Playlist.title;
-	        
-	        row.appendChild(destcell);
-	        datecell = document.createElement("td");
-	        datecell.textContent = Playlist.date;
-	        
-	        row.appendChild(datecell);
-	        linkcell = document.createElement("td");
-	        anchor = document.createElement("a");
-	        linkcell.appendChild(anchor);
-	        linkText = document.createTextNode("Show");
-	        anchor.appendChild(linkText);
-	        
-	        //anchor.Playlistid = Playlist.id; // make list item clickable
-	        anchor.setAttribute('PlaylistId', Playlist.id); // set a custom HTML attribute
-	        anchor.addEventListener("click", (e) => {
-	          // dependency via module parameter
-	          PlaylistDetails.show(e.target.getAttribute("Playlistid")); // the list must know the details container
-	        }, false);
-	        
-	        anchor.href = "#";
-	        row.appendChild(linkcell);
-	        self.listcontainerbody.appendChild(row);
-	      });
-	      this.listcontainer.style.visibility = "visible";
+    function PageOrchestrator() {
 
-	    }
+        var alertContainer = document.getElementById("id_alert"); //reference in HomeCS
 
-	    this.autoclick = function(TrackId) {
-	      var e = new Event("click");
-	      var selector = "a[Trackid='" + TrackId + "']";
-	      
-	      //prendo il primo della tabella
-	      var anchorToClick = (TrackId) ? document.querySelector(selector) : this.listcontainerbody.querySelectorAll("a")[0];
-	      if (anchorToClick) anchorToClick.dispatchEvent(e);
-	    }
+        this.start = function() {
+            personalMessage = new PersonalMessage(sessionStorage.getItem('user'),
+                document.getElementById("id_username"));
+            personalMessage.show();
 
-	  }
+            playlists = new Playlists(
+                alertContainer,
+                document.getElementById("playlistscontainer"),
+                document.getElementById("playlistsbody"),
+                document.getElementById("createplaylistform"));
 
-	  function PlaylistDetails(options) {
-	    this.alert = options['alert'];
-	    this.detailcontainer = options['detailcontainer'];
-	    this.expensecontainer = options['expensecontainer'];
-	    this.expenseform = options['expenseform'];
-	    this.closeform = options['closeform'];
-	    this.date = options['date'];
-	    this.track_title = options['track_title'];
-	    this.artist = options['artist'];
-	    this.genre = options['genre'];
-	    this.album = options['album'];
-	    this.image = options['image'];
-	    
-	    this.registerEvents = function(orchestrator) {
-	      this.expenseform.querySelector("input[type='button']").addEventListener('click', (e) => {
-	        var form = e.target.closest("form");
-	        if (form.checkValidity()) {
-	          var self = this,
-	            Playlist= form.querySelector("input[type = 'hidden']").value;
-	          makeCall("POST", 'CreatePlaylist', form,
-	            function(req) {
-	              if (req.readyState == 4) {
-	                var message = req.responseText;
-	                if (req.status == 200) {
-	                  orchestrator.refresh(Playlist);
-	                } else {
-	                  self.alert.textContent = message;
-	                }
-	              }
-	            }
-	          );
-	        } else {
-	          form.reportValidity();
-	        }
-	      });
+            playlistTracks = new PlaylistTracks({
+                alert: alertContainer,
+                playlistname: document.getElementById("playlist_name"),
+                trackscontainer: document.getElementById("track_groups"),
+                form: document.getElementById("addtrackform")
+                //wizard here
+            });
+            playlistTracks.registerEvents(this);
 
-	      this.closeform.querySelector("input[type='button']").addEventListener('click', (event) => {
-	        var self = this,
-	          form = event.target.closest("form"),
-	          PlaylistToClose = form.querySelector("input[type = 'hidden']").value;
-	        makeCall("POST", 'AdTrackToPlaylist', form,
-	          function(req) {
-	            if (req.readyState == 4) {
-	              var message = req.responseText;
-	              if (req.status == 200) {
-	                orchestrator.refresh(missionToClose);
-	              } else {
-	                self.alert.textContent = message;
-	              }
-	            }
-	          }
-	        );
-	      });
-	    }
+            trackDetails = new TrackDetails({
+                alert: alertContainer,
+                container: document.getElementById("track_player"),
+                title: document.getElementById("track_title"),
+                genre: document.getElementById("track_genre"),
+                albumname: document.getElementById("album_name"),
+                albumartist: document.getElementById("album_artist"),
+                albumyear: document.getElementById("album_year"),
+                albumimage: document.getElementById("album_image"),
+                player: document.getElementById("track_audioplayer")
+            });
 
+            //trackForm = new TrackForm(document.getElementById("uploadtrackform"), alertContainer);
+            //trackForm.registerEvents(this);
 
-		//shows Playlist Tracks
-	    this.show = function(Playlistid) {
-	      var self = this;
-	      makeCall("GET", "GetPlaylistTracksData?Playlistid=" + Playlistid, null,
-	        function(req) {
-	          if (req.readyState == 4) {
-	            var message = req.responseText;
-	            if (req.status == 200) {
-	              var Track = JSON.parse(req.responseText);
-	              self.update(Track); // self is the object on which the function
-	              // is applied
-	              self.detailcontainer.style.visibility = "visible";
-	              switch (mission.status) {
-	                case "OPEN":
-	                  self.expensecontainer.style.visibility = "hidden";
-	                  self.expenseform.style.visibility = "visible";
-	                  self.expenseform.missionid.value = mission.id;
-	                  self.closeform.style.visibility = "hidden";
-	                  break;
-	                case "REPORTED":
-	                  self.expensecontainer.style.visibility = "visible";
-	                  self.expenseform.style.visibility = "hidden";
-	                  self.closeform.missionid.value = mission.id;
-	                  self.closeform.style.visibility = "visible";
-	                  break;
-	                case "CLOSED":
-	                  self.expensecontainer.style.visibility = "visible";
-	                  self.expenseform.style.visibility = "hidden";
-	                  self.closeform.style.visibility = "hidden";
-	                  break;
-	              }
-	            } else {
-	              self.alert.textContent = message;
+            document.querySelector("a[href='Logout']").addEventListener('click', () => {
+                window.sessionStorage.removeItem('user');
+            })
+        };
 
-	            }
-	          }
-	        }
-	      );
-	    };
-
-
-	    this.reset = function() {
-	      this.detailcontainer.style.visibility = "hidden";
-	      this.expensecontainer.style.visibility = "hidden";
-	      this.expenseform.style.visibility = "hidden";
-	      this.closeform.style.visibility = "hidden";
-	    }
-
-	    this.update = function(t) {
-	      this.date.textContent = t.date;
-	      this.track_title.textContent = t.track_title;
-	      this.artist.textContent = t.artist;
-	      this.genre.textContent = t.genre;
-	      this.album.textContent = t.album;
-	      this.image.textContent = t.image;
-	    }
-	  }
-	  
-	  //here wizard code.js
-
-
-	
-	  
-
-	  function PageOrchestrator() {
-	  
-	    var alertContainer = document.getElementById("id_alert"); //reference in HomeCS
-	    
-	    this.start = function() {
-	      personalMessage = new PersonalMessage(sessionStorage.getItem('username'),
-	        document.getElementById("username"));
-	      personalMessage.show();
-
-	      Playlist = new Playlist(
-	        alertContainer, 	//if user login doesn't have playlist
-	        document.getElementById("id_listcontainer"),
-	        document.getElementById("id_listcontainerbody"));
-
-	      PlaylistDetails = new PlaylistDetails({
-	      
-	        alert: alertContainer,
-	        detailcontainer: document.getElementById("id_detailcontainer"),
-	        expensecontainer: document.getElementById("id_expensecontainer"),
-	        expenseform: document.getElementById("id_expenseform"),
-	        closeform: document.getElementById("id_closeform"),
-	        date: document.getElementById("id_date"),
-	        artist: document.getElementById("id_artist"),
-	        genre: document.getElementById("id_genre"),
-	        album: document.getElementById("id_album"),
-	        track_title: document.getElementById("id_track_title"),
-	        album_image: document.getElementById("id_album_image"),
-	        
-	      });
-	      PlaylistDetails.registerEvents(this);
-	      
-	      //wizard here
-	      
-	      document.querySelector("a[href='Logout']").addEventListener('click', () => {
-	        window.sessionStorage.removeItem('username');
-	      })
-	    };
-
-
-	    this.refresh = function(currentTrack) {
-	      alertContainer.textContent = "";
-	      Playlist.reset();
-	      PlaylistDetails.reset();
-	      Playlist.show(function() {
-	        Playlist.autoclick(currentTrack);
-	      });
-	      //wizard.reset()
-	    };
-	  }
-	})();
+        this.refresh = function (currentPlaylist) {
+            alertContainer.textContent = "";
+            playlists.reset();
+            playlistTracks.reset();
+            trackDetails.reset();
+            playlists.show(function () {
+                playlists.autoclick(currentPlaylist);
+            }); // closure preserves visibility of this
+            //trackForm.reset();
+        };
+    }
+})();

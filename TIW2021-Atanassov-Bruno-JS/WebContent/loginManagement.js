@@ -13,7 +13,7 @@
             var message = req.responseText;
             switch (req.status) {
               case 200:
-            	sessionStorage.setItem('username', message);
+            	sessionStorage.setItem('user', message);
                 window.location.href = "HomeCS.html";
                 break;
               case 400: // bad request

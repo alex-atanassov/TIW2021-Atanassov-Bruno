@@ -3,10 +3,11 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Home</title>
-<!-- link rel="stylesheet" type="text/css" media="all" href="CSS/mystyle.css" />
+<link rel="stylesheet" type="text/css" media="all" href="CSS/mystyle.css" />
 <script src="utils.js" charset="utf-8" defer></script>
+<!-- script src="playlistMgmt.js" charset="utf-8" defer></script-->
 <script src="PlaylistManagement.js" charset="utf-8" defer></script>
-<script src="sort.js" charset="utf-8" defer></script-->
+<!-- script src="sort.js" charset="utf-8" defer></script-->
 </head>
 <body>
 	<div align="right">
@@ -30,6 +31,16 @@
 					</thead>
 					<tbody id="playlistsbody"/>
 				</table>
+				<p>Create a new playlist here</p>
+				<form action="#" id="createplaylistform">
+					<fieldset>
+						<p>
+							Name: <input type="text" name="playlistTitle" required />
+							<span class="alertmessage" id="playlistCreationError"><br></span>
+						</p>
+						<input type="button" name="Create playlist">
+					</fieldset>
+				</form>
 			</td>
 			<td>
 				<p>Playlist: <span id="playlist_name"></span></p>
@@ -48,41 +59,30 @@
 								<span th:if="${errorMsg} != null" class="error" th:text="${errorMsg}"><br></span>
 								<!-- input type="hidden" name="playlistid" th:value="${playlistid}"-->
 							</p>
-							<input type="submit" name="Add track">
+							<input type="button" name="Add track">
 						</fieldset>
 					</form>
 				</div>
 			</td>
 			<td>
-				<h1>Track player</h1>
-				<div>
+				<p>Track player</p>
+				<div id="track_player">
 					<p id="track_title" />
 					<p id="track_genre" />
 					<br>
 					<p id="album_name" />
 					<p id="album_artist"/>
-					<p id="album_year" />
+					<p id="album_year"></p>
 					<img id="album_image" /><br>
 					
-					<audio
-			          controls
-			          id="track_audioplayer"></audio>
+					<audio id="track_audioplayer" controls></audio>
 					
 				</div>
 			</td>
 		</tr>
 	</table>
 
-	<p>Create a new playlist here</p>
-	<form action="#" id="createplaylistform">
-		<fieldset>
-			<p>
-				Name: <input type="text" name="playlistTitle" required />
-				<span th:if="${playlistErrorMsg} != null" class="error" th:text="${playlistErrorMsg}"><br></span>
-			</p>
-			<input type="submit" name="Create playlist">
-		</fieldset>
-	</form>
+	
 
 	<p>Upload your tracks here</p>
 	<form action="#" id="uploadtrackform" enctype="multipart/form-data">

@@ -31,7 +31,7 @@ public class TrackDAO {
 				track = new Track();
 				track.setId(result.getInt("id"));
 				track.setTitle(result.getString("title"));
-				track.setAlbum(result.getInt("albumid"));
+				track.setAlbumid(result.getInt("albumid"));
 				track.setGenre(result.getString("genre"));
 				track.setUser(result.getInt("userid"));
 				

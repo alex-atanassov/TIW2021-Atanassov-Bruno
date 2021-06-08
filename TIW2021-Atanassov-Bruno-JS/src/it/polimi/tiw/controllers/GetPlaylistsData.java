@@ -21,7 +21,7 @@ import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.PlaylistDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 
-@WebServlet("/Home")
+@WebServlet("/GetPlaylistsData")
 public class GetPlaylistsData extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
@@ -55,7 +55,7 @@ public class GetPlaylistsData extends HttpServlet {
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(json);
-		
+				
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

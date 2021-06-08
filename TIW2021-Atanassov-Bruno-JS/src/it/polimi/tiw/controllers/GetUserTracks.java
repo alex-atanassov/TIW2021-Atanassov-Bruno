@@ -20,7 +20,7 @@ import it.polimi.tiw.beans.User;
 import it.polimi.tiw.dao.TrackCoverDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
 
-@WebServlet("/GetPlaylistTracks")
+@WebServlet("/GetUserTracks")
 public class GetUserTracks extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
