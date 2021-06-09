@@ -54,7 +54,7 @@ public class AddTrackToPlaylist extends HttpServlet {
 			track = tDAO.findTrackById(trackid);
 			
 			// track does not exist, or the owner is another user
-			if (track == null || track.getId() != ((User) request.getSession().getAttribute("user")).getId()) {
+			if (track == null || track.getUserid() != ((User) request.getSession().getAttribute("user")).getId()) {
 				errorMsg = "Invalid track parameter";
 			} else {
 				tDAO.addTrackToPlaylist(trackid, playlistid);

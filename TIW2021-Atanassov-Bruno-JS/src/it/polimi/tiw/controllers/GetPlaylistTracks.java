@@ -42,7 +42,7 @@ public class GetPlaylistTracks extends HttpServlet {
 		List<TrackCover> playlistTracks = new ArrayList<TrackCover>();
 		Integer playlistid = null;
 		Playlist playlist = null;
-		
+				
 		try {
 			// All user tracks, selectable to be added to the playlist
 			playlistid = Integer.parseInt(request.getParameter("playlistid"));

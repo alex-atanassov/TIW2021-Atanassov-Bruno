@@ -82,7 +82,6 @@ public class GetTrackDetails extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(json);
 		
-		System.out.println(json);
 	}
 	
 	public void destroy() {

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,26 +22,17 @@ public class PlaylistDAO {
 	public int createPlaylist(String title, int user) throws SQLException{
 		String query = "INSERT into playlist (name, userid)   VALUES(?, ?)";
 
-		int code = 0;
-		PreparedStatement pstatement = null;
-		try {
-			pstatement = connection.prepareStatement(query);
+		try (PreparedStatement pstatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 			pstatement.setString(1, title);
 			pstatement.setInt(2, user);
-//			pstatement.setDate(3, new java.sql.Date(date.getTime()));
-			code = pstatement.executeUpdate();
-		} catch (SQLException e) {
-			throw new SQLException(e);
-		} finally {
-			try {
-				if (pstatement != null) {
-					pstatement.close();
-				}
-			} catch (Exception e) {
-				throw new SQLException("Cannot close statement");
-			}
+			pstatement.executeUpdate();
+			ResultSet generatedKeys = pstatement.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				return generatedKeys.getInt(1);
+			} else {
+				throw new SQLException("Error while creating playlist has occurred. No IDs Returned");
+			}		
 		}
-		return code;
 	}
 	
 	public Playlist findPlaylistById(int id) throws SQLException {

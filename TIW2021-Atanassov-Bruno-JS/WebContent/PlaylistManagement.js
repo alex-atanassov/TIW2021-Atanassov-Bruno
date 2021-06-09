@@ -31,7 +31,30 @@
 
         this.reset = function () {
             this.playlistscontainer.style.visibility = "hidden";
-            this.createplaylistform.style.visibility = "hidden";
+            //this.createplaylistform.style.visibility = "hidden";
+        }
+        
+        this.registerEvents = function (orchestrator) {
+            this.createplaylistform.querySelector("input[type='button']").addEventListener('click', (e) => {
+                var form = e.target.closest("form");
+                if (form.checkValidity()) {
+                    var self = this;
+                    makeCall("POST", "CreatePlaylist", form,
+                        function (req) {
+                            if (req.readyState == 4) {
+                                var message = req.responseText;
+                                if (req.status == 200) {                                
+                                    orchestrator.refresh(message); // error or new id
+                                } else {
+                                    self.alert.textContent = message;
+                                }
+                            }
+                        }
+                    );
+                } else {
+                    form.reportValidity();
+                }
+            });
         }
 
         this.show = function(next) {
@@ -128,8 +151,8 @@
                 var form = e.target.closest("form");
                 if (form.checkValidity()) {
                     var self = this,
-                        playlistToUpdate = form.querySelector("input[type = 'hidden']").value;
-                    makeCall("POST", 'AddTrackToPlaylist', form,
+                     playlistToUpdate = self.playlistid;
+                    makeCall("POST", "AddTrackToPlaylist", form,
                         function (req) {
                             if (req.readyState == 4) {
                                 var message = req.responseText;
@@ -150,6 +173,7 @@
 
         //shows Playlist Tracks
         this.show = function(playlistid, name) {
+        	this.playlistid = playlistid; // TODO this line is to avoid session storage, but might have to be removed if JWT will be used
             var self = this;
             this.playlistname.textContent = name;
             makeCall("GET", "GetPlaylistTracks?playlistid=" + playlistid, null,
@@ -175,7 +199,32 @@
 
         this.reset = function () {
             this.trackscontainer.style.visibility = "hidden";
-            this.addform.style.visibility = "hidden";
+            this.trackscontainer.innerHTML = "";
+                        
+            //reset add track form
+            trackselect = this.addform.getElementsByTagName("select")[0];
+            
+            //TODO maybe filter tracks not in the playlist, but this would require to move code out of reset()
+            makeCall("GET", "GetUserTracks", null,
+                function (req) {
+                    if (req.readyState == 4) {
+                        var message = req.responseText;
+                        if (req.status == 200) {
+                            var tracksToShow = JSON.parse(req.responseText);
+                            tracksToShow.forEach(function(track) {
+                            	var row = document.createElement("option");
+                            	row.value = track.id;
+                            	row.textContent = track.title /*+ " (by " + track.album.artist + ")"*/;
+                            	
+                            	trackselect.appendChild(row);
+                            });
+                        }
+                    } else {
+                        self.alert.textContent = message;
+                    }
+                }
+            );
+            
         }
 
         this.update = function (arrayTracks) {
@@ -324,7 +373,9 @@
                 alertContainer,
                 document.getElementById("playlistscontainer"),
                 document.getElementById("playlistsbody"),
-                document.getElementById("createplaylistform"));
+                document.getElementById("createplaylistform")
+            );
+            playlists.registerEvents(this);
 
             playlistTracks = new PlaylistTracks({
                 alert: alertContainer,

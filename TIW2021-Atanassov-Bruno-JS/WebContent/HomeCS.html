@@ -38,7 +38,7 @@
 							Name: <input type="text" name="playlistTitle" required />
 							<span class="alertmessage" id="playlistCreationError"><br></span>
 						</p>
-						<input type="button" name="Create playlist">
+						<input type="button" value="Create playlist">
 					</fieldset>
 				</form>
 			</td>
@@ -54,12 +54,11 @@
 							<p>
 								Track to add:
 								<select name="trackid">
-									<option th:each="t : ${userTracks}" th:value="${t.id}" th:text="${t.title}"></option>
 								</select>
-								<span th:if="${errorMsg} != null" class="error" th:text="${errorMsg}"><br></span>
+								<span id="addtrackerror"><br></span>
 								<!-- input type="hidden" name="playlistid" th:value="${playlistid}"-->
 							</p>
-							<input type="button" name="Add track">
+							<input type="button" value="Add track">
 						</fieldset>
 					</form>
 				</div>

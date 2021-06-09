@@ -35,7 +35,8 @@ public class CreatePlaylist extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 				
-		String title = request.getParameter("playlistTitle");	
+		String title = request.getParameter("playlistTitle");
+		int newPlaylistId;
 		try {
 			if(title==null || title.isEmpty()) {
 				response.setStatus(400);
@@ -45,12 +46,18 @@ public class CreatePlaylist extends HttpServlet {
 				PlaylistDAO pDAO = new PlaylistDAO(connection);
 	
 				int userid = ((User) session.getAttribute("user")).getId();
-				pDAO.createPlaylist(title,userid);
+				newPlaylistId = pDAO.createPlaylist(title,userid);
 			} 
-		}catch (Exception e) {
-			//TODO SQLException: Issue with DB
-			e.printStackTrace();
+		} catch (SQLException e) {
+			response.setStatus(500);
+			response.getWriter().println("Issue with DB, creation failed");
+			return;
 		}
+		
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().print(newPlaylistId);
 				
 	}
 	
