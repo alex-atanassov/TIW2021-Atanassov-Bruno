@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.TrackCover;
 import it.polimi.tiw.beans.User;
 
@@ -20,10 +21,10 @@ public class TrackCoverDAO {
 	
 	public List<TrackCover> findTracksByPlaylist(int playlistId) throws SQLException {
 		List<TrackCover> tracks = new ArrayList<TrackCover>();
-		String query = "SELECT track.id, title, track.userid, image "
-				+ "FROM track JOIN album ON track.albumid = album.id "
-				+ "WHERE track.id in ( SELECT trackid FROM playlist_containment WHERE playlistid = ? )"
-				+ "order by album.year desc";	//TODO check this row
+		String query = "SELECT * "
+				+ "FROM (track JOIN album ON track.albumid = album.id) JOIN playlist_containment ON track.id = playlist_containment.trackid "
+				+ "WHERE playlist_containment.playlistid = ? "
+				+ "ORDER BY progressive ASC, album.year DESC";	//TODO check this row
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
 		try {
@@ -36,9 +37,12 @@ public class TrackCoverDAO {
 				track.setId(result.getInt("track.id"));
 				track.setUserid(result.getInt("track.userid"));
 				
-				byte[] imgData = result.getBytes("image");
+				byte[] imgData = result.getBytes("album.image");
 				String encodedImg = Base64.getEncoder().encodeToString(imgData);
-				track.setImage(encodedImg);
+				
+				track.setAlbum(new Album(result.getString("album.name"),
+						result.getString("album.artist"),
+						encodedImg));
 				
 				tracks.add(track);
 			}

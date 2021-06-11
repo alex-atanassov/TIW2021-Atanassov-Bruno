@@ -7,6 +7,15 @@ public class Album {
 	private int year;
 	private String image;
 	
+	public Album() {}
+	
+	// Useful for the table shown in the modal window for reorder
+	public Album(String name, String artist, String image) {
+		this.name = name;
+		this.artist = artist;
+		this.image = image;
+	}
+	
 	public int getId() {
 		return id;
 	}

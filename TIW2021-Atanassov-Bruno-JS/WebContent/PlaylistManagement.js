@@ -23,11 +23,12 @@
         }
     }
 
-    function Playlists(_alert, _listcontainer, _listcontainerbody, _form) {
+    function Playlists(_alert, _listcontainer, _listcontainerbody, _form, _modal) {
         this.alert = _alert;
         this.playlistscontainer = _listcontainer;
         this.playlistsbody = _listcontainerbody;
         this.createplaylistform = _form;
+        this.modal = _modal;
 
         this.reset = function () {
             this.playlistscontainer.style.visibility = "hidden";
@@ -117,10 +118,13 @@
                 linkText = document.createTextNode("Reorder");
                 reorderanchor.appendChild(linkText);
 
-                //anchor.setAttribute('playlist', playlist.id); // set a custom HTML attribute
-                //anchor.addEventListener("click", (e) => {
-                //  playlistTracks.show(e.target.getAttribute("playlistid")); // the list must know the details container
-                //}, false);
+                reorderanchor.setAttribute('playlist', playlist.id); // set a custom HTML attribute
+                reorderanchor.addEventListener("click", (e) => {
+                
+                  self.modal.modal.style.display = "block"; //TODO rename modal.modal
+                  self.modal.getSortableTracks(playlist);
+                  
+                }, false);
                 reorderanchor.href = "#";
                 row.appendChild(reordercell);
 
@@ -251,7 +255,7 @@
                     imagecell.style.height = '200px';
                     imagecell.style.width = '160px';
 
-                    imagecell.src = "data:image/*;base64," + track.image;
+                    imagecell.src = "data:image/*;base64," + track.album.image;
                     cell.appendChild(imagecell);
                     cell.appendChild(document.createElement("br"));
 
@@ -356,6 +360,131 @@
             this.player.src = "data:audio/*;base64," + track.audio;
         }
     }
+    
+    function Modal(_alert, _modal, _playlistname, orchestrator) {
+    	this.modal = _modal;
+    	this.alert = _alert;
+    	this.table = this.modal.getElementsByTagName("tbody")[0];
+    	this.playlistname = _playlistname;
+    	this.submitbutton = this.modal.getElementsByTagName("input")[1];
+    	
+    	this.submitbutton.addEventListener('click', (e) => this.submit(orchestrator));
+    	    	
+    	var self = this,
+    	 span = document.getElementsByClassName("close")[0];
+    	
+    	// When the user clicks on the cross, close it
+    	span.addEventListener('click', () => {
+    		self.reset();
+    	});
+
+		// When the user clicks anywhere outside of the modal, close it
+		window.addEventListener('click', (e) => {
+		    if (e.target == self.modal) {
+		        self.reset();
+		    }
+		});
+		
+		this.reset = function() {
+			self.modal.style.display = "none";
+    		self.submitbutton.disabled = true;
+		}
+		
+		this.getSortableTracks = function (playlist) {
+			makeCall("GET", "GetPlaylistTracks?playlistid=" + playlist.id, null,
+                function (req) {
+                    if (req.readyState == 4) {
+                        var message = req.responseText;
+                        if (req.status == 200) {
+                            var tracksToShow = JSON.parse(req.responseText);
+                            if (tracksToShow.length == 0) {
+                                self.alert.textContent = "This playlist is empty.";
+                                return;
+                            }
+                            self.playlistname.textContent = playlist.title;
+                            self.update(tracksToShow); // self visible by closure
+                        }
+                    } else {
+                        self.alert.textContent = message;
+                    }
+                }
+            );
+		}
+		
+		this.update = function (arrayTracks) {
+			var titlecell, albumnamecell, albumartistcell, hiddencell;
+            self.table.innerHTML = "";
+
+            arrayTracks.forEach(function (track) { // self visible here, not this
+                row = document.createElement("tr");
+                
+                //source of drag & drop
+                var source;
+                
+                //enable drag and drop
+                row.setAttribute('draggable', true);
+                row.addEventListener('dragstart', (e) => { dragStart(e); source = e.target.closest("tr"); });
+                row.addEventListener('dragleave', dragLeave);
+                row.addEventListener('dragover', dragOver);
+                row.addEventListener('drop', (e) => {
+                	drop(e);
+                	if(e.target.closest("tr") != source)
+                		// enable Reorder button after the first order changing drop has been done
+                		self.submitbutton.disabled = false;
+                });
+
+                titlecell = document.createElement("td");
+                titlecell.textContent = track.title;
+                row.appendChild(titlecell);
+
+                albumnamecell = document.createElement("td");
+                albumnamecell.textContent = track.album.name;
+                row.appendChild(albumnamecell);
+
+                albumartistcell = document.createElement("td");
+                albumartistcell.textContent = track.album.artist;
+                row.appendChild(albumartistcell);
+                
+                hiddencell = document.createElement("td");
+				hiddencell.textContent = track.id;
+				hiddencell.style="display:none;";
+                row.appendChild(hiddencell);
+                
+				self.table.appendChild(row);
+            });
+        }
+        
+	
+	   this.submit = function(orchestrator) {
+        
+        // Create array with IDs of sorted tracks
+        var column = [];
+
+        for(var i = 0; i < self.table.rows.length; i++)
+        	column.push(self.table.rows[i].children[3].textContent);
+        	
+        self.modal.getElementsByTagName("input")[0].value = JSON.stringify(column);
+
+        	makeCall("POST", "ReorderPlaylistTracks", self.modal.getElementsByTagName("form")[0],
+                function (req) {
+                //TODO following code has been repeated a lot. Maybe use one function for all?
+                    if (req.readyState == 4) {
+                        var message = req.responseText;
+                        if (req.status == 200) {
+                            var message = req.responseText;
+                            if (req.status == 200) {                                
+                                orchestrator.refresh(message); // error or id of ordered playlist
+                            } else {
+                                self.alert.textContent = message;
+                            }
+                        }
+                    } else {
+                        self.alert.textContent = message;
+                    }
+                }
+            );
+        }		
+    }
 
     //TODO TRACKFORM...
 
@@ -369,14 +498,21 @@
                 document.getElementById("id_username"));
             personalMessage.show();
 
+            reorderModal = new Modal(
+            	alertContainer,
+             	document.getElementById("reorder_modal"),
+             	document.getElementById("modal_playlist_name"),
+             	this);
+
             playlists = new Playlists(
                 alertContainer,
                 document.getElementById("playlistscontainer"),
                 document.getElementById("playlistsbody"),
-                document.getElementById("createplaylistform")
+                document.getElementById("createplaylistform"),
+                reorderModal
             );
             playlists.registerEvents(this);
-
+            
             playlistTracks = new PlaylistTracks({
                 alert: alertContainer,
                 playlistname: document.getElementById("playlist_name"),
@@ -408,6 +544,7 @@
 
         this.refresh = function (currentPlaylist) {
             alertContainer.textContent = "";
+            reorderModal.reset();
             playlists.reset();
             playlistTracks.reset();
             trackDetails.reset();

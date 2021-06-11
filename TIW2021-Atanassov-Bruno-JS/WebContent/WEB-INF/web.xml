@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
 http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 	version="4.0">
-  <display-name>TIW2021-Atanassov-Bruno</display-name>
+  <display-name>TIW2021-Atanassov-Bruno-JS</display-name>
   <context-param>
     <param-name>dbUrl</param-name>
-    <param-value>jdbc:mysql://localhost:3306/project_db?serverTimezone=UTC</param-value>
+    <param-value>jdbc:mysql://localhost:3306/project_db_cs?serverTimezone=UTC</param-value>
   </context-param>
   <context-param>
     <param-name>dbUser</param-name>
@@ -26,13 +26,16 @@ http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
  </filter>
  <filter-mapping> 
     <filter-name>Checker</filter-name> 
-    <url-pattern>/Home</url-pattern> 
     <url-pattern>/AddTrackToPlaylist</url-pattern> 
     <url-pattern>/Logout</url-pattern> 
     <url-pattern>/CreatePlaylist</url-pattern> 
-    <url-pattern>/GetPlaylistTracks</url-pattern> 
+    <url-pattern>/GetPlaylistTracks</url-pattern>
+    <url-pattern>/GetPlaylistData</url-pattern> 
     <url-pattern>/GetTrackDetails</url-pattern> 
-    <url-pattern>/UploadTrack</url-pattern> 
+    <url-pattern>/UploadTrack</url-pattern>
+    <url-pattern>/GetUserAlbums</url-pattern>
+    <url-pattern>/GetUserTracks</url-pattern>
+    <url-pattern>/ReorderPlaylistTracks</url-pattern> 
  </filter-mapping> 
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>

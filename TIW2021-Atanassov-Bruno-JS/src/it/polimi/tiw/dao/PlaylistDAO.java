@@ -112,4 +112,43 @@ public class PlaylistDAO {
 		}
 		return playlists;
 	}
+	
+	public int reorderPlaylistTracks(int[] orderedTrackIds, int playlistid) throws SQLException {
+		//TODO implement
+		int code;
+		String query = "UPDATE playlist_containment "
+				+ "SET progressive = "
+				+ "(CASE trackid ";
+		
+		for(int i = 1; i <= orderedTrackIds.length; i++)
+			query += "WHEN ? THEN ? ";
+		query += "ELSE trackid "
+				+ "END) "
+				+ "WHERE playlistid = ?";
+				
+		PreparedStatement pstatement = null;
+		try {
+			pstatement = connection.prepareStatement(query);
+			for(int i = 1; i <= orderedTrackIds.length; i++) {
+				pstatement.setInt(2 * i - 1, orderedTrackIds[i - 1]);
+				pstatement.setInt(2 * i, i);
+			}
+			
+			pstatement.setInt(2 * orderedTrackIds.length + 1, playlistid);
+		
+			code = pstatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException(e);
+		} finally {
+			try {
+				if (pstatement != null) {
+					pstatement.close();
+				}
+			} catch (Exception e) {
+				throw new SQLException("Cannot close statement");
+			}
+		}
+		return code;
+	}
 }

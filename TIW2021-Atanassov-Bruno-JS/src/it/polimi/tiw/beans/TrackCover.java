@@ -4,7 +4,7 @@ public class TrackCover {
 	private int userid;
 	private int id;
 	private String title;
-	private String image;
+	private Album album;
 	
 	public int getId() {
 		return id;
@@ -24,11 +24,10 @@ public class TrackCover {
 	public void setUserid(int userid) {
 		this.userid = userid;
 	}
-	public String getImage() {
-		return image;
+	public Album getAlbum() {
+		return album;
 	}
-	public void setImage(String image) {
-		this.image = image;
+	public void setAlbum(Album album) {
+		this.album = album;
 	}
-	
 }
