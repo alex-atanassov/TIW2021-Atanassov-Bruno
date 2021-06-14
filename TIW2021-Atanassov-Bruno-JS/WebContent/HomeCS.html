@@ -121,19 +121,19 @@
 		</fieldset>
 		<fieldset>
 			<p>
-				Name: <input type="text" name="albumName"/>
+				Name: <input type="text" name="albumName" required/>
 				<span id="albumNameError"><br></span> 
 			</p>
 			<p>
-				Artist: <input type="text" name="albumArtist"/>
+				Artist: <input type="text" name="albumArtist" required/>
 				<span id="albumArtistError"><br></span> 
 			</p>
 			<p>
-			  	Year: <input type="number" name="albumYear" min="1800" max="#dates.year(#dates.createNow())"/>
+			  	Year: <input type="number" name="albumYear" min="1800" required/>
 			  	<span id="albumYearError"><br></span> 
 			</p>
 			<p>
-			  	Image: <input type="file" name="albumImage" accept="image/*"/>
+			  	Image: <input type="file" name="albumImage" accept="image/*" required/>
 			  	<span id="albumImageError"><br></span> 
 			</p>
 			<input type="button" value="prev" name="prev" class="prev">

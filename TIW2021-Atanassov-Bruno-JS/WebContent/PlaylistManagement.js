@@ -486,7 +486,151 @@
         }		
     }
 
-    //TODO TRACKFORM...
+    function TrackForm(wizardId, alert) {
+	    this.wizard = wizardId;
+	    this.alert = alert;
+
+		var self = this;
+		
+		this.show = function() {
+			makeCall("GET", "GetUserAlbums", null,
+                function (req) {
+                    if (req.readyState == 4) {
+                        var message = req.responseText;
+                        if (req.status == 200) {
+                            var albumsToShow = JSON.parse(req.responseText);
+                            if (albumsToShow.length == 0) {
+                                self.alert.textContent = "You have no albums uploaded";
+                                return;
+                            }
+                            // append available user albums to select in fieldset number 2
+							albumselect = self.wizard.getElementsByTagName("select")[1];
+            				console.log(albumselect);
+                            albumsToShow.forEach(function(album) {
+                            	var row = document.createElement("option");
+                            	row.value = album.id;
+                            	row.textContent = album.name + " (by " + album.artist + ")";
+                            	
+                            	albumselect.appendChild(row);
+                            });
+                            
+	                    } else {
+	                        self.alert.textContent = message;
+	                    }
+	                }
+	            }
+	        );
+		}
+				
+	    this.registerEvents = function(orchestrator) {
+	      // Manage previous and next buttons
+	      var nextButtons = Array.prototype.slice.call(this.wizard.querySelectorAll("input[type='button'].next"));
+	      var prevButtons = Array.prototype.slice.call(this.wizard.querySelectorAll("input[type='button'].prev"));
+	      
+	      // prev/next buttons in the two middle fieldsets
+	      Array.from(nextButtons.slice(1, 3).concat(prevButtons.slice(0,2))).forEach(b => {
+	        b.addEventListener("click", (e) => { 
+	          var eventfieldset = e.target.closest("fieldset"),
+	            valid = true;
+	          if (e.target.className == "next") {
+	            for (i = 0; i < eventfieldset.elements.length; i++) {
+	              if (!eventfieldset.elements[i].checkValidity()) {
+	                eventfieldset.elements[i].reportValidity();
+	                valid = false;
+	                break;
+	              }
+	            }
+	          }
+	          if (valid) {
+	            this.changeStep(e.target.parentNode, (e.target.className === "next") ? e.target.closest("form").children[3] : e.target.closest("form").children[0]);
+	          }
+	        }, false);
+	      });
+	      
+	      // for the two remaining buttons, that require to check an extra condition, based on user input
+		  Array.from(nextButtons.slice(0, 1).concat(prevButtons.slice(2,3))).forEach(b => {
+	        b.addEventListener("click", (e) => { 
+	          var eventfieldset = e.target.closest("fieldset"),
+	            valid = true;
+	          if (e.target.className == "next") {
+	            for (i = 0; i < eventfieldset.elements.length; i++) {
+	              if (!eventfieldset.elements[i].checkValidity()) {
+	                eventfieldset.elements[i].reportValidity();
+	                valid = false;
+	                break;
+	              }
+	            }
+		        var radioButtons = eventfieldset.querySelectorAll('input[name="album"]');
+	            for (var radio of radioButtons) {
+	                if (radio.checked) {
+	                    self.selectedAlbumOption = radio.value;
+	                    break;
+	                }
+	            }
+	          }
+	          
+	          if (valid) {
+				if ((self.selectedAlbumOption) && self.selectedAlbumOption == 1)
+	            	this.changeStep(e.target.parentNode, e.target.closest("form").children[1]);
+	            else this.changeStep(e.target.parentNode, e.target.closest("form").children[2]);
+	          }
+	        }, false);
+	      });
+	      
+	      // Manage submit button
+	      this.wizard.querySelector("input[type='button'].submit").addEventListener('click', (e) => {
+	        var eventfieldset = e.target.closest("fieldset"),
+	          valid = true;
+	        for (i = 0; i < eventfieldset.elements.length; i++) {
+	          if (!eventfieldset.elements[i].checkValidity()) {
+	            eventfieldset.elements[i].reportValidity();
+	            valid = false;
+	            break;
+	          }
+	        }
+
+	        if (valid) {
+	          var self = this;
+	          makeCall("POST", 'UploadTrack', e.target.closest("form"),
+	            function(req) {
+	              if (req.readyState == XMLHttpRequest.DONE) {
+	                var message = req.responseText; // error message, if present
+	                if (req.status == 200) {
+	                  orchestrator.refresh(); // TODO manage
+	                } else {
+	                  self.alert.textContent = message;
+	                  self.reset();
+	                }
+	              }
+	            }
+	          );
+	        }
+	      });
+	      // Manage cancel button
+	      this.wizard.querySelector("input[type='button'].cancel").addEventListener('click', (e) => {
+	        e.target.closest('form').reset();
+	        this.reset();
+	      });
+	    };
+
+	    this.reset = function() {
+	      var fieldsets = document.querySelectorAll("#" + this.wizard.id + " fieldset");
+	      fieldsets[0].hidden = false;
+	      fieldsets[1].hidden = true;
+	      fieldsets[2].hidden = true;
+		  fieldsets[3].hidden = true;
+		  
+		  // set max year to new album
+		  fieldsets[2].querySelectorAll("input[name='albumYear']")[0].max = new Date().getFullYear();
+	    }
+
+	    this.changeStep = function(origin, destination) {
+	      origin.hidden = true;
+	      //if(origin == origin.closest("form").children[2])
+	      	//origin.querySelectorAll("input").forEach((input) => input.required = false);
+	      destination.hidden = false;
+	    }
+	  }
 
 
     function PageOrchestrator() {
@@ -518,7 +662,6 @@
                 playlistname: document.getElementById("playlist_name"),
                 trackscontainer: document.getElementById("track_groups"),
                 form: document.getElementById("addtrackform")
-                //wizard here
             });
             playlistTracks.registerEvents(this);
 
@@ -534,8 +677,8 @@
                 player: document.getElementById("track_audioplayer")
             });
 
-            //trackForm = new TrackForm(document.getElementById("uploadtrackform"), alertContainer);
-            //trackForm.registerEvents(this);
+            trackForm = new TrackForm(document.getElementById("uploadtrackform"), alertContainer);
+            trackForm.registerEvents(this);
 
             document.querySelector("a[href='Logout']").addEventListener('click', () => {
                 window.sessionStorage.removeItem('user');
@@ -551,7 +694,8 @@
             playlists.show(function () {
                 playlists.autoclick(currentPlaylist);
             }); // closure preserves visibility of this
-            //trackForm.reset();
+            trackForm.reset();
+            trackForm.show();
         };
     }
 })();
