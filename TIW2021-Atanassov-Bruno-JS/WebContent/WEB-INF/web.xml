@@ -21,11 +21,12 @@ http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
     <param-value>com.mysql.cj.jdbc.Driver</param-value>
   </context-param>
   <filter> 
-      <filter-name>Checker</filter-name>
-      <filter-class>it.polimi.tiw.filters.Checker</filter-class> 
+      <filter-name>LoginChecker</filter-name>
+      <filter-class>it.polimi.tiw.filters.LoginChecker</filter-class> 
  </filter>
  <filter-mapping> 
-    <filter-name>Checker</filter-name> 
+    <filter-name>LoginChecker</filter-name>
+    <url-pattern>/HomeCS.html</url-pattern>
     <url-pattern>/AddTrackToPlaylist</url-pattern> 
     <url-pattern>/Logout</url-pattern> 
     <url-pattern>/CreatePlaylist</url-pattern> 

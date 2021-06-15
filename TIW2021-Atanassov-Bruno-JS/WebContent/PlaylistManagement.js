@@ -1,8 +1,7 @@
 (function() {
 
     //page components
-    var Playlist, PlaylistDetails, //maybe also wizard for previous and next
-        pageOrchestrator = new PageOrchestrator();
+    var pageOrchestrator = new PageOrchestrator();
 
     window.addEventListener("load", () => {
         if (sessionStorage.getItem("user") == null) {
