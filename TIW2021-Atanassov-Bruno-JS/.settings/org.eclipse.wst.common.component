@@ -2,7 +2,7 @@
     <wb-module deploy-name="TIW2021-Atanassov-Bruno(JS)">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="context-root" value="TIW2021-Atanassov-Bruno_JS"/>
+        <property name="context-root" value="TIW2021-Atanassov-Bruno-JS"/>
         <property name="java-output-path" value="/TIW2021-Atanassov-Bruno(JS)/build/classes"/>
     </wb-module>
 </project-modules>
