@@ -114,7 +114,6 @@ public class PlaylistDAO {
 	}
 	
 	public int reorderPlaylistTracks(int[] orderedTrackIds, int playlistid) throws SQLException {
-		//TODO implement
 		int code;
 		String query = "UPDATE playlist_containment "
 				+ "SET progressive = "

@@ -32,14 +32,15 @@ public class ReorderPlaylistTracks extends HttpServlet {
 		int playlistid = (Integer) request.getSession().getAttribute("playlistid");	//TODO exception
 		
 		int[] orderedTracksIds = new Gson().fromJson(request.getParameter("orderedTracks"), int[].class);
-		
+		//System.out.println(request.getParameter("orderedTracks"));
 		//TODO checks, errors, exceptions, etc.
 		
 		try {
 			new PlaylistDAO(connection).reorderPlaylistTracks(orderedTracksIds, playlistid);
 		} catch (SQLException e) {
-			response.setStatus(500);
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Issue with DB, reorder failed");
+			return;
 		}
 		
 		response.setStatus(HttpServletResponse.SC_OK);

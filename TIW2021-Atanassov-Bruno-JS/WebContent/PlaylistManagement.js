@@ -23,16 +23,20 @@
         }
     }
 
-    function Playlists(_alert, _listcontainer, _listcontainerbody, _form, _modal) {
+    function Playlists(_alert, _formalert, _zeroplaylistsMsg, _playlistscontainer, _playlistsbody, _form, _modal) {
         this.alert = _alert;
-        this.playlistscontainer = _listcontainer;
-        this.playlistsbody = _listcontainerbody;
+        this.formalert = _formalert;
+        this.zeroplaylistsMsg = _zeroplaylistsMsg;
+        this.playlistscontainer = _playlistscontainer;
+        this.playlistsbody = _playlistsbody;
         this.createplaylistform = _form;
         this.modal = _modal;
 
         this.reset = function () {
             this.playlistscontainer.style.visibility = "hidden";
-            //this.createplaylistform.style.visibility = "hidden";
+			this.alert.textContent = "";
+			this.formalert.textContent = "";
+			this.zeroplaylistsMsg.textContent = "You have no playlists yet, create one below!";
         }
         
         this.registerEvents = function (orchestrator) {
@@ -43,13 +47,15 @@
                     makeCall("POST", "CreatePlaylist", form,
                         function (req) {
                             if (req.readyState == 4) {
-                                var message = req.responseText;
+                                var message = req.responseText; // error or new id
                                 if (req.status == 200) {                                
-                                    orchestrator.refresh(message); // error or new id
+                                    orchestrator.refresh(message);
                                 } else {
-                                    self.alert.textContent = message;
+                                    self.formalert.textContent = message;
                                 }
-                            }
+                            } else {
+		                        self.formalert.textContent = message;
+		                    }
                         }
                     );
                 } else {
@@ -59,7 +65,7 @@
         }
 
         this.show = function(next) {
-            //self per avere riferimento a playlist tramite closure
+            // self visible by closure
             var self = this;
             makeCall("GET", "GetPlaylistsData", null,
                 function(req) {
@@ -67,12 +73,10 @@
                         var message = req.responseText;
                         if (req.status == 200) {
                             var playlistsToShow = JSON.parse(req.responseText);
-                            if (playlistsToShow.length == 0) {
-                                self.alert.textContent = "No playlists available to display.";
-                                return;
+                            if (playlistsToShow.length > 0) {
+	                            self.update(playlistsToShow); 
+	                            if (next) next(); // show the default element of the list if present
                             }
-                            self.update(playlistsToShow); // self visible by closure
-                            if (next) next(); // show the default element of the list if present
                         }
                     } else {
                         self.alert.textContent = message;
@@ -87,6 +91,7 @@
             this.playlistsbody.innerHTML = ""; // empty the table body
             // build updated list
             var self = this;
+            self.zeroplaylistsMsg.textContent = "";
             arrayPlaylists.forEach(function(playlist) { // self visible here, not this
                 row = document.createElement("tr");
 
@@ -103,7 +108,7 @@
                 linkcell.appendChild(linkanchor);
                 linkText = document.createTextNode("Show");
                 linkanchor.appendChild(linkText);
-                //anchor.missionid = mission.id; // make list item clickable
+
                 linkanchor.setAttribute('playlistid', playlist.id); // set a custom HTML attribute
                 linkanchor.addEventListener("click", (e) => {
                     // dependency via module parameter
@@ -146,6 +151,7 @@
 
     function PlaylistTracks(options) {
         this.alert = options['alert'];
+        this.formalert = options['formalert'];
         this.trackscontainer = options['trackscontainer'];
         this.addform = options['form'];
 		this.playlistname = options['playlistname'];
@@ -163,7 +169,7 @@
                                 if (req.status == 200) {
                                     orchestrator.refresh(playlistToUpdate);
                                 } else {
-                                    self.alert.textContent = message;
+                                    self.formalert.textContent = message;
                                 }
                             }
                         }
@@ -179,6 +185,7 @@
         this.show = function(playlistid, name) {
         	this.playlistid = playlistid; // TODO this line is to avoid session storage, but might have to be removed if JWT will be used
             var self = this;
+            
             this.playlistname.textContent = name;
             makeCall("GET", "GetPlaylistTracks?playlistid=" + playlistid, null,
                 function (req) {
@@ -187,7 +194,7 @@
                         if (req.status == 200) {
                             var tracksToShow = JSON.parse(req.responseText);
                             if (tracksToShow.length == 0) {
-                                self.alert.textContent = "This playlist is empty.";
+                                self.trackscontainer.innerHTML = "This playlist is empty.";
                                 return;
                             }
                             self.update(tracksToShow); // self visible by closure
@@ -202,12 +209,14 @@
 
 
         this.reset = function () {
-            this.trackscontainer.style.visibility = "hidden";
-            this.trackscontainer.innerHTML = "";
+            this.trackscontainer.innerHTML = "No playlists available.";
+            this.alert.textContent = "";
+			this.formalert.textContent = "";
                         
             //reset add track form
             trackselect = this.addform.getElementsByTagName("select")[0];
             
+            var self = this;
             //TODO maybe filter tracks not in the playlist, but this would require to move code out of reset()
             makeCall("GET", "GetUserTracks", null,
                 function (req) {
@@ -224,7 +233,7 @@
                             });
                         }
                     } else {
-                        self.alert.textContent = message;
+                        self.formalert.textContent = message;
                     }
                 }
             );
@@ -313,11 +322,10 @@
             if (anchorToClick) anchorToClick.dispatchEvent(e);
         }
 
-        //here wizard code.js
     }
 
     function TrackDetails(options) {
-        this.alert = options['alert'];
+        this.alertmessage = options['alert'];
         this.title = options['title'];
         this.genre = options['genre'];
         this.albumname = options['albumname'];
@@ -339,7 +347,7 @@
 
                             self.track_player.style.visibility = "visible";
                         } else {
-                            self.alert.textContent = message;
+                            self.alertmessage.textContent = message;
                         }
                     }
                 }
@@ -347,23 +355,25 @@
         };
 
         this.reset = function () {
+        	this.alertmessage.textContent = "No tracks available.";
             this.track_player.style.visibility = "hidden";
         }
 
         this.update = function (track) {
-            this.title.textContent = track.title;
-            this.genre.textContent = track.genre;
-            this.albumname.textContent = track.album.name;
-            this.albumartist.textContent = track.album.artist;
-            this.albumyear.textContent = track.album.year;
+        	this.alertmessage.hidden = true;
+            this.title.textContent = "Title: " + track.title;
+            this.genre.textContent = "Genre: " + track.genre;
+            this.albumname.textContent = "Name: " + track.album.name;
+            this.albumartist.textContent = "Artist: " + track.album.artist;
+            this.albumyear.textContent = "Year: " + track.album.year;
             this.albumimage.src = "data:image/*;base64," + track.album.image;
             this.player.src = "data:audio/*;base64," + track.audio;
         }
     }
     
-    function Modal(_alert, _modal, _playlistname, orchestrator) {
+    function Modal(_modal, _playlistname, orchestrator) {
     	this.modal = _modal;
-    	this.alert = _alert;
+    	this.alert = document.getElementById("reorderErrorMsg");
     	this.table = this.modal.getElementsByTagName("tbody")[0];
     	this.playlistname = _playlistname;
     	this.submitbutton = this.modal.getElementsByTagName("input")[1];
@@ -387,6 +397,8 @@
 		
 		this.reset = function() {
 			self.modal.style.display = "none";
+			self.modal.getElementsByTagName("table")[0].hidden = true;
+			document.getElementById("emptyplaylistmessage").hidden = true;
     		self.submitbutton.disabled = true;
 		}
 		
@@ -398,7 +410,8 @@
                         if (req.status == 200) {
                             var tracksToShow = JSON.parse(req.responseText);
                             if (tracksToShow.length == 0) {
-                                self.alert.textContent = "This playlist is empty.";
+                            	document.getElementById("emptyplaylistmessage").hidden = false;
+                                document.getElementById("emptyplaylistmessage").innerHTML = "This playlist is empty.";
                                 return;
                             }
                             self.playlistname.textContent = playlist.title;
@@ -452,6 +465,7 @@
                 
 				self.table.appendChild(row);
             });
+            self.modal.getElementsByTagName("table")[0].hidden = false;
         }
         
 	
@@ -469,17 +483,14 @@
                 function (req) {
                 //TODO following code has been repeated a lot. Maybe use one function for all?
                     if (req.readyState == 4) {
-                        var message = req.responseText;
-                        if (req.status == 200) {
-                            var message = req.responseText;
-                            if (req.status == 200) {                                
-                                orchestrator.refresh(message); // error or id of ordered playlist
-                            } else {
-                                self.alert.textContent = message;
-                            }
+                        var message = req.responseText;	// error or id of ordered playlist
+                        if (req.status == 200) {                                
+                            orchestrator.refresh(message);
+                        } else {
+                            self.alert.innerHTML = message;
                         }
                     } else {
-                        self.alert.textContent = message;
+                        self.alert.innerHTML = message;
                     }
                 }
             );
@@ -505,7 +516,6 @@
                             }
                             // append available user albums to select in fieldset number 2
 							albumselect = self.wizard.getElementsByTagName("select")[1];
-            				console.log(albumselect);
                             albumsToShow.forEach(function(album) {
                             	var row = document.createElement("option");
                             	row.value = album.id;
@@ -622,6 +632,7 @@
 		  
 		  // set max year to new album
 		  fieldsets[2].querySelectorAll("input[name='albumYear']")[0].max = new Date().getFullYear();
+	      this.alert.textContent = "";
 	    }
 
 	    this.changeStep = function(origin, destination) {
@@ -635,21 +646,20 @@
 
     function PageOrchestrator() {
 
-        var alertContainer = document.getElementById("id_alert"); //reference in HomeCS
-
         this.start = function() {
             personalMessage = new PersonalMessage(sessionStorage.getItem('user'),
                 document.getElementById("id_username"));
             personalMessage.show();
 
             reorderModal = new Modal(
-            	alertContainer,
              	document.getElementById("reorder_modal"),
              	document.getElementById("modal_playlist_name"),
              	this);
 
             playlists = new Playlists(
-                alertContainer,
+                document.getElementById("playlistsError"),
+                document.getElementById("playlistCreationError"),
+                document.getElementById("zeroPlaylists"),
                 document.getElementById("playlistscontainer"),
                 document.getElementById("playlistsbody"),
                 document.getElementById("createplaylistform"),
@@ -658,7 +668,8 @@
             playlists.registerEvents(this);
             
             playlistTracks = new PlaylistTracks({
-                alert: alertContainer,
+            	alert: document.getElementById("playlistTracksError"),
+                formalert: document.getElementById("addToPlaylistError"),
                 playlistname: document.getElementById("playlist_name"),
                 trackscontainer: document.getElementById("track_groups"),
                 form: document.getElementById("addtrackform")
@@ -666,7 +677,7 @@
             playlistTracks.registerEvents(this);
 
             trackDetails = new TrackDetails({
-                alert: alertContainer,
+                alert: document.getElementById("notrackselected"),
                 container: document.getElementById("track_player"),
                 title: document.getElementById("track_title"),
                 genre: document.getElementById("track_genre"),
@@ -677,7 +688,7 @@
                 player: document.getElementById("track_audioplayer")
             });
 
-            trackForm = new TrackForm(document.getElementById("uploadtrackform"), alertContainer);
+            trackForm = new TrackForm(document.getElementById("uploadtrackform"), document.getElementById("trackFormError"));
             trackForm.registerEvents(this);
 
             document.querySelector("a[href='Logout']").addEventListener('click', () => {
@@ -686,7 +697,6 @@
         };
 
         this.refresh = function (currentPlaylist) {
-            alertContainer.textContent = "";
             reorderModal.reset();
             playlists.reset();
             playlistTracks.reset();

@@ -13,13 +13,15 @@
 	<div align="right">
 		<a href="Logout">Logout</a>
 	</div>
-	<h1>Your playlists</h1>
-	<p>Welcome back, <span id="id_username"></span></p>
-	<div id="id_alert" class="alertmessage"></div>	
+	<h1>Playlists manager</h1>
+	<p>Welcome, <span id="id_username"></span></p>
 
-	<table>
+	<table id="components">
 		<tr>
-			<td>
+			<td class="component">
+				<h3>Your playlists</h3>
+				<p id="playlistsError" class="alertmessage"></p>
+				<p id="zeroPlaylists"></p>
 				<table id="playlistscontainer" class="boxed">
 					<thead>
 						<tr>
@@ -42,11 +44,11 @@
 					</fieldset>
 				</form>
 			</td>
-			<td>
-				<p>Playlist: <span id="playlist_name"></span></p>
-				<div id="track_groups">
-					
-				</div>
+			<td class="component" width="840px">
+				<h3>Tracks of playlist: <span id="playlist_name"></span></h3>
+				<span id="playlistTracksError" class="alertmessage"><br></span>
+				<div id="track_groups"></div>
+				
 				<div>
 					<p>Add a track to this playlist</p>
 					<form action="#" id="addtrackform">
@@ -55,7 +57,7 @@
 								Track to add:
 								<select name="trackid">
 								</select>
-								<span id="addtrackerror"><br></span>
+								<span id="addToPlaylistError" class="alertmessage"><br></span>
 								<!-- input type="hidden" name="playlistid" th:value="${playlistid}"-->
 							</p>
 							<input type="button" value="Add track">
@@ -63,15 +65,16 @@
 					</form>
 				</div>
 			</td>
-			<td>
-				<p>Track player</p>
+			<td class="component">
+				<h3>Track player</h3>
+				<p id="notrackselected"></p>
 				<div id="track_player">
-					<p id="track_title" />
-					<p id="track_genre" />
-					<br>
-					<p id="album_name" />
-					<p id="album_artist"/>
-					<p id="album_year"></p>
+					<p id="track_title" ></p>
+					<p id="track_genre" ></p>
+					<h4>Album data</h4>
+					<p id="album_name" ></p>
+					<p id="album_artist" ></p>
+					<p id="album_year" ></p>
 					<img width="336" id="album_image" /><br>
 					
 					<audio id="track_audioplayer" controls></audio>
@@ -84,6 +87,7 @@
 	
 
 	<p>Upload your tracks here</p>
+	<span id="trackFormError" class="alertmessage"><br></span>
 	<form action="#" id="uploadtrackform" enctype="multipart/form-data">
 		<fieldset>
 			<p>
@@ -92,11 +96,17 @@
 			</p>
 			<p> Genre: 
 				<select name="genre" required>
-					<!-- TODO should probably extract from DB instead -->
 				    <option value="Pop">Pop</option>
 					<option value="Rock">Rock</option>
 					<option value="EDM">EDM</option>
+					<option value="Hip hop">Hip hop</option>
+					<option value="Classical">Classical</option>
+					<option value="Folk">Folk</option>
+					<option value="Jazz">Jazz</option>
+					<option value="Metal">Metal</option>
+					<option value="Other">Other</option>
 			    </select>
+			    <!-- TODO remove error spans if unused-->
 			    <span id="genreError"><br></span> 
 			</p>
 			<div>
@@ -156,6 +166,8 @@
 		<div align="center" class="modal_content">
 		    <span class="close">&times;</span>
 		    <p>Reorder tracks of playlist: <span id="modal_playlist_name"></span></p>
+		    <p id="reorderErrorMsg" class="alertmessage"></p>
+		    <p id="emptyplaylistmessage"></p>
 		    <table class="boxed">
 				<thead>
 					<tr>

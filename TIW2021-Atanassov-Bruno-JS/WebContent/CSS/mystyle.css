@@ -6,6 +6,16 @@
 	border: 1px solid black;
 }
 
+.component {
+	border: 1px solid black;
+	padding: 10px;
+	vertical-align:top;
+}
+
+#components {
+	border-spacing: 10px;
+}
+
 .alertmessage{
 	color: red;
 }
