@@ -18,7 +18,7 @@
 		<p th:text="${'Album: ' + album.name}" />
 		<p th:text="${'Artist: ' + album.artist}" />
 		<p th:text="${'Year: ' + album.year}" />
-		<img th:src="'data:image/*;base64,' + ${album.image}" /><br>
+		<img th:src="'data:image/mp3;base64,' + ${album.image}" /><br>
 		
 		<audio
           controls
