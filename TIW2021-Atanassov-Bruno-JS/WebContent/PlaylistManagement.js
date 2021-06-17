@@ -263,7 +263,7 @@
                     imagecell.style.height = '200px';
                     imagecell.style.width = '160px';
 
-                    imagecell.src = "data:image/*;base64," + track.album.image;
+                    imagecell.src = "data:image/jpeg;base64," + track.album.image;
                     cell.appendChild(imagecell);
                     cell.appendChild(document.createElement("br"));
 
@@ -365,8 +365,8 @@
             this.albumname.textContent = "Name: " + track.album.name;
             this.albumartist.textContent = "Artist: " + track.album.artist;
             this.albumyear.textContent = "Year: " + track.album.year;
-            this.albumimage.src = "data:image/*;base64," + track.album.image;
-            this.player.src = "data:audio/*;base64," + track.audio;
+            this.albumimage.src = "data:image/jpeg;base64," + track.album.image;
+            this.player.src = "data:audio/mp3;base64," + track.audio;
         }
     }
     
@@ -644,7 +644,7 @@
 
 
     function PageOrchestrator() {
-
+	    var alertContainer = document.getElementById("id_alert");
         this.start = function() {
             personalMessage = new PersonalMessage(sessionStorage.getItem('user'),
                 document.getElementById("id_username"));
