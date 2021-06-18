@@ -10,7 +10,7 @@
 	<div align="right">
 		<a th:href="@{/Logout}">Logout</a>
 	</div>
-	<h1 th:text="'Playlist: ' + ${playlist.title}"></h1>
+	<h1 th:text="'Playlist: ' + ${playlist.title}">Static playlist content</h1>
 
 	<div th:switch="${tracks.size() &gt; 0}" th:with="max=${(tracks.size() - 1) / 5}">
 		<div th:case="true" class = "row">
@@ -19,8 +19,8 @@
 					<tbody>
 						<tr>
 							<td th:each="j : ${#numbers.sequence( 0, 5 > tracks.size() - 5 * i ? tracks.size() - 5 * i - 1 : 4)}">
-								<span th:text="${tracks[5 * i + j].title}"></span><br>
-								<img th:src="'data:image/*;base64,' + ${tracks[5 * i + j].image}" width="240" height="300"/><br>
+								<span th:text="${tracks[5 * i + j].title}">Mockup song</span><br>
+								<img th:src="'data:image/*;base64,' + ${tracks[5 * i + j].image}" width="240" height="300" alt="Image not found. Placeholder text"/><br>
 								<a th:href="@{/GetTrackDetails(trackid=${tracks[5 * i + j].id})}">Play</a>
 							</td>
 						</tr>
@@ -32,7 +32,7 @@
 			    <br><br>
 			</div>
 		</div>
-		<p th:case="*">This playlist does not contain any tracks yet.</p>
+		<p th:case="*" th:text="${'This playlist does not contain any tracks yet.'}"></p>
 	</div>
 	
 	<div>
@@ -42,7 +42,7 @@
 				<p>
 					Track to add:
 					<select name="trackid">
-						<option th:each="t : ${userTracks}" th:value="${t.id}" th:text="${t.title}"></option>
+						<option th:each="t : ${userTracks}" th:value="${t.id}" th:text="${t.title}">More Mockup</option>
 					</select>
 					<span th:if="${errorMsg} != null" class="error" th:text="${errorMsg}"><br></span>
 					<!-- input type="hidden" name="playlistid" th:value="${playlistid}"-->

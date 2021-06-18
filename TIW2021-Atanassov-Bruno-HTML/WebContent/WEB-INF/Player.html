@@ -12,13 +12,13 @@
 	</div>
 	<h1>Track player</h1>
 	<div>
-		<p th:text="${'Title: ' + track.title}" />
-		<p th:text="${'Genre: ' + track.genre}" />
+		<p th:text="${'Title: ' + track.title}" >Title: Sample text</p>
+		<p th:text="${'Genre: ' + track.genre}" >Genre: None</p>
 		<br>
-		<p th:text="${'Album: ' + album.name}" />
-		<p th:text="${'Artist: ' + album.artist}" />
-		<p th:text="${'Year: ' + album.year}" />
-		<img th:src="'data:image/*;base64,' + ${album.image}" /><br>
+		<p th:text="${'Album: ' + album.name}" >Album: Mockup Album</p>
+		<p th:text="${'Artist: ' + album.artist}" >Artist: John Doe</p>
+		<p th:text="${'Year: ' + album.year}" >Year: 1970</p>
+		<img th:src="'data:image/*;base64,' + ${album.image}" alt="Image not found. Placeholder text"/><br>
 		
 		<audio
           controls

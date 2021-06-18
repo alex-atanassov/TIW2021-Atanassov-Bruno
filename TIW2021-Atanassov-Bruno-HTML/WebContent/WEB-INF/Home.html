@@ -11,7 +11,7 @@
 		<a th:href="@{/Logout}">Logout</a>
 	</div>
 	<h1>Your playlists</h1>
-	<p th:text="${'Welcome back ' + session.user.name + ' ' + session.user.surname}"></p>
+	<p th:text="${'Welcome back ' + session.user.name + ' ' + session.user.surname}">Welcome.</p>
 	
 	<div th:switch="${playlists.size() &gt; 0}">
 		<table th:case="true">
@@ -24,13 +24,13 @@
 			</thead>
 			<tbody>
 				<tr th:each="playlist : ${playlists}">
-					<td th:text="${playlist.title}"></td>
-					<td th:text="${playlist.date}"></td>
+					<td th:text="${playlist.title}">Mockup title</td>
+					<td th:text="${playlist.date}">1970-01-01</td>
 					<td><a th:href="@{/GetPlaylistTracks(playlistid=${playlist.id})}">View tracks</a></td>
 				</tr>
 			</tbody>
 		</table>
-		<p th:case="*">No playlists available to display.</p>
+		<p th:case="*" th:text="${'No playlists available to display.'}"></p>
 	</div>
 	
 	<p>Create a new playlist here</p>
@@ -66,7 +66,7 @@
 				<br>
 				<p class="indented"> Album:
 					<select name="albumId"><!--th:value="${trackForm.albumId}"-->
-						<option th:each="a : ${albums}" th:value="${a.id}" th:text="${a.name} + ' (by ' + ${a.artist} + ')'" th:selected="${trackForm.albumId} == ${a.id}"></option>
+						<option th:each="a : ${albums}" th:value="${a.id}" th:text="${a.name} + ' (by ' + ${a.artist} + ')'" th:selected="${trackForm.albumId} == ${a.id}">Mockup album name</option>
 					</select>
 					<span th:if="${trackForm.albumIdError} != null" class="error" th:text="${trackForm.albumIdError}"><br></span> 
 				</p>

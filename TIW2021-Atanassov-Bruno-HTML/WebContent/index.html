@@ -11,7 +11,7 @@
 		Username: <input type="text" placeholder="Enter Username" name="username" required> <br>
 		Password: <input type="password" placeholder="Enter Password" name="pwd" required><br>
 		<input type="submit" value="login">
-		<p th:text=" ${errorMsg}"></p>
+		<p style="color:red" th:text="${errorMsg}"></p>
 	</form>
 </body>
 </html>
