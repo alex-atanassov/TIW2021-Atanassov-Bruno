@@ -79,7 +79,6 @@ public class AlbumDAO {
 				album.setName(result.getString("name"));
 				album.setYear(result.getInt("year"));
 				album.setArtist(result.getString("artist"));
-				//set img
 				albums.add(album);
 			}
 		} catch (SQLException e) {

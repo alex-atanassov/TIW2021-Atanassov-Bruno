@@ -67,31 +67,35 @@ public class UploadTrack extends HttpServlet {
 			TrackDAO tDAO = new TrackDAO(connection);
 			try {
 				if(gDAO.findGenreByName(genre) == null) {
-					trackForm.setGenreError("Invalid genre.");	//TODO set genre to null?
+					trackForm.setGenreError("Invalid genre.");
 				}
 				else if(Integer.parseInt(albumchoice) == 1 && aDAO.findAlbumById(Integer.parseInt(albumid) /*Ocio al formato*/) == null) {
 					trackForm.setAlbumIdError("Invalid existing album choice.");
 				} else {
 					int album;
 					int userid = ((User) session.getAttribute("user")).getId();
+					
+					// disable autocommit for the next two SQL updates
+					connection.setAutoCommit(false);
 					if(Integer.parseInt(albumchoice) == 2) {
 						album = aDAO.createAlbum(albumName, artist, Integer.parseInt(year), albumimg, userid);
-						// TODO duplicate albumName+artist
 					}
-					else album = Integer.parseInt(albumid);	//TODO else if - else
+					else album = Integer.parseInt(albumid);
 					
 					tDAO.uploadTrack(title, album, genre, file, userid);
 					
+					connection.commit();
+					connection.setAutoCommit(true);
 					isBadRequest = false;
 				}
 			} catch (NumberFormatException e) {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Invalid parameters");
-				return;
+				trackForm.setGenericError("Invalid parameters");
 			} catch (SQLException e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Issue with DB");
-				return;
+				if(e.getMessage().contains("Duplicate"))
+					trackForm.setAlbumNameError("Duplicate album name for same artist");
+				else trackForm.setGenericError("Database error, operation failed");
 			} catch (IOException e) {
-				// TODO handle
+				trackForm.setGenericError("I/O exception has occured");
 			}
 		}
 		

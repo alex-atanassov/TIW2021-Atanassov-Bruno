@@ -16,10 +16,13 @@ public class Logout extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		// destroys session
 		HttpSession session = request.getSession(false);
 		if (session != null) {
 			session.invalidate();
 		}
+		
+		// redirect to login page
 		String path = getServletContext().getContextPath() + "/index.html";
 		response.sendRedirect(path);
 	}
@@ -28,6 +31,5 @@ public class Logout extends HttpServlet {
 			throws ServletException, IOException {
 		doGet(request, response);
 	}
-
 }
 

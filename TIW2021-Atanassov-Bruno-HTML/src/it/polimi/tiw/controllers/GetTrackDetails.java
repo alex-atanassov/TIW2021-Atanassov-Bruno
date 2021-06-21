@@ -64,16 +64,19 @@ public class GetTrackDetails extends HttpServlet {
 		
 		try {
 			track = trackDAO.findTrackById(trackId);
+			// check if track exists
 			if (track == null) {						
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				response.getWriter().println("Track not found");
 				return;
 			}
+			// check ownership
 			if (track.getUser() != user.getId()) {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				response.getWriter().println("User not allowed");
 				return;
 			}
+			// get album data
 			album = albumDAO.findAlbumById(track.getAlbum());
 			if (album == null) {						
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);

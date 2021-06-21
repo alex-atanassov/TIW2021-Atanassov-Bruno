@@ -26,10 +26,6 @@ public class CreatePlaylist extends HttpServlet {
 	private Connection connection = null;
 	private TemplateEngine templateEngine;
 
-	public CreatePlaylist() {
-		super();
-	}
-	
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
 		ServletContext servletContext = getServletContext();
@@ -44,30 +40,40 @@ public class CreatePlaylist extends HttpServlet {
 			throws IOException, ServletException {
 		
 		HttpSession session = request.getSession();
-		
-		boolean isBadRequest = false;
-		
-		String title = request.getParameter("playlistTitle");	
+				
+		String title = request.getParameter("playlistTitle");
+		String errorMsg = null;
 		try {
 			if(title==null || title.isEmpty()) {
-				isBadRequest = true;
-			}else {
-			PlaylistDAO pDAO = new PlaylistDAO(connection);
-
-//			Date startDate = Calendar.getInstance().getTime();
-			int userid = ((User) session.getAttribute("user")).getId();
-			pDAO.createPlaylist(title,userid);
-				} 
-		}catch (Exception e) {
-			e.printStackTrace();
+				errorMsg = "Invalid playlist name";
+			} else {
+				PlaylistDAO pDAO = new PlaylistDAO(connection);
+	
+				// check if duplicate playlist name for same user
+				// Note: DB is already protected from duplicates, but this is to get the correct error message
+//				if(pDAO.findPlaylistsByUser((User) session.getAttribute("user")).stream()
+//						.anyMatch(p -> p.getTitle().equals(title)))
+//					errorMsg = "Duplicate playlist name";
+//				else {
+					int userid = ((User) session.getAttribute("user")).getId();
+					pDAO.createPlaylist(title,userid);
+//				}
+			}
+		} catch (SQLException e) {
+			if(e.getMessage().contains("Duplicate"))
+				errorMsg = "Duplicate name in your playlists";
+			else errorMsg = "Issue with database, creation failed";
 		}
 		
 		ServletContext servletContext = getServletContext();
 		String ctxpath = servletContext.getContextPath();
 		String path = ctxpath + "/Home" ;
-		if(isBadRequest) {
-			path += "?playlistErrorMsg=Invalid+playlist+name" ;
+		if(errorMsg != null) {
+			// show error to client
+			errorMsg.replaceAll(" ", "+");
+			path += "?playlistErrorMsg=" + errorMsg;
 		}
+		// redirect in both cases, to avoid retransmission on refresh
 		response.sendRedirect(path);
 		
 	}

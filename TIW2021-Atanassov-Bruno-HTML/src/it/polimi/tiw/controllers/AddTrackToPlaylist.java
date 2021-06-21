@@ -44,8 +44,8 @@ public class AddTrackToPlaylist extends HttpServlet {
 		
 		String errorMsg = null;
 		try {
+			// get ID of playlist and track involved
 			playlistid = (Integer) request.getSession().getAttribute("playlistid");
-			//TODO remove attribute after usage (not in this servlet)
 			trackid = Integer.parseInt(request.getParameter("trackid"));
 			
 			TrackDAO tDAO = new TrackDAO(connection);
@@ -53,17 +53,25 @@ public class AddTrackToPlaylist extends HttpServlet {
 
 			track = tDAO.findTrackById(trackid);
 			
-			// track does not exist, or the owner is another user
+			// if track does not exist, or the owner is another user
 			if (track == null || track.getUserid() != ((User) request.getSession().getAttribute("user")).getId()) {
-				errorMsg = "Invalid track parameter";
+				errorMsg = "Invalid parameter, no track found";
 			} else {
-				tDAO.addTrackToPlaylist(trackid, playlistid);
+				int id = trackid;
+				
+				// check for possible duplicate (DB is already protected from duplicates, but this is to get the correct error message)
+//				if(new TrackCoverDAO(connection).findTracksByPlaylist(playlistid).stream().anyMatch(t -> t.getId() == id))
+//					errorMsg = "This playlist already contains the selected track";
+//				else
+					tDAO.addTrackToPlaylist(trackid, playlistid);
 			}
 		} catch (NumberFormatException e) {
-			errorMsg = "Invalid track or playlist";
+			errorMsg = "Invalid track ID";
 		} catch (SQLException e) {
 			e.printStackTrace();
-			errorMsg = "Issue with DB";
+			if(e.getMessage().contains("Duplicate"))
+				errorMsg = "Duplicate track";
+			else errorMsg = "Issue with database, operation failed";
 		}
 	
 		ServletContext servletContext = getServletContext();
@@ -71,6 +79,7 @@ public class AddTrackToPlaylist extends HttpServlet {
 		String path = ctxpath + "/GetPlaylistTracks?playlistid=" + playlistid;
 		
 		if(errorMsg != null) {
+			// show the error message client side
 			errorMsg.replaceAll(" ", "+");
 			path += "&errorMsg=" + errorMsg;
 		}

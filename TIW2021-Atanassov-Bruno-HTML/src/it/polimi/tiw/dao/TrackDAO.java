@@ -61,7 +61,7 @@ public class TrackDAO {
 		return track;
 	}
 	
-	public int uploadTrack(String title, int albumid, String genre, Part file, int user) throws SQLException {
+	public int uploadTrack(String title, int albumid, String genre, Part file, int user) throws SQLException, IOException {
 		String query = "INSERT into track (title, albumid, genre, audio, userid) VALUES(?, ?, ?, ?, ?)";
 
 		int code = 0;
@@ -77,9 +77,6 @@ public class TrackDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new SQLException(e);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} finally {
 			try {
 				if (pstatement != null) {
@@ -93,7 +90,7 @@ public class TrackDAO {
 	}
 	
 	public int addTrackToPlaylist(int trackid, int playlistid) throws SQLException {
-		String query = "INSERT into playlist_containment (playlistid, trackid)   VALUES(?, ?)";
+		String query = "INSERT into playlist_containment (playlistid, trackid) VALUES(?, ?)";
 
 		int code = 0;
 		PreparedStatement pstatement = null;

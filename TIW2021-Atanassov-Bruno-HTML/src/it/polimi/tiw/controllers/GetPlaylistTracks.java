@@ -80,14 +80,18 @@ public class GetPlaylistTracks extends HttpServlet {
 			response.sendError(500, "Database access failed");
 		}
 		
+		// Important: this line avoids manipulation of AddTrack form, in which user might change the destination playlist.
+		// This is to avoid any redirect that "jumps" from one playlist to another
 		session.setAttribute("playlistid", playlistid);
 		
 		String path = "/WEB-INF/Playlist.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		ctx.setVariable("tracks", playlistTracks);
+		// UserTracks are used in the AddTrack form select
 		ctx.setVariable("userTracks", userTracks);
 		ctx.setVariable("playlist", playlist);
+		// Note: a non null errorMsg comes from a redirect from POST
 		ctx.setVariable("errorMsg", request.getParameter("errorMsg"));
 		templateEngine.process(path, ctx, response.getWriter());
 	}

@@ -28,10 +28,6 @@ public class CheckLogin extends HttpServlet{
 	private Connection connection = null;
 	private TemplateEngine templateEngine;
 
-	public CheckLogin() {
-		super();
-	}
-
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
 		ServletContext servletContext = getServletContext();

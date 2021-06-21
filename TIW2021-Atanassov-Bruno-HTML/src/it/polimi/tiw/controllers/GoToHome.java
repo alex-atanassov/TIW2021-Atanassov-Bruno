@@ -51,7 +51,6 @@ public class GoToHome extends HttpServlet {
 			throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
-		String playlistErrorMsg = request.getParameter("playlistErrorMsg");
 
 		User user = (User) session.getAttribute("user");
 		PlaylistDAO playlistDAO = new PlaylistDAO(connection);
@@ -73,20 +72,23 @@ public class GoToHome extends HttpServlet {
 			return;
 		}
 		
+		// get error messages, if redirected from a failed POST
 		TrackForm trackForm = (TrackForm) session.getAttribute("trackForm");
 		if(trackForm == null) trackForm = new TrackForm();
 
-		// Redirect to the Home page
+		String playlistErrorMsg = request.getParameter("playlistErrorMsg");
+
 		String path = "/WEB-INF/Home.html";
-//		if(session.getAttribute("trackForm") != null)
-//			path += "#form2";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		ctx.setVariable("playlists", playlists);
 		ctx.setVariable("albums", albums);
+		
+		// variables used to show errors from the two forms
 		ctx.setVariable("trackForm", trackForm);
 		ctx.setVariable("playlistErrorMsg", playlistErrorMsg);
 		
+		// removes trackForm previously saved in UploadTrack
 		session.removeAttribute("trackForm");
 		
 		templateEngine.process(path, ctx, response.getWriter());

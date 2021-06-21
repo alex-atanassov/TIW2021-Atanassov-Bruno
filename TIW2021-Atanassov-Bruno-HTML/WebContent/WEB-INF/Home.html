@@ -50,6 +50,7 @@
 		<p>Upload your tracks here</p>
 		<form action="#" th:action="@{/UploadTrack}" method="POST" enctype="multipart/form-data">
 			<fieldset>
+				<span th:if="${trackForm.genericError} != null" class="error" th:text="${trackForm.genericError}"><br></span>
 				<p>
 					Title: <input type="text" name="trackTitle" th:value="${trackForm.title}" required />
 					<span th:if="${trackForm.titleError} != null" class="error" th:text="${trackForm.titleError}"><br></span> 
@@ -92,8 +93,7 @@
 						<span th:if="${trackForm.albumArtistError} != null" class="error" th:text="${trackForm.albumArtistError}"><br></span> 
 					</p>
 					<p class="indented">
-					<!-- TODO year does not clear if invalid -->
-					  	Year: <input type="number" name="albumYear" min="1800" max="#dates.year(#dates.createNow())" th:value="${trackForm.albumYear}" />
+					  	Year: <input type="number" name="albumYear" min="1800" th:max="${#dates.year(#dates.createNow())}" th:value="${trackForm.albumYear}" />
 					  	<span th:if="${trackForm.albumYearError} != null" class="error" th:text="${trackForm.albumYearError}"><br></span> 
 					</p>
 					<p class="indented">
@@ -107,8 +107,6 @@
 				</p>
 	   			<br>
 				<input type="submit" name="Upload track">
-				<!-- TODO formbean does not clear -->
-				<input type="reset">
 			</fieldset>
 		</form>
 	</td>

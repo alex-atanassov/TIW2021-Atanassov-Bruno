@@ -12,8 +12,6 @@ public class TrackForm {
 	private String albumName;
 	private String albumArtist;
 	private String albumYear;
-//	private Part albumImage;
-//	private Part audio;
 	
 	private int albumChoiceNumber = 0;
 	
@@ -26,6 +24,8 @@ public class TrackForm {
 	private String albumYearError;
 	private String albumImageError;
 	private String audioError;
+	
+	private String genericError;
 
 	public TrackForm() {
 		super();
@@ -109,7 +109,7 @@ public class TrackForm {
 				return;
 			}
 			
-			if (year < 1800 && year > Calendar.getInstance().get(Calendar.YEAR))
+			if (year < 1800 || year > Calendar.getInstance().get(Calendar.YEAR))
 				this.setAlbumYearError("A valid year is required");
 			else {
 				this.setAlbumYearError(null);
@@ -122,8 +122,6 @@ public class TrackForm {
 	}
 	
 	public void setAlbumImage(Part albumImage) {
-//		this.albumImage = albumImage;
-		
 		if(albumChoiceNumber == 2) {
 			if (albumImage == null || albumImage.getSize() <= 0) {
 				this.setAlbumImageError("An image for the new album is required");
@@ -142,7 +140,6 @@ public class TrackForm {
 	}
 	
 	public void setAudio(Part audio) {
-//		this.audio = audio;
 		if (audio == null || audio.getSize() <= 0) {
 			this.setAudioError("An audio file is required");
 		} else {
@@ -168,7 +165,7 @@ public class TrackForm {
 		if (choice != 1 && choice != 2)
 			this.setAlbumChoiceError("Please choose between an existing album or a new one");
 		else {
-			albumChoiceNumber = choice;	// TODO ???
+			albumChoiceNumber = choice;
 			this.setAlbumChoiceError(null);
 			this.albumChoice = albumChoice;
 		}
@@ -190,10 +187,9 @@ public class TrackForm {
 		return albumName;
 	}
 
-	private void setAlbumNameError(String albumNameError) {
+	public void setAlbumNameError(String albumNameError) {
 		this.albumNameError = albumNameError;
 	}
-
 
 	public String getAlbumArtist() {
 		return albumArtist;
@@ -207,34 +203,25 @@ public class TrackForm {
 		return albumYear;
 	}
 
-
 	private void setAlbumYearError(String yearError) {
 		this.albumYearError = yearError;
 	}
-
-//	public Part getAlbumImage() {
-//		return albumImage;
-//	}
-
-
 
 	private void setAlbumImageError(String albumImageError) {
 		this.albumImageError = albumImageError;
 	}
 
-//	public Part getAudio() {
-//		return audio;
-//	}
-
 	private void setAudioError(String audioError) {
 		this.audioError = audioError;
 	}
-
 
 	public void setGenreError(String genreError) {
 		this.genreError = genreError;
 	}
 
+	public void setAlbumChoiceError(String albumChoiceError) {
+		this.albumChoiceError = albumChoiceError;
+	}
 
 	public void setAlbumIdError(String albumIdError) {
 		this.albumIdError = albumIdError;
@@ -244,26 +231,21 @@ public class TrackForm {
 		return titleError;
 	}
 
-
 	public String getGenreError() {
 		return genreError;
 	}
-
 
 	public String getAlbumidError() {
 		return albumIdError;
 	}
 
-
 	public String getAlbumNameError() {
 		return albumNameError;
 	}
 
-
 	public String getAlbumArtistError() {
 		return albumArtistError;
 	}
-
 
 	public String getAlbumYearError() {
 		return albumYearError;
@@ -274,26 +256,23 @@ public class TrackForm {
 		return albumImageError;
 	}
 
-
 	public String getAudioError() {
 		return audioError;
 	}
-
 
 	public String getAlbumChoiceError() {
 		return albumChoiceError;
 	}
 
-
-	public void setAlbumChoiceError(String albumChoiceError) {
-		this.albumChoiceError = albumChoiceError;
-	}
-
-
 	public String getAlbumChoice() {
 		return albumChoice;
 	}
-
-
-
+	
+	public void setGenericError(String genericError) {
+		this.genericError = genericError;
+	}
+	
+	public String getGenericError() {
+		return genericError;
+	}
 }
