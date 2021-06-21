@@ -6,20 +6,25 @@
 <link rel="stylesheet" type="text/css" media="all"
 	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
-<body>
+<body id="player">
+	<img class="albumimagebackground" th:src="'data:image/*;base64,' + ${album.image}" alt="Image not found. Placeholder text"/><br>
 	<div align="right">
 		<a th:href="@{/Logout}">Logout</a>
 	</div>
-	<h1>Track player</h1>
-	<div>
-		<p th:text="${'Title: ' + track.title}" >Title: Sample text</p>
+	<h1 align="center">Track player</h1>
+	<div id="trackinfo">
+	<table id="trackinfotable" class="container">
+	<td>
+		<h3 th:text="${'Title: ' + track.title}" >Title: Sample text</h3>
 		<p th:text="${'Genre: ' + track.genre}" >Genre: None</p>
-		<br>
+		</td>
+		<td>
 		<p th:text="${'Album: ' + album.name}" >Album: Mockup Album</p>
 		<p th:text="${'Artist: ' + album.artist}" >Artist: John Doe</p>
 		<p th:text="${'Year: ' + album.year}" >Year: 1970</p>
-		<img th:src="'data:image/*;base64,' + ${album.image}" alt="Image not found. Placeholder text"/><br>
-		
+		</td>
+		<!-- img th:src="'data:image/*;base64,' + ${album.image}" alt="Image not found. Placeholder text"/><br-->
+		</table>
 		<audio
           controls
           th:src="'data:audio/mp3;base64,' + ${track.audio}"></audio>

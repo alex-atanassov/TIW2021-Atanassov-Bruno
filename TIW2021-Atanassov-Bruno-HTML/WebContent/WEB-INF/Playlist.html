@@ -10,9 +10,9 @@
 	<div align="right">
 		<a th:href="@{/Logout}">Logout</a>
 	</div>
-	<h1 th:text="'Playlist: ' + ${playlist.title}">Static playlist content</h1>
+	<h1 align="center" th:text="'Playlist: ' + ${playlist.title}">Static playlist content</h1>
 
-	<div th:switch="${tracks.size() &gt; 0}" th:with="max=${(tracks.size() - 1) / 5}">
+	<div align="center" th:switch="${tracks.size() &gt; 0}" th:with="max=${(tracks.size() - 1) / 5}">
 		<div th:case="true" class = "row">
 			<div th:each="i : ${#numbers.sequence(0, max)}" th:id="${i}">
 				<table>
@@ -35,7 +35,7 @@
 		<p th:case="*" th:text="${'This playlist does not contain any tracks yet.'}"></p>
 	</div>
 	
-	<div>
+	<div id="addform">
 		<p>Add a track to this playlist</p>
 		<form action="#" th:action="@{/AddTrackToPlaylist}" method="POST">
 			<fieldset>

@@ -1,5 +1,23 @@
-table, th, tr, td {
+body:not(#player) {
+	background: radial-gradient(#e66465, #9198e5);
+}
+
+table:not(.container), th, tr, table:not(.container) td {
 	border: 1px solid black;
+}
+
+.container {
+	height: 90%;
+	width: 90%;
+}
+
+.container td {
+ 	vertical-align: top;
+	width: 30%;
+}
+
+table.container + td {
+	width: 20%;
 }
 
 .indented {
@@ -15,7 +33,68 @@ div.row {
   overflow: hidden;
 }
 
-/*div {
-	display: inline-block;
-	vertical-align:top;
-}*/
+#addform {
+	width: 90%;
+	margin: auto;
+	text-align: center;
+}
+
+.albumimagebackground {
+	top: 0;
+	left: 0;
+	opacity: 0.5;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+}
+
+#trackinfotable {
+	max-width: 80%;
+	min-height: 60%;
+ 	margin: auto;
+}
+
+#trackinfotable table {
+	width: 50%;
+}
+
+#trackinfotable td {
+	vertical-align: top;
+	width: 25%;
+	padding-top: 20%;
+	padding-bottom: 5%;
+}
+
+#trackinfo {
+	text-align: center;
+}
+
+audio:hover, audio:focus, audio:active {
+	-webkit-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+	-moz-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+	box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+	-webkit-transform: scale(1.05);
+	-moz-transform: scale(1.05);
+	transform: scale(1.05);
+}
+
+audio {
+	width: 50%;
+	height: 5%;
+	-webkit-transition:all 0.5s linear;
+	-moz-transition:all 0.5s linear;
+	-o-transition:all 0.5s linear;
+	transition:all 0.5s linear;
+	-moz-box-shadow: 2px 2px 4px 0px #006773;
+	-webkit-box-shadow:  2px 2px 4px 0px #006773;
+	box-shadow: 2px 2px 4px 0px #006773;
+	-moz-border-radius:7px 7px 7px 7px ;
+	-webkit-border-radius:7px 7px 7px 7px ;
+	border-radius:7px 7px 7px 7px ;
+}
+
+form, table:not(.container) {
+	background: white;
+}

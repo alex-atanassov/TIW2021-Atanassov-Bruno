@@ -10,99 +10,108 @@
 	<div align="right">
 		<a th:href="@{/Logout}">Logout</a>
 	</div>
-	<h1>Your playlists</h1>
-	<p th:text="${'Welcome back ' + session.user.name + ' ' + session.user.surname}">Welcome.</p>
+	<table class="container">
+	<td align="center">
+		<h1>Your playlists</h1>
+		<p th:text="${'Welcome back ' + session.user.name + ' ' + session.user.surname}">Welcome.</p>
+		<div th:switch="${playlists.size() &gt; 0}">
+			<table th:case="true">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Date of creation</th>
+						<th>Link</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="playlist : ${playlists}">
+						<td th:text="${playlist.title}">Mockup title</td>
+						<td th:text="${playlist.date}">1970-01-01</td>
+						<td><a th:href="@{/GetPlaylistTracks(playlistid=${playlist.id})}">View tracks</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p th:case="*" th:text="${'No playlists available to display.'}"></p>
+		</div>
+	</td>
 	
-	<div th:switch="${playlists.size() &gt; 0}">
-		<table th:case="true">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Date of creation</th>
-					<th>Link</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="playlist : ${playlists}">
-					<td th:text="${playlist.title}">Mockup title</td>
-					<td th:text="${playlist.date}">1970-01-01</td>
-					<td><a th:href="@{/GetPlaylistTracks(playlistid=${playlist.id})}">View tracks</a></td>
-				</tr>
-			</tbody>
-		</table>
-		<p th:case="*" th:text="${'No playlists available to display.'}"></p>
-	</div>
+	<td>
+		<p>Create a new playlist here</p>
+		<form action="#" th:action="@{/CreatePlaylist}" method="POST">
+			<fieldset>
+				<p>
+					Name: <input type="text" name="playlistTitle" required />
+					<span th:if="${playlistErrorMsg} != null" class="error" th:text="${playlistErrorMsg}"><br></span>
+				</p>
+				<input type="submit" name="Create playlist">
+			</fieldset>
+		</form>
 	
-	<p>Create a new playlist here</p>
-	<form action="#" th:action="@{/CreatePlaylist}" method="POST">
-		<fieldset>
-			<p>
-				Name: <input type="text" name="playlistTitle" required />
-				<span th:if="${playlistErrorMsg} != null" class="error" th:text="${playlistErrorMsg}"><br></span>
-			</p>
-			<input type="submit" name="Create playlist">
-		</fieldset>
-	</form>
-
-	<p>Upload your tracks here</p>
-	<form action="#" th:action="@{/UploadTrack}" method="POST" enctype="multipart/form-data">
-		<fieldset>
-			<p>
-				Title: <input type="text" name="trackTitle" th:value="${trackForm.title}" required />
-				<span th:if="${trackForm.titleError} != null" class="error" th:text="${trackForm.titleError}"><br></span> 
-			</p>
-			<p> Genre: 
-				<select name="genre" required>
-					<!-- TODO should probably extract from DB instead -->
-				    <option value="Pop" th:selected="${trackForm.genre} == 'Pop'">Pop</option>
-					<option value="Rock" th:selected="${trackForm.genre} == 'Rock'">Rock</option>
-					<option value="EDM" th:selected="${trackForm.genre} == 'EDM'">EDM</option>
-			    </select>
-			    <span th:if="${trackForm.genreError} != null" class="error" th:text="${trackForm.genreError}"><br></span> 
-			</p>
-			<div>
-			    <input type="radio" id="1" name="album" value="1" th:checked="${trackForm.albumChoice == 1 or trackForm.albumChoice == null}" required>
-				<label for="1">From existing album</label>
-				<br>
-				<p class="indented"> Album:
-					<select name="albumId"><!--th:value="${trackForm.albumId}"-->
-						<option th:each="a : ${albums}" th:value="${a.id}" th:text="${a.name} + ' (by ' + ${a.artist} + ')'" th:selected="${trackForm.albumId} == ${a.id}">Mockup album name</option>
-					</select>
-					<span th:if="${trackForm.albumIdError} != null" class="error" th:text="${trackForm.albumIdError}"><br></span> 
+		<p>Upload your tracks here</p>
+		<form action="#" th:action="@{/UploadTrack}" method="POST" enctype="multipart/form-data">
+			<fieldset>
+				<p>
+					Title: <input type="text" name="trackTitle" th:value="${trackForm.title}" required />
+					<span th:if="${trackForm.titleError} != null" class="error" th:text="${trackForm.titleError}"><br></span> 
 				</p>
-				<input type="radio" id="2" name="album" value="2" th:checked="${trackForm.albumChoice == 2}">
-				<label for="2">Insert new album</label>
-				<br>
-			
-				<p class="indented">
-					Name: <input type="text" name="albumName" th:value="${trackForm.albumName}" />
-					<span th:if="${trackForm.albumNameError} != null" class="error" th:text="${trackForm.albumNameError}"><br></span> 
+				<p> Genre: 
+					<select name="genre" required>
+					    <option value="Pop" th:selected="${trackForm.genre} == 'Pop'">Pop</option>
+						<option value="Rock" th:selected="${trackForm.genre} == 'Rock'">Rock</option>
+						<option value="EDM" th:selected="${trackForm.genre} == 'EDM'">EDM</option>
+						<option value="Hip hop" th:selected="${trackForm.genre} == 'Hip hop'">Hip hop</option>
+						<option value="Classical" th:selected="${trackForm.genre} == 'Classical'">Classical</option>
+						<option value="Folk" th:selected="${trackForm.genre} == 'Folk'">Folk</option>
+						<option value="Jazz" th:selected="${trackForm.genre} == 'Jazz'">Jazz</option>
+						<option value="Metal" th:selected="${trackForm.genre} == 'Metal'">Metal</option>
+						<option value="Other" th:selected="${trackForm.genre} == 'Other'">Other</option>
+				    </select>
+				    <span th:if="${trackForm.genreError} != null" class="error" th:text="${trackForm.genreError}"><br></span> 
 				</p>
-				<p class="indented">
-					Artist: <input type="text" name="albumArtist" th:value="${trackForm.albumArtist}" />
-					<span th:if="${trackForm.albumArtistError} != null" class="error" th:text="${trackForm.albumArtistError}"><br></span> 
+				<div>
+					<p th:if="${trackForm.albumChoiceError} != null" class="error" th:text="${trackForm.albumChoiceError}"></p>
+				    <input type="radio" id="1" name="album" value="1" th:checked="${trackForm.albumChoice == 1 or trackForm.albumChoice == null}" required>
+					<label for="1">From existing album</label>
+					<br>
+					<p class="indented"> Album:
+						<select name="albumId"><!--th:value="${trackForm.albumId}"-->
+							<option th:each="a : ${albums}" th:value="${a.id}" th:text="${a.name} + ' (by ' + ${a.artist} + ')'" th:selected="${trackForm.albumId} == ${a.id}">Mockup album name</option>
+						</select>
+						<span th:if="${trackForm.albumIdError} != null" class="error" th:text="${trackForm.albumIdError}"><br></span> 
+					</p>
+					<input type="radio" id="2" name="album" value="2" th:checked="${trackForm.albumChoice == 2}">
+					<label for="2">Insert new album</label>
+					<br>
+				
+					<p class="indented">
+						Name: <input type="text" name="albumName" th:value="${trackForm.albumName}" />
+						<span th:if="${trackForm.albumNameError} != null" class="error" th:text="${trackForm.albumNameError}"><br></span> 
+					</p>
+					<p class="indented">
+						Artist: <input type="text" name="albumArtist" th:value="${trackForm.albumArtist}" />
+						<span th:if="${trackForm.albumArtistError} != null" class="error" th:text="${trackForm.albumArtistError}"><br></span> 
+					</p>
+					<p class="indented">
+					<!-- TODO year does not clear if invalid -->
+					  	Year: <input type="number" name="albumYear" min="1800" max="#dates.year(#dates.createNow())" th:value="${trackForm.albumYear}" />
+					  	<span th:if="${trackForm.albumYearError} != null" class="error" th:text="${trackForm.albumYearError}"><br></span> 
+					</p>
+					<p class="indented">
+					  	Image: <input type="file" name="albumImage" accept="image/*" />
+					  	<span th:if="${trackForm.albumImageError} != null" class="error" th:text="${trackForm.albumImageError}"><br></span> 
+					</p>
+				</div>
+				<p>
+					Audio file: <input type="file" name="audio" accept="audio/*" required/>
+					<span th:if="${trackForm.audioError} != null" class="error" th:text="${trackForm.audioError}"><br></span> 
 				</p>
-				<p class="indented">
-				<!-- TODO year does not clear if invalid -->
-				  	Year: <input type="number" name="albumYear" min="1800" max="#dates.year(#dates.createNow())" th:value="${trackForm.albumYear}" />
-				  	<span th:if="${trackForm.albumYearError} != null" class="error" th:text="${trackForm.albumYearError}"><br></span> 
-				</p>
-				<p class="indented">
-				  	Image: <input type="file" name="albumImage" accept="image/*" />
-				  	<span th:if="${trackForm.albumImageError} != null" class="error" th:text="${trackForm.albumImageError}"><br></span> 
-				</p>
-				<span th:if="${trackForm.albumChoiceError} != null" class="error" th:text="${trackForm.albumChoiceError}"><br></span>
-			</div>
-			<p>
-				Audio file: <input type="file" name="audio" accept="audio/*" required/>
-				<span th:if="${trackForm.audioError} != null" class="error" th:text="${trackForm.audioError}"><br></span> 
-			</p>
-   			<br>
-			<input type="submit" name="Upload track">
-			<!-- TODO formbean does not clear -->
-			<input type="reset">
-		</fieldset>
-	</form>
-
+	   			<br>
+				<input type="submit" name="Upload track">
+				<!-- TODO formbean does not clear -->
+				<input type="reset">
+			</fieldset>
+		</form>
+	</td>
+	</table>
 </body>
 </html>
