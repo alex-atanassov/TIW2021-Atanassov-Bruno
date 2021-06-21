@@ -49,17 +49,11 @@ public class CreatePlaylist extends HttpServlet {
 			} else {
 				PlaylistDAO pDAO = new PlaylistDAO(connection);
 	
-				// check if duplicate playlist name for same user
-				// Note: DB is already protected from duplicates, but this is to get the correct error message
-//				if(pDAO.findPlaylistsByUser((User) session.getAttribute("user")).stream()
-//						.anyMatch(p -> p.getTitle().equals(title)))
-//					errorMsg = "Duplicate playlist name";
-//				else {
-					int userid = ((User) session.getAttribute("user")).getId();
-					pDAO.createPlaylist(title,userid);
-//				}
+				int userid = ((User) session.getAttribute("user")).getId();
+				pDAO.createPlaylist(title,userid);
 			}
 		} catch (SQLException e) {
+			// check if duplicate playlist name for same user (unique constraint)
 			if(e.getMessage().contains("Duplicate"))
 				errorMsg = "Duplicate name in your playlists";
 			else errorMsg = "Issue with database, creation failed";

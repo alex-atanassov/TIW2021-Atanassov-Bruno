@@ -57,18 +57,12 @@ public class AddTrackToPlaylist extends HttpServlet {
 			if (track == null || track.getUserid() != ((User) request.getSession().getAttribute("user")).getId()) {
 				errorMsg = "Invalid parameter, no track found";
 			} else {
-				int id = trackid;
-				
-				// check for possible duplicate (DB is already protected from duplicates, but this is to get the correct error message)
-//				if(new TrackCoverDAO(connection).findTracksByPlaylist(playlistid).stream().anyMatch(t -> t.getId() == id))
-//					errorMsg = "This playlist already contains the selected track";
-//				else
-					tDAO.addTrackToPlaylist(trackid, playlistid);
+				tDAO.addTrackToPlaylist(trackid, playlistid);
 			}
 		} catch (NumberFormatException e) {
 			errorMsg = "Invalid track ID";
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// check if cause is duplicate track for same playlist
 			if(e.getMessage().contains("Duplicate"))
 				errorMsg = "Duplicate track";
 			else errorMsg = "Issue with database, operation failed";

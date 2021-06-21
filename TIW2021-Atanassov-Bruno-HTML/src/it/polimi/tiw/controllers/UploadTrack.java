@@ -91,8 +91,10 @@ public class UploadTrack extends HttpServlet {
 			} catch (NumberFormatException e) {
 				trackForm.setGenericError("Invalid parameters");
 			} catch (SQLException e) {
-				if(e.getMessage().contains("Duplicate"))
+				// check if cause is duplicate value on unique constraint
+				if(e.getMessage().contains("Duplicate")) {
 					trackForm.setAlbumNameError("Duplicate album name for same artist");
+				}
 				else trackForm.setGenericError("Database error, operation failed");
 			} catch (IOException e) {
 				trackForm.setGenericError("I/O exception has occured");
