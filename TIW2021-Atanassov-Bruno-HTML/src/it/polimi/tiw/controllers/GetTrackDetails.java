@@ -50,8 +50,7 @@ public class GetTrackDetails extends HttpServlet {
 		try {
 			trackId = Integer.parseInt(request.getParameter("trackid"));
 		} catch (NumberFormatException | NullPointerException e) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("Incorrect parameter values");
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect parameter values");
 			return;
 		}
 		
@@ -66,21 +65,18 @@ public class GetTrackDetails extends HttpServlet {
 			track = trackDAO.findTrackById(trackId);
 			// check if track exists
 			if (track == null) {						
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				response.getWriter().println("Track not found");
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Track not found");
 				return;
 			}
 			// check ownership
 			if (track.getUser() != user.getId()) {
-				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				response.getWriter().println("User not allowed");
+				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not allowed");
 				return;
 			}
 			// get album data
 			album = albumDAO.findAlbumById(track.getAlbum());
 			if (album == null) {						
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				response.getWriter().println("Album not found");
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Album not found");
 				return;
 			}
 		} catch(SQLException e) {

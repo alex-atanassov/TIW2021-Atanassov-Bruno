@@ -61,15 +61,17 @@ public class GetPlaylistTracks extends HttpServlet {
 			playlistid = Integer.parseInt(request.getParameter("playlistid"));
 			// The covers of the tracks in this playlist
 			playlist = new PlaylistDAO(connection).findPlaylistById(playlistid);
-			playlistTracks = tDAO.findTracksByPlaylist(playlistid);
-			if (playlistTracks == null) {						
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				response.getWriter().println("Resource not found");
+			if (playlist == null) {						
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Playlist not found");
 				return;
 			}
-			if (playlist.getUser() != user.getId()) {
-				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				response.getWriter().println("User not allowed");
+			if (playlist != null && playlist.getUser() != user.getId()) {
+				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not allowed");
+				return;
+			}
+			playlistTracks = tDAO.findTracksByPlaylist(playlistid);
+			if (playlistTracks == null) {						
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Playlist not found");
 				return;
 			}
 		} catch(NumberFormatException e) {
