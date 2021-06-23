@@ -242,7 +242,7 @@
         this.update = function (arrayTracks) {
             var row, titlecell, imagecell, linkcell, linkanchor, previous, next;
             this.trackscontainer.innerHTML = "";
-
+			
             var self = this;
             for(var i = 0; i <= parseInt((arrayTracks.length - 1) / 5); i += 1) {
                 trackGroup = arrayTracks.slice(5 * i, 5 * i + 5);
@@ -261,7 +261,8 @@
 
                     imagecell = document.createElement("img");
                     imagecell.style.height = '200px';
-                    imagecell.style.width = '160px';
+                    imagecell.style.width = '100%';
+                    imagecell.style.objectFit = "cover";
 
                     imagecell.src = "data:image/jpeg;base64," + track.album.image;
                     cell.appendChild(imagecell);
@@ -362,10 +363,16 @@
         	this.alertmessage.hidden = true;
             this.title.textContent = "Title: " + track.title;
             this.genre.textContent = "Genre: " + track.genre;
-            this.albumname.textContent = "Name: " + track.album.name;
+            this.albumname.textContent = "Album: " + track.album.name;
             this.albumartist.textContent = "Artist: " + track.album.artist;
             this.albumyear.textContent = "Year: " + track.album.year;
-            this.albumimage.src = "data:image/jpeg;base64," + track.album.image;
+            
+            // reset background color
+            document.getElementsByTagName("body")[0].style.background = "white";
+            
+            // sets both image and background
+            for(img in this.albumimage)
+            	this.albumimage[img].src = "data:image/jpeg;base64," + track.album.image;
             this.player.src = "data:audio/mp3;base64," + track.audio;
         }
     }
@@ -515,6 +522,7 @@
                             }
                             // append available user albums to select in fieldset number 2
 							albumselect = self.wizard.getElementsByTagName("select")[1];
+							albumselect.innerHTML = "";
                             albumsToShow.forEach(function(album) {
                             	var row = document.createElement("option");
                             	row.value = album.id;
@@ -683,7 +691,7 @@
                 albumname: document.getElementById("album_name"),
                 albumartist: document.getElementById("album_artist"),
                 albumyear: document.getElementById("album_year"),
-                albumimage: document.getElementById("album_image"),
+                albumimage: document.getElementsByClassName("album_image"),
                 player: document.getElementById("track_audioplayer")
             });
 
@@ -707,4 +715,14 @@
             trackForm.show();
         };
     }
+    
+    // function used for background to follow scrolling
+    function parallax()
+	{
+	    var background = document.getElementsByClassName('album_image')[0]; 
+	    background.style.top = window.pageYOffset + 'px';
+	}
+	
+	window.addEventListener("scroll", parallax, false);
+	
 })();

@@ -10,18 +10,18 @@
 <script src="move_d&d.js" charset="utf-8"></script>
 </head>
 <body>
+	<img class="album_image" />
 	<div align="right">
 		<a href="Logout">Logout</a>
 	</div>
-	<h1>Playlists manager</h1>
-	<p>Welcome, <span id="id_username"></span></p>
-	<!-- div id="bg-image"></div-->
-	<div id="id_alert" class="alertmessage"></div>
+	<h1 align="center">Playlists manager</h1>
+	<p align="center">Welcome, <span id="id_username"></span></p>
+	<div align="center" id="id_alert" class="alertmessage"></div>
 
-	<table id="components">
+	<table id="components" class="boxed">
 		<tr>
-			<td class="component">
-				<h3>Your playlists</h3>
+			<td class="component" id="td_left">
+				<h3 align="center">Your playlists</h3>
 				<p id="playlistsError" class="alertmessage"></p>
 				<p id="zeroPlaylists"></p>
 				<table id="playlistscontainer" class="boxed">
@@ -46,8 +46,8 @@
 					</fieldset>
 				</form>
 			</td>
-			<td class="component" width="840px">
-				<h3>Tracks of playlist: <span id="playlist_name"></span></h3>
+			<td class="component" id="td_center">
+				<h3 align="center">Tracks of playlist: <span id="playlist_name"></span></h3>
 				<span id="playlistTracksError" class="alertmessage"><br></span>
 				<div id="track_groups"></div>
 				
@@ -67,17 +67,22 @@
 					</form>
 				</div>
 			</td>
-			<td class="component">
-				<h3>Track player</h3>
+			<td class="component" id="td_right">
+				<h3 align="center">Track player</h3>
 				<p id="notrackselected"></p>
 				<div id="track_player">
-					<p id="track_title" ></p>
-					<p id="track_genre" ></p>
-					<h4>Album data</h4>
-					<p id="album_name" ></p>
-					<p id="album_artist" ></p>
-					<p id="album_year" ></p>
-					<img width="336" id="album_image" /><br>
+					<table id="trackinfotable">
+					<td>
+						<p id="track_title" ></p>
+						<p id="track_genre" ></p>
+					</td>
+					<td>
+						<p id="album_name" ></p>
+						<p id="album_artist" ></p>
+						<p id="album_year" ></p>
+					</td>
+					</table>
+					<img width="336" class="album_image" /><br>
 					
 					<audio id="track_audioplayer" controls></audio>
 					
@@ -88,7 +93,7 @@
 
 	
 
-	<p>Upload your tracks here</p>
+	<p align="center">Upload your tracks here</p>
 	<span id="trackFormError" class="alertmessage"><br></span>
 	<form action="#" id="uploadtrackform" enctype="multipart/form-data">
 		<fieldset>

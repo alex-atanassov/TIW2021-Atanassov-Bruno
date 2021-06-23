@@ -1,15 +1,28 @@
+body {
+	background: radial-gradient(#e66465, #9198e5);
+}
+
+table {
+	margin: auto;
+	width: 100%;
+}
+
 .boxed {
 	border: 1px solid black;
 }
 
 .component {
-	border: 1px solid black;
 	padding: 10px;
 	vertical-align:top;
 }
 
+#td_center {
+	text-align: center;
+}
+
 #components {
 	border-spacing: 10px;
+	width: 100%;
 }
 
 .alertmessage{
@@ -72,17 +85,55 @@ th.sortable, .up, .down {
 	color: black;
 }
 
-/*background*/
-#bg-image {
-  /* Add the blur effect */
-  filter: blur(8px);
-  -webkit-filter: blur(8px);
+ body > .album_image {
+	top: 0;
+	left: 0;
+	opacity: 0.5;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+}
 
-  /* Full height */
-  height: 100%;
+fieldset, table:not(#components):not(#trackinfotable) {
+	background: white;
+}
 
-  /* Center and scale the image nicely */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-} 
+#uploadtrackform > fieldset {
+	width: 30%;
+	margin: auto;
+}
+
+#trackFormError {
+	text-align: center;
+}
+
+#trackinfotable {
+ 	margin: auto;
+ 	width: 100%;
+}
+
+#trackinfotable td {
+	vertical-align: top;
+	width: 50%;
+}
+
+#track_player {
+	text-align: center;
+}
+
+audio {
+	border-radius:7px 7px 7px 7px ;
+}
+
+#td_left {
+	width: 22%;
+}
+
+#td_right {
+	width: 22%;
+}
+#td_right * {
+	width: 100%;
+}

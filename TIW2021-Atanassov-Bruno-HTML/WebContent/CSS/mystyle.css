@@ -84,8 +84,8 @@ audio {
 	-o-transition:all 0.5s linear;
 	transition:all 0.5s linear;
 	-moz-border-radius:7px 7px 7px 7px ;
-	-webkit-border-radius:7px 7px 7px 7px ;
-	border-radius:7px 7px 7px 7px ;*/
+	-webkit-border-radius:7px 7px 7px 7px ;*/
+	border-radius:7px 7px 7px 7px ;
 }
 
 form, table:not(.container) {
