@@ -51,18 +51,18 @@ div.row {
 }
 
 #trackinfotable {
-	max-width: 80%;
-	min-height: 60%;
+	max-width: 50%;
  	margin: auto;
+ 	font-size: 25px;
 }
 
 #trackinfotable table {
-	width: 50%;
+	width: 30%;
 }
 
 #trackinfotable td {
 	vertical-align: top;
-	width: 25%;
+	width: 15%;
 	padding-top: 20%;
 	padding-bottom: 5%;
 }
@@ -71,27 +71,21 @@ div.row {
 	text-align: center;
 }
 
-audio:hover, audio:focus, audio:active {
-	-webkit-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
-	-moz-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
-	box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+/*audio:hover, audio:focus, audio:active {
 	-webkit-transform: scale(1.05);
 	-moz-transform: scale(1.05);
 	transform: scale(1.05);
-}
+}*/
 
 audio {
 	width: 50%;
-	-webkit-transition:all 0.5s linear;
+	/*-webkit-transition:all 0.5s linear;
 	-moz-transition:all 0.5s linear;
 	-o-transition:all 0.5s linear;
 	transition:all 0.5s linear;
-	-moz-box-shadow: 2px 2px 4px 0px #006773;
-	-webkit-box-shadow:  2px 2px 4px 0px #006773;
-	box-shadow: 2px 2px 4px 0px #006773;
 	-moz-border-radius:7px 7px 7px 7px ;
 	-webkit-border-radius:7px 7px 7px 7px ;
-	border-radius:7px 7px 7px 7px ;
+	border-radius:7px 7px 7px 7px ;*/
 }
 
 form, table:not(.container) {
