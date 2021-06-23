@@ -94,12 +94,11 @@
 	
 
 	<p align="center">Upload your tracks here</p>
-	<span id="trackFormError" class="alertmessage"><br></span>
+	<p id="trackFormError" class="alertmessage"></p>
 	<form action="#" id="uploadtrackform" enctype="multipart/form-data">
 		<fieldset>
 			<p>
 				Title: <input type="text" name="trackTitle" required/>
-				<span id="titleError"><br></span> 
 			</p>
 			<p> Genre: 
 				<select name="genre" required>
@@ -113,8 +112,6 @@
 					<option value="Metal">Metal</option>
 					<option value="Other">Other</option>
 			    </select>
-			    <!-- TODO remove error spans if unused-->
-			    <span id="genreError"><br></span> 
 			</p>
 			<div>
 			    <input type="radio" id="1" name="album" value="1" required>
@@ -124,14 +121,12 @@
 				<input type="radio" id="2" name="album" value="2">
 				<label for="2">Insert new album</label>
 				<br>
-				<span id="albumChoiceError" class="error"><br></span>
 			</div>
 			<input type="button" name="next" value="next" class="next">
 		</fieldset>
 		<fieldset>
 			<p> Album:
 				<select name="albumId" id="selectalbumid"></select>
-				<span id="albumIdError"><br></span> 
 			</p>
 			<input type="button" value="prev" name="prev" class="prev">
 			<input type="button" value="next" name="next" class="next">
@@ -139,19 +134,15 @@
 		<fieldset>
 			<p>
 				Name: <input type="text" name="albumName" required/>
-				<span id="albumNameError"><br></span> 
 			</p>
 			<p>
 				Artist: <input type="text" name="albumArtist" required/>
-				<span id="albumArtistError"><br></span> 
 			</p>
 			<p>
 			  	Year: <input type="number" name="albumYear" min="1800" required/>
-			  	<span id="albumYearError"><br></span> 
 			</p>
 			<p>
 			  	Image: <input type="file" name="albumImage" accept="image/*" required/>
-			  	<span id="albumImageError"><br></span> 
 			</p>
 			<input type="button" value="prev" name="prev" class="prev">
 			<input type="button" value="next" name="next" class="next">
@@ -159,7 +150,6 @@
 		<fieldset>
 			<p>
 				Audio file: <input type="file" name="audio" accept="audio/*" required/>
-				<span id="albumAudioError" class="error"><br></span> 
 			</p>
    			<br>
 			<input type="button" value="prev" name="prev" class="prev"> 

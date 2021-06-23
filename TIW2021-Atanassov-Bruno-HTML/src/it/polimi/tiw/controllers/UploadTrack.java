@@ -60,20 +60,21 @@ public class UploadTrack extends HttpServlet {
 		Part albumimg = request.getPart("albumImage");
 		
 		TrackForm trackForm = new TrackForm(title, genre, albumchoice, albumid, albumName, artist, year, albumimg, file);
-		
+		int userid = ((User) session.getAttribute("user")).getId();
+
 		if (trackForm.isValid()) {
 			AlbumDAO aDAO = new AlbumDAO(connection);
 			GenreDAO gDAO = new GenreDAO(connection);
 			TrackDAO tDAO = new TrackDAO(connection);
 			try {
 				if(gDAO.findGenreByName(genre) == null) {
-					trackForm.setGenreError("Invalid genre.");
+					trackForm.setGenreError("Invalid genre");
 				}
-				else if(Integer.parseInt(albumchoice) == 1 && aDAO.findAlbumById(Integer.parseInt(albumid) /*Ocio al formato*/) == null) {
+				else if(Integer.parseInt(albumchoice) == 1 && (aDAO.findAlbumById(Integer.parseInt(albumid)) == null
+						|| aDAO.findAlbumById(Integer.parseInt(albumid)).getUserid() != userid)) {
 					trackForm.setAlbumIdError("Invalid existing album choice.");
 				} else {
 					int album;
-					int userid = ((User) session.getAttribute("user")).getId();
 					
 					// disable autocommit for the next two SQL updates
 					connection.setAutoCommit(false);

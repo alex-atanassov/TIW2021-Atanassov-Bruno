@@ -12,8 +12,6 @@ public class TrackForm {
 	private String albumName;
 	private String albumArtist;
 	private String albumYear;
-//	private Part albumImage;
-//	private Part audio;
 	
 	private int albumChoiceNumber = 0;
 	
@@ -109,7 +107,7 @@ public class TrackForm {
 				return;
 			}
 			
-			if (year < 1800 && year > Calendar.getInstance().get(Calendar.YEAR))
+			if (year < 1800 || year > Calendar.getInstance().get(Calendar.YEAR))
 				this.setAlbumYearError("A valid year is required");
 			else {
 				this.setAlbumYearError(null);
@@ -168,7 +166,7 @@ public class TrackForm {
 		if (choice != 1 && choice != 2)
 			this.setAlbumChoiceError("Please choose between an existing album or a new one");
 		else {
-			albumChoiceNumber = choice;	// TODO ???
+			albumChoiceNumber = choice;
 			this.setAlbumChoiceError(null);
 			this.albumChoice = albumChoice;
 		}
@@ -190,10 +188,9 @@ public class TrackForm {
 		return albumName;
 	}
 
-	private void setAlbumNameError(String albumNameError) {
+	public void setAlbumNameError(String albumNameError) {
 		this.albumNameError = albumNameError;
 	}
-
 
 	public String getAlbumArtist() {
 		return albumArtist;
@@ -294,6 +291,33 @@ public class TrackForm {
 		return albumChoice;
 	}
 
-
+	public String getErrors() {
+		StringBuilder s = new StringBuilder();
+		
+		// appends non null errors
+		if(getTitleError() != null)
+			s.append(getTitleError() + "\n");
+		if(getGenreError() != null)
+			s.append(getGenreError() + "\n");
+		if(getAlbumChoiceError() != null)
+			s.append(getAlbumChoiceError() + "\n");
+		if(getAlbumidError() != null)
+			s.append(getAlbumidError() + "\n");
+		if(getAlbumNameError() != null)
+			s.append(getAlbumNameError() + "\n");
+		if(getAlbumArtistError() != null)
+			s.append(getAlbumArtistError() + "\n");
+		if(getAlbumYearError() != null)
+			s.append(getAlbumYearError() + "\n");
+		if(getAlbumImageError() != null)
+			s.append(getAlbumImageError() + "\n");
+		if(getAudioError() != null)
+			s.append(getAudioError() + "\n");
+		
+		if(s.length() > 0){
+		    s.deleteCharAt(s.length() - 1);
+		}
+		return s.toString();
+	}
 
 }

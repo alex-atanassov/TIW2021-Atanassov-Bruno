@@ -49,8 +49,14 @@ public class CreatePlaylist extends HttpServlet {
 				newPlaylistId = pDAO.createPlaylist(title,userid);
 			} 
 		} catch (SQLException e) {
-			response.setStatus(500);
-			response.getWriter().println("Issue with DB, creation failed");
+			// check if duplicate playlist name for same user (unique constraint)
+			if(e.getMessage().contains("Duplicate")) {
+				response.setStatus(400);
+				response.getWriter().println("Duplicate name in your playlists");
+			} else {
+				response.setStatus(500);
+				response.getWriter().println("Issue with DB, creation failed");
+			}
 			return;
 		}
 		
@@ -58,7 +64,6 @@ public class CreatePlaylist extends HttpServlet {
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().print(newPlaylistId);
-				
 	}
 	
 	public void destroy() {

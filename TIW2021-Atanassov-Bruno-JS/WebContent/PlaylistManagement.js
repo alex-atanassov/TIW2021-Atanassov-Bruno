@@ -612,10 +612,10 @@
 	            function(req) {
 	              if (req.readyState == XMLHttpRequest.DONE) {
 	                var message = req.responseText; // error message, if present
+	                self.alert.textContent = message;
 	                if (req.status == 200) {
 	                  orchestrator.refresh(); // TODO manage
 	                } else {
-	                  self.alert.textContent = message;
 	                  self.reset();
 	                }
 	              }
@@ -631,6 +631,7 @@
 	    };
 
 	    this.reset = function() {
+	      // CSS-like selector: fieldsets inside #uploadtrackform
 	      var fieldsets = document.querySelectorAll("#" + this.wizard.id + " fieldset");
 	      fieldsets[0].hidden = false;
 	      fieldsets[1].hidden = true;
@@ -639,13 +640,10 @@
 		  
 		  // set max year to new album
 		  fieldsets[2].querySelectorAll("input[name='albumYear']")[0].max = new Date().getFullYear();
-	      this.alert.textContent = "";
 	    }
 
 	    this.changeStep = function(origin, destination) {
 	      origin.hidden = true;
-	      //if(origin == origin.closest("form").children[2])
-	      	//origin.querySelectorAll("input").forEach((input) => input.required = false);
 	      destination.hidden = false;
 	    }
 	  }

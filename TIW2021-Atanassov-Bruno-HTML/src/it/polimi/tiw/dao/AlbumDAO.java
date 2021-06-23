@@ -37,6 +37,7 @@ public class AlbumDAO {
 				album.setName(result.getString("name"));
 				album.setYear(result.getInt("year"));
 				album.setArtist(result.getString("artist"));
+				album.setUserid(result.getInt("userid"));
 				
 				byte[] imgData = result.getBytes("image");
 				String encodedImg = Base64.getEncoder().encodeToString(imgData);

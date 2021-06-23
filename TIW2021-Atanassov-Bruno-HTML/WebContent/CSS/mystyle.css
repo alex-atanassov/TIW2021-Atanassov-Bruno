@@ -91,3 +91,7 @@ audio {
 form, table:not(.container) {
 	background: white;
 }
+
+td > img {
+	object-fit: cover;
+}

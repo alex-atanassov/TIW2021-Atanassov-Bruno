@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import it.polimi.tiw.dao.PlaylistDAO;
 import it.polimi.tiw.utils.ConnectionHandler;
@@ -29,18 +30,34 @@ public class ReorderPlaylistTracks extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 				
-		int playlistid = (Integer) request.getSession().getAttribute("playlistid");	//TODO exception
+		int playlistid = (Integer) request.getSession().getAttribute("playlistid");
 		
-		int[] orderedTracksIds = new Gson().fromJson(request.getParameter("orderedTracks"), int[].class);
-		//System.out.println(request.getParameter("orderedTracks"));
-		//TODO checks, errors, exceptions, etc.
+		Integer[] orderedTracksIds = new Gson().fromJson(request.getParameter("orderedTracks"), Integer[].class);
 		
 		try {
+			
+			// checks for inexistent or unauthorized tracks
+//			List<Integer> tracks = Arrays.asList(orderedTracksIds);
+
+//			TrackDAO tDAO = new TrackDAO(connection);
+//			for(int t : tracks) {
+//				Track track = tDAO.findTrackById(t);
+//				if(track == null || track.getUserid() != ((User) request.getSession().getAttribute("user")).getId()) {
+//					response.setStatus(400);
+//					response.getWriter().println("Found an inexistent or unauthorized track");
+//					return;
+//				}
+//			}
+		
 			new PlaylistDAO(connection).reorderPlaylistTracks(orderedTracksIds, playlistid);
 		} catch (SQLException e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Issue with DB, reorder failed");
 			return;
+		} catch (JsonSyntaxException e) {
+			response.setStatus(400);
+			response.getWriter().println("Invalid JSON");
+			return;			
 		}
 		
 		response.setStatus(HttpServletResponse.SC_OK);

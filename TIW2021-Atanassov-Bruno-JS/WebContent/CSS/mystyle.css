@@ -111,6 +111,7 @@ fieldset, table:not(#components):not(#trackinfotable) {
 }
 
 #trackFormError {
+	white-space: pre-line;
 	text-align: center;
 }
 

@@ -75,7 +75,6 @@ public class PlaylistDAO {
 	public List<Playlist> findPlaylistsByUser(User user) throws SQLException {
 		
 		List<Playlist> playlists = new ArrayList<Playlist>();
-		//TODO check query
 		String query = "SELECT * FROM playlist where userid = ? order by date desc";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
@@ -87,7 +86,6 @@ public class PlaylistDAO {
 				Playlist playlist= new Playlist();
 				playlist.setId(result.getInt("id"));
 				playlist.setTitle(result.getString("name"));
-				//playlist.setUser(user);
 				playlist.setDate(new SimpleDateFormat( "yyyy-MM-dd" ).format(result.getDate("date")));
 				playlists.add(playlist);
 			}
@@ -113,13 +111,13 @@ public class PlaylistDAO {
 		return playlists;
 	}
 	
-	public int reorderPlaylistTracks(int[] orderedTrackIds, int playlistid) throws SQLException {
+	public int reorderPlaylistTracks(Integer[] orderedTracksIds, int playlistid) throws SQLException {
 		int code;
 		String query = "UPDATE playlist_containment "
 				+ "SET progressive = "
 				+ "(CASE trackid ";
 		
-		for(int i = 1; i <= orderedTrackIds.length; i++)
+		for(int i = 1; i <= orderedTracksIds.length; i++)
 			query += "WHEN ? THEN ? ";
 		query += "ELSE trackid "
 				+ "END) "
@@ -128,12 +126,12 @@ public class PlaylistDAO {
 		PreparedStatement pstatement = null;
 		try {
 			pstatement = connection.prepareStatement(query);
-			for(int i = 1; i <= orderedTrackIds.length; i++) {
-				pstatement.setInt(2 * i - 1, orderedTrackIds[i - 1]);
+			for(int i = 1; i <= orderedTracksIds.length; i++) {
+				pstatement.setInt(2 * i - 1, orderedTracksIds[i - 1]);
 				pstatement.setInt(2 * i, i);
 			}
 			
-			pstatement.setInt(2 * orderedTrackIds.length + 1, playlistid);
+			pstatement.setInt(2 * orderedTracksIds.length + 1, playlistid);
 		
 			code = pstatement.executeUpdate();
 		} catch (SQLException e) {

@@ -54,13 +54,16 @@ public class AddTrackToPlaylist extends HttpServlet {
 			track = tDAO.findTrackById(trackid);
 			
 			// if track does not exist, or the owner is another user
-			if (track == null || track.getUserid() != ((User) request.getSession().getAttribute("user")).getId()) {
+			if (track == null) {
 				errorMsg = "Invalid parameter, no track found";
+			} else if(track.getUserid() != ((User) request.getSession().getAttribute("user")).getId()) {
+				errorMsg = "Unauthorized to access this track";
 			} else {
 				tDAO.addTrackToPlaylist(trackid, playlistid);
 			}
+			
 		} catch (NumberFormatException e) {
-			errorMsg = "Invalid track ID";
+			errorMsg = "Invalid track ID format";
 		} catch (SQLException e) {
 			// check if cause is duplicate track for same playlist
 			if(e.getMessage().contains("Duplicate"))

@@ -34,8 +34,14 @@ public class AddTrackToPlaylist extends HttpServlet {
 				
 		try {
 			playlistid = (Integer) request.getSession().getAttribute("playlistid");
-			//TODO remove attribute after usage (not in this servlet)
 			trackid = Integer.parseInt(request.getParameter("trackid"));
+			
+			// null check for destination playlist
+			if(playlistid == null) {
+				response.setStatus(400);
+				response.getWriter().println("No playlist selected");
+				return;
+			}
 			
 			TrackDAO tDAO = new TrackDAO(connection);
 			Track track = null;
@@ -55,12 +61,16 @@ public class AddTrackToPlaylist extends HttpServlet {
 			response.getWriter().println("Invalid track id");
 			return;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			response.setStatus(500);
-			response.getWriter().println("Issue with DB");
+			// check if cause is duplicate track for same playlist
+			if(e.getMessage().contains("Duplicate")) {
+				response.setStatus(400);
+				response.getWriter().println("Duplicate track");
+			} else {
+				response.setStatus(500);
+				response.getWriter().println("Issue with DB");
+			}
 			return;
 		}
-					
 	}
 
 	public void destroy() {

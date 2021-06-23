@@ -6,6 +6,7 @@ public class Album {
 	private String artist;
 	private int year;
 	private String image;
+	private int userid;
 	
 	public Album() {}
 	
@@ -45,6 +46,14 @@ public class Album {
 	}
 	public void setArtist(String artist) {
 		this.artist = artist;
+	}
+
+	public int getUserid() {
+		return userid;
+	}
+
+	public void setUserid(int userid) {
+		this.userid = userid;
 	}
 
 }

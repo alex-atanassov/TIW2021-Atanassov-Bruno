@@ -24,7 +24,7 @@ public class TrackCoverDAO {
 		String query = "SELECT * "
 				+ "FROM (track JOIN album ON track.albumid = album.id) JOIN playlist_containment ON track.id = playlist_containment.trackid "
 				+ "WHERE playlist_containment.playlistid = ? "
-				+ "ORDER BY progressive ASC, album.year DESC";	//TODO check this row
+				+ "ORDER BY progressive ASC, album.year DESC";
 		ResultSet result = null;
 		PreparedStatement pstatement = null;
 		try {

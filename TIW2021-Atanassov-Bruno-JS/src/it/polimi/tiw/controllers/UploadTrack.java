@@ -46,42 +46,69 @@ public class UploadTrack extends HttpServlet {
 		Part albumimg = request.getPart("albumImage");
 		
 		TrackForm trackForm = new TrackForm(title, genre, albumchoice, albumid, albumName, artist, year, albumimg, file);
-		
+		int userid = ((User) session.getAttribute("user")).getId();
+
 		if (trackForm.isValid()) {
 			AlbumDAO aDAO = new AlbumDAO(connection);
 			GenreDAO gDAO = new GenreDAO(connection);
 			TrackDAO tDAO = new TrackDAO(connection);
 			try {
+				
 				if(gDAO.findGenreByName(genre) == null) {
-					trackForm.setGenreError("Invalid genre.");	//TODO set genre to null?
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					response.getWriter().println("Invalid genre");
+					return;
 				}
-				else if(Integer.parseInt(albumchoice) == 1 && aDAO.findAlbumById(Integer.parseInt(albumid) /*Ocio al formato*/) == null) {
-					trackForm.setAlbumIdError("Invalid existing album choice.");
+				else if(Integer.parseInt(albumchoice) == 1 && (aDAO.findAlbumById(Integer.parseInt(albumid)) == null
+						|| aDAO.findAlbumById(Integer.parseInt(albumid)).getUserid() != userid)) {
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					response.getWriter().println("Invalid existing album choice");
+					return;
 				} else {
 					int album;
-					int userid = ((User) session.getAttribute("user")).getId();
+					
+					// disable autocommit for the next two SQL updates
+					connection.setAutoCommit(false);
+
 					if(Integer.parseInt(albumchoice) == 2) {
 						album = aDAO.createAlbum(albumName, artist, Integer.parseInt(year), albumimg, userid);
-						// TODO duplicate albumName+artist
 					}
-					else album = Integer.parseInt(albumid);	//TODO else if - else
+					else album = Integer.parseInt(albumid);
 					
 					tDAO.uploadTrack(title, album, genre, file, userid);
-					
+					connection.commit();
+					connection.setAutoCommit(true);
 				}
 			} catch (NumberFormatException e) {
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				response.getWriter().println("Invalid parameters");
+				response.getWriter().println("Parsing error: invalid parameters");
 				return;
 			} catch (SQLException e) {
-				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				response.getWriter().println("Issue with DB");
+				// check if cause is duplicate value on unique constraint
+				if(e.getMessage().contains("Duplicate")) {
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					response.getWriter().println("Duplicate album name for same artist");
+				} else {
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					response.getWriter().println("Issue with Database happened");
+				}
 				return;
 			} catch (IOException e) {
-				// TODO handle
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().println("I/O exception has occured");
+				return;
 			}
-		} // TODO else: return errors in form
+		} else {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println(trackForm.getErrors());
+			return;
+		}
 		
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().println("Creation successful");
+
 	}
 	
 	public void destroy() {
