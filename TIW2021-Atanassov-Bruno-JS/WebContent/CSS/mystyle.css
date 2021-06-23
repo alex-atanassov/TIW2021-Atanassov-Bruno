@@ -7,6 +7,11 @@ table {
 	width: 100%;
 }
 
+.modal_content > table {
+	margin: auto;
+	width: 30%;
+}
+
 .boxed {
 	border: 1px solid black;
 }
@@ -123,7 +128,7 @@ fieldset, table:not(#components):not(#trackinfotable) {
 	text-align: center;
 }
 
-audio {
+#td_right img, audio {
 	border-radius:7px 7px 7px 7px ;
 }
 

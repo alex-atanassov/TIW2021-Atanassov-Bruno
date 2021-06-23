@@ -716,7 +716,6 @@
         };
     }
     
-    // function used for background to follow scrolling
     function parallax()
 	{
 	    var background = document.getElementsByClassName('album_image')[0]; 
