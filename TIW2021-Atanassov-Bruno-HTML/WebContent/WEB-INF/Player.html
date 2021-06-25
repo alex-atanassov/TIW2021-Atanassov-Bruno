@@ -8,7 +8,7 @@
 </head>
 <body id="player">
 	<img class="albumimagebackground" th:src="'data:image/*;base64,' + ${album.image}" alt="Image not found. Placeholder text"/><br>
-	<div align="right">
+	<div align="right" class="logoutdiv">
 		<a th:href="@{/Logout}">Logout</a>
 	</div>
 	<h1 align="center">Track player</h1>

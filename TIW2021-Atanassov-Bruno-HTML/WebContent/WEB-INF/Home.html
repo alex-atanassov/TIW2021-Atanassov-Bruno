@@ -7,7 +7,7 @@
 	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
 <body>
-	<div align="right">
+	<div align="right" class=logoutdiv>
 		<a th:href="@{/Logout}">Logout</a>
 	</div>
 	<table class="container">
@@ -15,7 +15,7 @@
 		<h1>Your playlists</h1>
 		<p th:text="${'Welcome back ' + session.user.name + ' ' + session.user.surname}">Welcome.</p>
 		<div th:switch="${playlists.size() &gt; 0}">
-			<table th:case="true">
+			<table th:case="true" id="playliststable">
 				<thead>
 					<tr>
 						<th>Name</th>
@@ -33,9 +33,6 @@
 			</table>
 			<p th:case="*" th:text="${'No playlists available to display.'}"></p>
 		</div>
-	</td>
-	
-	<td>
 		<p>Create a new playlist here</p>
 		<form action="#" th:action="@{/CreatePlaylist}" method="POST">
 			<fieldset>
@@ -46,6 +43,10 @@
 				<input type="submit" name="Create playlist">
 			</fieldset>
 		</form>
+	</td>
+	
+	<td>
+		
 	
 		<p>Upload your tracks here</p>
 		<form action="#" th:action="@{/UploadTrack}" method="POST" enctype="multipart/form-data">

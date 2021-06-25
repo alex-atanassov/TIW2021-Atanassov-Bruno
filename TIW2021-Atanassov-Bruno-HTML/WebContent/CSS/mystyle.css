@@ -1,5 +1,11 @@
 body:not(#player) {
 	background: linear-gradient(#9198e5,#e66465);
+	background-attachment: fixed;
+}
+
+.logoutdiv {
+	position: relative;
+	height: 0;
 }
 
 table:not(.container){
@@ -17,14 +23,56 @@ th, tr, table:not(.container) td {
 	width: 90%;
 }
 
-.container td {
+.container > tbody > tr > td {
  	vertical-align: top;
 	width: 30%;
 }
 
-table.container + td {
-	width: 20%;
-	border-collapse: collapse;
+body:not(#player) > .container td:nth-child(2) > p {
+ 	padding-top: 60px;
+}
+
+table.container td:nth-child(1) > form {
+	width: 70%;
+}
+
+table.container td:nth-child(1) table {
+	height: 300px;
+	overflow: hidden;
+}
+
+#playliststable {
+	width: 70%;
+	max-height: 300px;
+	display: block;
+}
+
+#playliststable > thead {
+	width: 100%;
+	display: inline-block;
+	text-align: left;
+}
+
+#playliststable > tbody {
+	max-height: 300px;
+	display: inline-block;
+	width: 100%;
+	overflow: auto;
+	text-align: left;
+}
+
+#playliststable thead {
+	padding-left: 15px;
+}
+
+#playliststable th {
+	width: 30%;
+}
+
+#playliststable td  {
+	width: 28%;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 .indented {
@@ -96,8 +144,9 @@ audio {
 }
 
 form, table:not(.container) {
-	background: white;
-  	padding: 5px;
+	background: #FFFFE0;
+  	padding-left: 5px;
+  	padding-right: 5px;
   	border-radius: 7px;
 }
 
