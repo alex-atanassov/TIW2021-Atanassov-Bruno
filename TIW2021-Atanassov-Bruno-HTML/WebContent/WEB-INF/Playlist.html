@@ -20,7 +20,7 @@
 						<tr>
 							<td th:each="j : ${#numbers.sequence( 0, 5 > tracks.size() - 5 * i ? tracks.size() - 5 * i - 1 : 4)}">
 								<span th:text="${tracks[5 * i + j].title}">Mockup song</span><br>
-								<img th:src="'data:image/*;base64,' + ${tracks[5 * i + j].image}" width="240" height="300" alt="Image not found. Placeholder text"/><br>
+								<img th:src="'data:image/*;base64,' + ${tracks[5 * i + j].image}" width="192" height="240" alt="Image not found. Placeholder text"/><br>
 								<a th:href="@{/GetTrackDetails(trackid=${tracks[5 * i + j].id})}">Play</a>
 							</td>
 						</tr>

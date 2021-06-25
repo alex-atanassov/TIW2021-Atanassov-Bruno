@@ -36,7 +36,7 @@ table.container + td {
 }
 
 div.row {
-  height: 400px;
+  height: 340px;
   overflow: hidden;
 }
 
@@ -98,7 +98,7 @@ audio {
 form, table:not(.container) {
 	background: white;
   	padding: 5px;
-  	border-radius: 15px;
+  	border-radius: 7px;
 }
 
 td > img {
