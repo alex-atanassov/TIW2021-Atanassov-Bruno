@@ -28,6 +28,7 @@ table {
 #components {
 	border-spacing: 10px;
 	width: 100%;
+	border:0;
 }
 
 .alertmessage{
@@ -101,8 +102,15 @@ th.sortable, .up, .down {
 	z-index: -1;
 }
 
-fieldset, table:not(#components):not(#trackinfotable) {
-	background: white;
+table:not(#components):not(#trackinfotable) {
+	background: #FFFFE0;
+	border: 1px solid black;
+  	padding: 5px;
+  	border-radius: 15px;
+}
+
+fieldset{
+	border: 0;
 }
 
 #uploadtrackform > fieldset {

@@ -45,55 +45,9 @@
 						<input type="button" value="Create playlist">
 					</fieldset>
 				</form>
-			</td>
-			<td class="component" id="td_center">
-				<h3 align="center">Tracks of playlist: <span id="playlist_name"></span></h3>
-				<span id="playlistTracksError" class="alertmessage"><br></span>
-				<div id="track_groups"></div>
-				
-				<div>
-					<p>Add a track to this playlist</p>
-					<form action="#" id="addtrackform">
-						<fieldset>
-							<p>
-								Track to add:
-								<select name="trackid">
-								</select>
-								<span id="addToPlaylistError" class="alertmessage"><br></span>
-								<!-- input type="hidden" name="playlistid" th:value="${playlistid}"-->
-							</p>
-							<input type="button" value="Add track">
-						</fieldset>
-					</form>
-				</div>
-			</td>
-			<td class="component" id="td_right">
-				<h3 align="center">Track player</h3>
-				<p id="notrackselected"></p>
-				<div id="track_player">
-					<table id="trackinfotable">
-					<td>
-						<p id="track_title" ></p>
-						<p id="track_genre" ></p>
-					</td>
-					<td>
-						<p id="album_name" ></p>
-						<p id="album_artist" ></p>
-						<p id="album_year" ></p>
-					</td>
-					</table>
-					<img width="336" class="album_image" /><br>
-					
-					<audio id="track_audioplayer" controls></audio>
-					
-				</div>
-			</td>
-		</tr>
-	</table>
-
-	
-
-	<p align="center">Upload your tracks here</p>
+				</td>
+		<td id="td">		
+		<p align="right">Upload your tracks here</p>
 	<p id="trackFormError" class="alertmessage"></p>
 	<form action="#" id="uploadtrackform" enctype="multipart/form-data">
 		<fieldset>
@@ -157,6 +111,57 @@
 		    <input type="button" value="submit" name="submit" class="submit">
 		</fieldset>
 	</form>
+			</td>
+			
+		</tr>
+		<tr>
+			<td class="component" id="td_center">
+					<h3 align="center">Tracks of playlist: <span id="playlist_name"></span></h3>
+					<span id="playlistTracksError" class="alertmessage"><br></span>
+					<div id="track_groups"></div>
+					
+					<div>
+						<p>Add a track to this playlist</p>
+						<form action="#" id="addtrackform">
+							<fieldset>
+								<p>
+									Track to add:
+									<select name="trackid">
+									</select>
+									<span id="addToPlaylistError" class="alertmessage"><br></span>
+									<!-- input type="hidden" name="playlistid" th:value="${playlistid}"-->
+								</p>
+								<input type="button" value="Add track">
+							</fieldset>
+						</form>
+					</div>
+				</td>
+			<td class="component" id="td_right">
+					<h3 align="center">Track player</h3>
+					<p id="notrackselected"></p>
+					<div id="track_player">
+						<table id="trackinfotable">
+						<td>
+							<p id="track_title" ></p>
+							<p id="track_genre" ></p>
+						</td>
+						<td>
+							<p id="album_name" ></p>
+							<p id="album_artist" ></p>
+							<p id="album_year" ></p>
+						</td>
+						</table>
+						<img width="336" class="album_image" /><br>
+						
+						<audio id="track_audioplayer" controls></audio>
+						
+					</div>
+				</td>
+		</tr>
+	</table>
+
+	
+
 	
 	<div id="reorder_modal" class="modal">
 	
