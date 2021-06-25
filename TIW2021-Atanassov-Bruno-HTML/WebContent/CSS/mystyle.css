@@ -1,9 +1,15 @@
 body:not(#player) {
-	background: radial-gradient(#e66465, #9198e5);
+	background: linear-gradient(#9198e5,#e66465);
 }
 
-table:not(.container), th, tr, table:not(.container) td {
+table:not(.container){
 	border: 1px solid black;
+  	padding: 5px;
+  	border-radius: 15px;
+}
+
+th, tr, table:not(.container) td {
+	border-collapse: collapse;
 }
 
 .container {
@@ -18,6 +24,7 @@ table:not(.container), th, tr, table:not(.container) td {
 
 table.container + td {
 	width: 20%;
+	border-collapse: collapse;
 }
 
 .indented {
@@ -36,7 +43,7 @@ div.row {
 #addform {
 	width: 90%;
 	margin: auto;
-	text-align: center;
+	text-align: center;	
 }
 
 .albumimagebackground {
@@ -53,7 +60,7 @@ div.row {
 #trackinfotable {
 	max-width: 50%;
  	margin: auto;
- 	font-size: 25px;
+ 	font-size: 25px; 	
 }
 
 #trackinfotable table {
@@ -90,8 +97,14 @@ audio {
 
 form, table:not(.container) {
 	background: white;
+  	padding: 5px;
+  	border-radius: 15px;
 }
 
 td > img {
 	object-fit: cover;
+}
+
+fieldset{
+	border: 0;
 }
