@@ -8,6 +8,14 @@ body:not(#player) {
 	height: 0;
 }
 
+.logoutdiv a {
+    background-color: #FFFFE0;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-bottom: 3px;
+    border-radius: 5px;
+}
+
 table:not(.container){
 	border: 1px solid black;
   	padding: 5px;
