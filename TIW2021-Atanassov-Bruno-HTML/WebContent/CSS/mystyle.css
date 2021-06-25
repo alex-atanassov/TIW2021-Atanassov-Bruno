@@ -58,7 +58,7 @@ table.container td:nth-child(1) table {
 #playliststable > thead {
 	width: 100%;
 	display: inline-block;
-	text-align: left;
+	text-align: center;
 }
 
 #playliststable > tbody {
@@ -66,11 +66,7 @@ table.container td:nth-child(1) table {
 	display: inline-block;
 	width: 100%;
 	overflow: auto;
-	text-align: left;
-}
-
-#playliststable thead {
-	padding-left: 15px;
+	text-align: center;
 }
 
 #playliststable th {
