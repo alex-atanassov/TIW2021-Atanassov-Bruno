@@ -11,17 +11,18 @@
 </head>
 <body>
 	<img class="album_image" />
-	<div align="right">
+	<div align="right" class="logoutdiv">
 		<a href="Logout">Logout</a>
 	</div>
 	<h1 align="center">Playlists manager</h1>
 	<p align="center">Welcome, <span id="id_username"></span></p>
 	<div align="center" id="id_alert" class="alertmessage"></div>
 
-	<table id="components" class="boxed">
+	<table class="components" id="top">
 		<tr>
-			<td class="component" id="td_left">
+			<td class="component" id="td_topleft">
 				<h3 align="center">Your playlists</h3>
+				<div class="boxed">
 				<p id="playlistsError" class="alertmessage"></p>
 				<p id="zeroPlaylists"></p>
 				<table id="playlistscontainer" class="boxed">
@@ -35,22 +36,23 @@
 					</thead>
 					<tbody id="playlistsbody"/>
 				</table>
-				<p>Create a new playlist here</p>
 				<form action="#" id="createplaylistform">
 					<fieldset>
+						<h3>Create a new playlist here</h3>
 						<p>
+							<p class="alertmessage" id="playlistCreationError"><br></p>
 							Name: <input type="text" name="playlistTitle" required />
-							<span class="alertmessage" id="playlistCreationError"><br></span>
 						</p>
 						<input type="button" value="Create playlist">
 					</fieldset>
 				</form>
+				</div>
 				</td>
-		<td id="td">		
-		<p align="right">Upload your tracks here</p>
-	<p id="trackFormError" class="alertmessage"></p>
+		<td id="td_topright">		
+		<h3>Upload your tracks here</h3>
 	<form action="#" id="uploadtrackform" enctype="multipart/form-data">
 		<fieldset>
+			<p id="trackFormError" class="alertmessage"></p>
 			<p>
 				Title: <input type="text" name="trackTitle" required/>
 			</p>
@@ -76,6 +78,7 @@
 				<label for="2">Insert new album</label>
 				<br>
 			</div>
+			<br>
 			<input type="button" name="next" value="next" class="next">
 		</fieldset>
 		<fieldset>
@@ -114,14 +117,17 @@
 			</td>
 			
 		</tr>
+		</table>
+		<table class="components" id="bottom" >
 		<tr>
-			<td class="component" id="td_center">
+			<td class="component" id="td_botleft" align="center">
 					<h3 align="center">Tracks of playlist: <span id="playlist_name"></span></h3>
-					<span id="playlistTracksError" class="alertmessage"><br></span>
+					<div class="boxed">
+					<p id="playlistTracksError" class="alertmessage"></p>
 					<div id="track_groups"></div>
 					
-					<div>
-						<p>Add a track to this playlist</p>
+					
+						<h3>Add a track to this playlist</h3>
 						<form action="#" id="addtrackform">
 							<fieldset>
 								<p>
@@ -136,9 +142,10 @@
 						</form>
 					</div>
 				</td>
-			<td class="component" id="td_right">
+			<td class="component" id="td_botright">
 					<h3 align="center">Track player</h3>
-					<p id="notrackselected"></p>
+					<div class="boxed">
+					<p id="notrackselected" align="center"></p>
 					<div id="track_player">
 						<table id="trackinfotable">
 						<td>
@@ -151,10 +158,11 @@
 							<p id="album_year" ></p>
 						</td>
 						</table>
-						<img width="336" class="album_image" /><br>
+						<img class="album_image" /><br>
 						
 						<audio id="track_audioplayer" controls></audio>
 						
+					</div>
 					</div>
 				</td>
 		</tr>
@@ -167,7 +175,7 @@
 	
 		<div align="center" class="modal_content">
 		    <span class="close">&times;</span>
-		    <p>Reorder tracks of playlist: <span id="modal_playlist_name"></span></p>
+		    <h3>Reorder tracks of playlist: <span id="modal_playlist_name"></span></h3>
 		    <p id="reorderErrorMsg" class="alertmessage"></p>
 		    <p id="emptyplaylistmessage"></p>
 		    <table class="boxed">

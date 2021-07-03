@@ -20,7 +20,7 @@ body:not(#player) {
 table:not(.container){
 	border: 1px solid black;
   	padding: 5px;
-  	border-radius: 15px;
+  	border-radius: 7px;
 }
 
 th, tr, table:not(.container) td {

@@ -1,5 +1,20 @@
 body {
-	background: radial-gradient(#e66465, #9198e5);
+	background: linear-gradient(#9198e5, #e66465);
+	background-attachment: fixed;
+}
+
+.logoutdiv {
+	position: relative;
+	height: 0;
+}
+
+.logoutdiv a {
+	border: 1px solid black;
+	background-color: #FFFFE0;
+	padding-left: 3px;
+	padding-right: 3px;
+	padding-bottom: 3px;
+	border-radius: 5px;
 }
 
 table {
@@ -7,91 +22,105 @@ table {
 	width: 100%;
 }
 
-.modal_content > table {
+.modal_content>table {
 	margin: auto;
 	width: 30%;
 }
 
-.boxed {
-	border: 1px solid black;
-}
-
 .component {
 	padding: 10px;
-	vertical-align:top;
 }
 
-#td_center {
+#td_botleft {
+	width: 60%;
 	text-align: center;
 }
 
-#components {
-	border-spacing: 10px;
-	width: 100%;
-	border:0;
+#td_botleft table {
+	width: auto;
 }
 
-.alertmessage{
+#td_botleft > div {
+	width: 86%;
+	margin-left: 2%;
+}
+
+#td_botright > div {
+	padding: 10px;
+}
+
+#td_botright > h3, #td_botright > div{
+	margin-left: -20%;
+}
+
+.components {
+	border-spacing: 10px;
+	width: 100%;
+	border: 0;
+}
+
+.alertmessage {
 	color: red;
 }
 
 div.row {
-  height: 400px;
-  overflow: hidden;
+	height: 400px;
+	overflow: hidden;
 }
 
- /* The Modal (background) */
+/* The Modal (background) */
 .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
 /* Modal Content/Box */
 .modal_content {
-  background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+	background-color: #f0f0f0;
+	margin: 15% auto; /* 15% from the top and centered */
+	padding: 20px;
+	border: 1px solid #888;
+	width: 60%;
+	border-radius: 15px;
+	border-width: 5px;
 }
 
 /* The Close Button */
 .close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
+.close:hover, .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
 }
 
 /*sort*/
 th.sortable, .up, .down {
 	cursor: pointer;
 }
- 
-.selected{
+
+.selected {
 	color: red;
 }
 
-.notselected{
+.notselected {
 	color: black;
 }
 
- body > .album_image {
+body>.album_image {
 	top: 0;
 	left: 0;
 	opacity: 0.5;
@@ -102,30 +131,46 @@ th.sortable, .up, .down {
 	z-index: -1;
 }
 
-table:not(#components):not(#trackinfotable) {
+.boxed, form:not(#createplaylistform):not(#addtrackform) > fieldset {
 	background: #FFFFE0;
-	border: 1px solid black;
-  	padding: 5px;
-  	border-radius: 15px;
+	border: 1px solid #888;
+	border-width: 5px;
+	
+	/*padding: 10px;*/
+	border-radius: 7px;
 }
 
-fieldset{
+#playlistscontainer {
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+
+#createplaylistform > fieldset, #addtrackform > fieldset {
 	border: 0;
 }
 
-#uploadtrackform > fieldset {
+#addtrackform > fieldset > p{
+	margin-top: 0;
+}
+
+#playlistTracksError {
+	margin-top: 10px;
+}
+
+#uploadtrackform>fieldset {
 	width: 30%;
 	margin: auto;
+	padding: 15px;
 }
 
 #trackFormError {
 	white-space: pre-line;
-	text-align: center;
+	margin-top: 0;
 }
 
 #trackinfotable {
- 	margin: auto;
- 	width: 100%;
+	margin: auto;
+	width: 100%;
 }
 
 #trackinfotable td {
@@ -137,17 +182,93 @@ fieldset{
 	text-align: center;
 }
 
-#td_right img, audio {
-	border-radius:7px 7px 7px 7px ;
+#td_botright img, audio {
+	border-radius: 7px 7px 7px 7px;
 }
 
-#td_left {
-	width: 22%;
+/*#td_topright {
+	vertical-align: top;
+	padding-top: 20px;
+}*/
+
+#td_topright fieldset {
+	width: 70%;
 }
 
-#td_right {
-	width: 22%;
+#top {
+	width: 90%;
 }
-#td_right * {
+
+#td_topleft {
+	width: 50%;
+}
+
+#td_botright {
+	width: 30%;
+}
+
+#td_botright * {
 	width: 100%;
 }
+
+top>tbody>tr>td {
+	vertical-align: top;
+	width: 30%;
+}
+
+#td_topleft>form {
+	width: 80%;
+	margin: auto;
+}
+
+#td_topleft fieldset {
+	padding: 15px;
+	text-align: center;
+}
+
+#td_topleft h3 {
+	text-align: center;
+}
+
+#td_topleft table {
+	width: 80%;
+	max-height: 300px;
+	display: block;
+}
+
+#td_topleft table>thead {
+	width: 100%;
+	display: inline-block;
+	text-align: center;
+}
+
+#td_topleft table>tbody {
+	max-height: 300px;
+	display: inline-block;
+	width: 100%;
+	overflow: auto;
+	text-align: center;
+}
+
+#td_topleft table th {
+	width: 28%;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+#td_topleft table td {
+	width: 28%;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+#addtrackform {
+	width: 90%;
+	margin: auto;
+	text-align: center;
+}
+
+#td_topright h3 {
+	text-align: center;
+}
+

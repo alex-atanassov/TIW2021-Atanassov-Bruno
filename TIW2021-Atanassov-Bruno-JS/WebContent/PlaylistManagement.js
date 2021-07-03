@@ -32,10 +32,11 @@
         this.modal = _modal;
 
         this.reset = function () {
-            this.playlistscontainer.style.visibility = "hidden";
+            this.playlistscontainer.style.display = "none";
 			this.alert.textContent = "";
 			this.formalert.textContent = "";
 			this.zeroplaylistsMsg.textContent = "You have no playlists yet, create one below!";
+			this.zeroplaylistsMsg.style.textAlign = "center";
         }
         
         this.registerEvents = function (orchestrator) {
@@ -134,7 +135,7 @@
 
                 self.playlistsbody.appendChild(row);
             });
-            this.playlistscontainer.style.visibility = "visible";
+            this.playlistscontainer.style.display = "block";
 
         }
 
@@ -249,10 +250,11 @@
                 groupdiv = document.createElement("div");
                 table = document.createElement("table");
                 table.className = "boxed";
+                // table.style.padding = "5px";
+
                 row = document.createElement("tr");
                 trackGroup.forEach(function (track) { // self visible here, not this
                     cell = document.createElement("td");
-                    cell.className = "boxed";
 
                     titlecell = document.createElement("span");
                     titlecell.textContent = track.title;
@@ -260,8 +262,9 @@
                     cell.appendChild(document.createElement("br"));
 
                     imagecell = document.createElement("img");
-                    imagecell.style.height = '200px';
-                    imagecell.style.width = '100%';
+                    imagecell.style.width = '140px';
+					imagecell.style.height = '200px';
+					
                     imagecell.style.objectFit = "cover";
 
                     imagecell.src = "data:image/jpeg;base64," + track.album.image;
@@ -368,7 +371,7 @@
             this.albumyear.textContent = "Year: " + track.album.year;
             
             // reset background color
-            document.getElementsByTagName("body")[0].style.background = "white";
+            // document.getElementsByTagName("body")[0].style.background = "white";
             
             // sets both image and background
             for(img in this.albumimage)
@@ -518,6 +521,7 @@
                             var albumsToShow = JSON.parse(req.responseText);
                             if (albumsToShow.length == 0) {
                                 self.alert.textContent = "You have no albums uploaded";
+                                document.getElementById('1').disabled = "true"; // disables first radio button
                                 return;
                             }
                             // append available user albums to select in fieldset number 2
