@@ -289,8 +289,6 @@
                 table.appendChild(row);
                 groupdiv.appendChild(table);
                 groupdiv.appendChild(document.createElement("br"));
-
-				// TODO create method changeStep
 				
 				if (i > 0) {
 	                previous = document.createElement("button");
@@ -298,6 +296,7 @@
 	                previous.addEventListener("click", (e) => {
 	                	self.changeStep(e.target.closest("div"), e.target.closest("div").previousElementSibling);
 	                });
+	                previous.style.marginRight = "5px";
 	                groupdiv.appendChild(previous);
 	                
 	                groupdiv.hidden = true; // hide next elements at the beginning
@@ -309,6 +308,7 @@
 	                next.addEventListener("click", (e) => {
 	                	self.changeStep(e.target.closest("div"), e.target.closest("div").nextElementSibling);
 	                });
+	                next.style.marginLeft = "5px";
 	                groupdiv.appendChild(next);
 	            }
 

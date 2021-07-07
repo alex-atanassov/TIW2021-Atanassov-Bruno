@@ -48,6 +48,11 @@ public class GetPlaylistTracks extends HttpServlet {
 			playlistid = Integer.parseInt(request.getParameter("playlistid"));
 			// The covers of the tracks in this playlist
 			playlist = new PlaylistDAO(connection).findPlaylistById(playlistid);
+			if (playlist == null) {						
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				response.getWriter().println("Playlist not found");
+				return;
+			}
 			playlistTracks = tDAO.findTracksByPlaylist(playlistid);
 			if (playlistTracks == null) {						
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
