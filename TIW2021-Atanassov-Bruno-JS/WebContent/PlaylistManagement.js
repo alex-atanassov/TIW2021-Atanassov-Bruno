@@ -529,7 +529,8 @@
                                 self.alert.textContent = "You have no albums uploaded";
                                 document.getElementById('1').disabled = "true"; // disables first radio button
                                 return;
-                            }
+                            } else console.log("AAA"); document.getElementById('1').removeAttribute("disabled");
+                            
                             // append available user albums to select in fieldset number 2
 							albumselect = self.wizard.getElementsByTagName("select")[1];
 							albumselect.innerHTML = "";
