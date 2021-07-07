@@ -65,7 +65,7 @@ public class GetPlaylistTracks extends HttpServlet {
 				return;
 			}
 		} catch(NumberFormatException e) {
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().println("Invalid parameters");
 			return;	
 		} catch(SQLException e) {
