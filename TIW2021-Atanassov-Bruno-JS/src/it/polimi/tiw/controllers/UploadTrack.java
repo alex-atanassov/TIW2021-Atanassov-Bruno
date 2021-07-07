@@ -67,17 +67,12 @@ public class UploadTrack extends HttpServlet {
 				} else {
 					int album;
 					
-					// disable autocommit for the next two SQL updates
-					connection.setAutoCommit(false);
-
 					if(Integer.parseInt(albumchoice) == 2) {
 						album = aDAO.createAlbum(albumName, artist, Integer.parseInt(year), albumimg, userid);
 					}
 					else album = Integer.parseInt(albumid);
 					
 					tDAO.uploadTrack(title, album, genre, file, userid);
-					connection.commit();
-					connection.setAutoCommit(true);
 				}
 			} catch (NumberFormatException e) {
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);

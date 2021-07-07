@@ -7,7 +7,7 @@
 	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
 <body id="player">
-	<img class="albumimagebackground" th:src="'data:image/*;base64,' + ${album.image}" alt="Image not found. Placeholder text"/><br>
+	<img class="albumimagebackground" th:src="'data:image/*;base64,' + ${album.image}"/><br>
 	<div align="right" class="logoutdiv">
 		<a th:href="@{/Logout}">Logout</a>
 	</div>

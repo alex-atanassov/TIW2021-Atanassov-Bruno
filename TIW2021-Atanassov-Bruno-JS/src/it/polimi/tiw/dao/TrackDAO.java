@@ -74,9 +74,17 @@ public class TrackDAO {
 			pstatement.setBlob(4, file.getInputStream());
 			pstatement.setInt(5, user);
 			code = pstatement.executeUpdate();
+
+			// required if autocommit is false
+			if(!connection.getAutoCommit())
+				connection.commit();
+
 		} catch (SQLException e) {
+			// e.printStackTrace();
 			throw new SQLException(e);
 		} finally {
+			// re-enable autocommit
+			connection.setAutoCommit(true);
 			try {
 				if (pstatement != null) {
 					pstatement.close();

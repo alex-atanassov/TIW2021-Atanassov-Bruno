@@ -105,6 +105,9 @@ public class AlbumDAO {
 	}
 	
 	public int createAlbum(String name, String artist, int year, Part image, int user) throws SQLException, IOException {
+		// disable autocommit for this query and then uploadTrack
+		connection.setAutoCommit(false);
+		
 		String query = "INSERT into album (name, artist, year, image, userid) VALUES(?, ?, ?, ?, ?)";
 		try (PreparedStatement pstatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 			pstatement.setString(1, name);
@@ -119,6 +122,10 @@ public class AlbumDAO {
 			} else {
 				throw new SQLException("Error while creating album has occurred. No IDs Returned");
 			}		
+		} catch(SQLException e) {
+			// re-enable autocommit, since uploadTrack will be skipped
+			connection.setAutoCommit(true);
+			throw new SQLException(e);
 		}
 	}
 	

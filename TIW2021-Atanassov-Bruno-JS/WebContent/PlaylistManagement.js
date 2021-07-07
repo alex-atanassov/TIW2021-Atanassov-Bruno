@@ -127,7 +127,7 @@
                 reorderanchor.addEventListener("click", (e) => {
                 
                   self.modal.modal.style.display = "block"; //TODO rename modal.modal
-                  self.modal.getSortableTracks(playlist);
+                  self.modal.show(playlist);
                   
                 }, false);
                 reorderanchor.href = "#";
@@ -167,7 +167,7 @@
                             if (req.readyState == 4) {
                                 var message = req.responseText;
                                 if (req.status == 200) {
-                                    orchestrator.refresh(playlistToUpdate);
+                                    orchestrator.refresh(playlistToUpdate); // TODO use update
                                 } else {
                                     self.formalert.textContent = message;
                                 }
@@ -183,7 +183,7 @@
 
         //shows Playlist Tracks
         this.show = function(playlistid, name) {
-        	this.playlistid = playlistid; // TODO this line is to avoid session storage, but might have to be removed if JWT will be used
+        	this.playlistid = playlistid;
             var self = this;
             
             this.playlistname.textContent = name;
@@ -198,7 +198,7 @@
                                 return;
                             }
                             self.update(tracksToShow); // self visible by closure
-                            if (playlistid) self.autoclick(); // TODO possibly refactor this line (if (next) next();)
+                            if (playlistid) self.autoclick();
                         }
                     } else {
                         self.alert.textContent = message;
@@ -289,6 +289,8 @@
                 groupdiv.appendChild(table);
                 groupdiv.appendChild(document.createElement("br"));
 
+				// TODO create method changeStep
+				
 				if (i > 0) {
 	                previous = document.createElement("button");
 	                previous.innerHTML = "Previous";
@@ -380,29 +382,31 @@
         }
     }
     
-    function Modal(_modal, _playlistname, orchestrator) {
+    function Modal(_modal, _playlistname) {
     	this.modal = _modal;
     	this.alert = document.getElementById("reorderErrorMsg");
     	this.table = this.modal.getElementsByTagName("tbody")[0];
     	this.playlistname = _playlistname;
     	this.submitbutton = this.modal.getElementsByTagName("input")[1];
-    	
-    	this.submitbutton.addEventListener('click', (e) => this.submit(orchestrator));
     	    	
     	var self = this,
     	 span = document.getElementsByClassName("close")[0];
     	
-    	// When the user clicks on the cross, close it
-    	span.addEventListener('click', () => {
-    		self.reset();
-    	});
-
-		// When the user clicks anywhere outside of the modal, close it
-		window.addEventListener('click', (e) => {
-		    if (e.target == self.modal) {
-		        self.reset();
-		    }
-		});
+    	this.registerEvents = function (orchestrator) {
+    		this.submitbutton.addEventListener('click', (e) => this.submit(orchestrator));
+    	
+	    	// When the user clicks on the cross, close it
+	    	span.addEventListener('click', () => {
+	    		self.reset();
+	    	});
+	
+			// When the user clicks anywhere outside of the modal, close it
+			window.addEventListener('click', (e) => {
+			    if (e.target == self.modal) {
+			        self.reset();
+			    }
+			});
+		}
 		
 		this.reset = function() {
 			self.modal.style.display = "none";
@@ -411,7 +415,7 @@
     		self.submitbutton.disabled = true;
 		}
 		
-		this.getSortableTracks = function (playlist) {
+		this.show = function (playlist) {
 			makeCall("GET", "GetPlaylistTracks?playlistid=" + playlist.id, null,
                 function (req) {
                     if (req.readyState == 4) {
@@ -480,17 +484,16 @@
 	
 	   this.submit = function(orchestrator) {
         
-        // Create array with IDs of sorted tracks
-        var column = [];
-
-        for(var i = 0; i < self.table.rows.length; i++)
-        	column.push(self.table.rows[i].children[3].textContent);
-        	
-        self.modal.getElementsByTagName("input")[0].value = JSON.stringify(column);
+	        // Create array with IDs of sorted tracks
+	        var column = [];
+	
+	        for(var i = 0; i < self.table.rows.length; i++)
+	        	column.push(self.table.rows[i].children[3].textContent);
+	        	
+	        self.modal.getElementsByTagName("input")[0].value = JSON.stringify(column);
 
         	makeCall("POST", "ReorderPlaylistTracks", self.modal.getElementsByTagName("form")[0],
                 function (req) {
-                //TODO following code has been repeated a lot. Maybe use one function for all?
                     if (req.readyState == 4) {
                         var message = req.responseText;	// error or id of ordered playlist
                         if (req.status == 200) {                                
@@ -654,7 +657,7 @@
 
 
     function PageOrchestrator() {
-	    var alertContainer = document.getElementById("id_alert");
+	    // var alertContainer = document.getElementById("id_alert");
         this.start = function() {
             personalMessage = new PersonalMessage(sessionStorage.getItem('user'),
                 document.getElementById("id_username"));
@@ -662,8 +665,9 @@
 
             reorderModal = new Modal(
              	document.getElementById("reorder_modal"),
-             	document.getElementById("modal_playlist_name"),
-             	this);
+             	document.getElementById("modal_playlist_name")
+            );
+            reorderModal.registerEvents(this);
 
             playlists = new Playlists(
                 document.getElementById("playlistsError"),
