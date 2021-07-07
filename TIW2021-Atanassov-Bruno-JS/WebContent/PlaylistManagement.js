@@ -296,8 +296,7 @@
 	                previous = document.createElement("button");
 	                previous.innerHTML = "Previous";
 	                previous.addEventListener("click", (e) => {
-	                	e.target.closest("div").hidden = true;
-	                	e.target.closest("div").previousElementSibling.hidden = false;
+	                	self.changeStep(e.target.closest("div"), e.target.closest("div").previousElementSibling);
 	                });
 	                groupdiv.appendChild(previous);
 	                
@@ -308,8 +307,7 @@
 	                next = document.createElement("button");
 	                next.innerHTML = "Next";
 	                next.addEventListener("click", (e) => {
-	          			e.target.closest("div").hidden = true;
-	                	e.target.closest("div").nextElementSibling.hidden = false;
+	                	self.changeStep(e.target.closest("div"), e.target.closest("div").nextElementSibling);
 	                });
 	                groupdiv.appendChild(next);
 	            }
@@ -327,7 +325,11 @@
                 (trackid) ? document.querySelector(selector) : this.trackscontainer.querySelectorAll("a")[0];
             if (anchorToClick) anchorToClick.dispatchEvent(e);
         }
-
+        
+		this.changeStep = function(origin, destination) {
+	      origin.hidden = true;
+	      destination.hidden = false;
+	    }
     }
 
     function TrackDetails(options) {
