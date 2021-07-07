@@ -624,7 +624,7 @@
 	                var message = req.responseText; // error message, if present
 	                self.alert.textContent = message;
 	                if (req.status == 200) {
-	                  orchestrator.refresh(); // TODO manage
+	                  orchestrator.refreshNoAutoclick(); // TODO manage
 	                } else {
 	                  self.reset();
 	                }
@@ -720,6 +720,16 @@
             playlists.show(function () {
                 playlists.autoclick(currentPlaylist);
             }); // closure preserves visibility of this
+            trackForm.reset();
+            trackForm.show();
+        };
+        
+        this.refreshNoAutoclick = function () {
+            playlists.reset();
+            playlistTracks.reset();
+            playlists.show(function () {
+                playlists.autoclick();
+            });
             trackForm.reset();
             trackForm.show();
         };
