@@ -224,6 +224,7 @@
                         var message = req.responseText;
                         if (req.status == 200) {
                             var tracksToShow = JSON.parse(req.responseText);
+                            trackselect.innerHTML = "";
                             tracksToShow.forEach(function(track) {
                             	var row = document.createElement("option");
                             	row.value = track.id;
@@ -280,7 +281,7 @@
                     linkcell.addEventListener("click", (e) => {
                         trackDetails.show(e.target.getAttribute("trackid")); // the list must know the details container
                     }, false);
-                    linkcell.href = "#";
+                    linkcell.href = "#td_botright";
                     cell.appendChild(linkcell);
 
                     row.appendChild(cell);
