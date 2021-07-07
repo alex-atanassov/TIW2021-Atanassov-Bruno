@@ -8,7 +8,12 @@ body:not(#player) {
 	height: 0;
 }
 
-.logoutdiv a {
+.backdiv {
+	position: relative;
+	height: 0;
+}
+
+.logoutdiv a, .backdiv a {
     border: 1px solid black;
     background-color: #FFFFE0;
     padding-left: 3px;
