@@ -61,7 +61,6 @@ public class GetTrackDetails extends HttpServlet {
 			if (track.getUser() != user.getId()) {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				response.getWriter().println("User not allowed");
-				// TODO test this type of errors
 				return;
 			}
 			album = albumDAO.findAlbumById(track.getAlbumid());

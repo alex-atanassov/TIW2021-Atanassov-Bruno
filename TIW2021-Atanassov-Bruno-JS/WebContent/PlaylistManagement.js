@@ -167,7 +167,7 @@
                             if (req.readyState == 4) {
                                 var message = req.responseText;
                                 if (req.status == 200) {
-                                    orchestrator.refresh(playlistToUpdate); // TODO use update
+                                    orchestrator.refresh(playlistToUpdate);
                                 } else {
                                     self.formalert.textContent = message;
                                 }
