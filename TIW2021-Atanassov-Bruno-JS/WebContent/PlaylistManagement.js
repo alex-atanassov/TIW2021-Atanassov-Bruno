@@ -29,7 +29,7 @@
         this.playlistscontainer = _playlistscontainer;
         this.playlistsbody = _playlistsbody;
         this.createplaylistform = _form;
-        this.modal = _modal;
+        this.modalObject = _modal;
 
         this.reset = function () {
             this.playlistscontainer.style.display = "none";
@@ -126,8 +126,8 @@
                 reorderanchor.setAttribute('playlist', playlist.id); // set a custom HTML attribute
                 reorderanchor.addEventListener("click", (e) => {
                 
-                  self.modal.modal.style.display = "block"; //TODO rename modal.modal
-                  self.modal.show(playlist);
+                  self.modalObject.modalDiv.style.display = "block";
+                  self.modalObject.show(playlist);
                   
                 }, false);
                 reorderanchor.href = "#";
@@ -217,7 +217,7 @@
             trackselect = this.addform.getElementsByTagName("select")[0];
             
             var self = this;
-            //TODO maybe filter tracks not in the playlist, but this would require to move code out of reset()
+
             makeCall("GET", "GetUserTracks", null,
                 function (req) {
                     if (req.readyState == 4) {
@@ -386,11 +386,11 @@
     }
     
     function Modal(_modal, _playlistname) {
-    	this.modal = _modal;
+    	this.modalDiv = _modal;
     	this.alert = document.getElementById("reorderErrorMsg");
-    	this.table = this.modal.getElementsByTagName("tbody")[0];
+    	this.table = this.modalDiv.getElementsByTagName("tbody")[0];
     	this.playlistname = _playlistname;
-    	this.submitbutton = this.modal.getElementsByTagName("input")[1];
+    	this.submitbutton = this.modalDiv.getElementsByTagName("input")[1];
     	    	
     	var self = this,
     	 span = document.getElementsByClassName("close")[0];
@@ -405,15 +405,15 @@
 	
 			// When the user clicks anywhere outside of the modal, close it
 			window.addEventListener('click', (e) => {
-			    if (e.target == self.modal) {
+			    if (e.target == self.modalDiv) {
 			        self.reset();
 			    }
 			});
 		}
 		
 		this.reset = function() {
-			self.modal.style.display = "none";
-			self.modal.getElementsByTagName("table")[0].hidden = true;
+			self.modalDiv.style.display = "none";
+			self.modalDiv.getElementsByTagName("table")[0].hidden = true;
 			document.getElementById("emptyplaylistmessage").hidden = true;
     		self.submitbutton.disabled = true;
 		}
@@ -481,7 +481,7 @@
                 
 				self.table.appendChild(row);
             });
-            self.modal.getElementsByTagName("table")[0].hidden = false;
+            self.modalDiv.getElementsByTagName("table")[0].hidden = false;
         }
         
 	
@@ -493,9 +493,9 @@
 	        for(var i = 0; i < self.table.rows.length; i++)
 	        	column.push(self.table.rows[i].children[3].textContent);
 	        	
-	        self.modal.getElementsByTagName("input")[0].value = JSON.stringify(column);
+	        self.modalDiv.getElementsByTagName("input")[0].value = JSON.stringify(column);
 
-        	makeCall("POST", "ReorderPlaylistTracks", self.modal.getElementsByTagName("form")[0],
+        	makeCall("POST", "ReorderPlaylistTracks", self.modalDiv.getElementsByTagName("form")[0],
                 function (req) {
                     if (req.readyState == 4) {
                         var message = req.responseText;	// error or id of ordered playlist
@@ -624,7 +624,7 @@
 	                var message = req.responseText; // error message, if present
 	                self.alert.textContent = message;
 	                if (req.status == 200) {
-	                  orchestrator.refreshNoAutoclick(); // TODO manage
+	                  orchestrator.refreshNoAutoclick();
 	                } else {
 	                  self.reset();
 	                }
