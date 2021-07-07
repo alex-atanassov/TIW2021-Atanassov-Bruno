@@ -11,6 +11,7 @@
 		<a th:href="@{/Logout}">Logout</a>
 	</div>
 	<table class="container">
+	<tr>
 	<td align="center">
 		<h1>Your playlists</h1>
 		<p th:text="${'Welcome back ' + session.user.name + ' ' + session.user.surname}">Welcome.</p>
@@ -44,10 +45,8 @@
 			</fieldset>
 		</form>
 	</td>
-	
+
 	<td>
-		
-	
 		<p>Upload your tracks here</p>
 		<form action="#" th:action="@{/UploadTrack}" method="POST" enctype="multipart/form-data">
 			<fieldset>
@@ -111,6 +110,7 @@
 			</fieldset>
 		</form>
 	</td>
+	<tr>
 	</table>
 </body>
 </html>

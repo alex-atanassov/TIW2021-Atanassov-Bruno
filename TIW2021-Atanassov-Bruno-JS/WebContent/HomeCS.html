@@ -39,10 +39,10 @@
 				<form action="#" id="createplaylistform">
 					<fieldset>
 						<h3>Create a new playlist here</h3>
-						<p>
+						<div>
 							<p class="alertmessage" id="playlistCreationError"><br></p>
 							Name: <input type="text" name="playlistTitle" required />
-						</p>
+						</div>
 						<input type="button" value="Create playlist">
 					</fieldset>
 				</form>
@@ -148,15 +148,17 @@
 					<p id="notrackselected" align="center"></p>
 					<div id="track_player">
 						<table id="trackinfotable">
-						<td>
-							<p id="track_title" ></p>
-							<p id="track_genre" ></p>
-						</td>
-						<td>
-							<p id="album_name" ></p>
-							<p id="album_artist" ></p>
-							<p id="album_year" ></p>
-						</td>
+						<tr>
+							<td>
+								<p id="track_title" ></p>
+								<p id="track_genre" ></p>
+							</td>
+							<td>
+								<p id="album_name" ></p>
+								<p id="album_artist" ></p>
+								<p id="album_year" ></p>
+							</td>
+						</tr>
 						</table>
 						<img class="album_image" /><br>
 						
@@ -167,8 +169,6 @@
 				</td>
 		</tr>
 	</table>
-
-	
 
 	
 	<div id="reorder_modal" class="modal">

@@ -14,15 +14,17 @@
 	<h1 align="center">Track player</h1>
 	<div id="trackinfo">
 	<table id="trackinfotable" class="container">
-	<td>
-		<h3 th:text="${'Title: ' + track.title}" >Title: Sample text</h3>
-		<p th:text="${'Genre: ' + track.genre}" >Genre: None</p>
-	</td>
-	<td>
-		<p th:text="${'Album: ' + album.name}" >Album: Mockup Album</p>
-		<p th:text="${'Artist: ' + album.artist}" >Artist: John Doe</p>
-		<p th:text="${'Year: ' + album.year}" >Year: 1970</p>
-	</td>
+	<tr>
+		<td>
+			<h3 th:text="${'Title: ' + track.title}" >Title: Sample text</h3>
+			<p th:text="${'Genre: ' + track.genre}" >Genre: None</p>
+		</td>
+		<td>
+			<p th:text="${'Album: ' + album.name}" >Album: Mockup Album</p>
+			<p th:text="${'Artist: ' + album.artist}" >Artist: John Doe</p>
+			<p th:text="${'Year: ' + album.year}" >Year: 1970</p>
+		</td>
+	</tr>
 		<!-- img th:src="'data:image/*;base64,' + ${album.image}" alt="Image not found. Placeholder text"/><br-->
 		</table>
 		<audio
