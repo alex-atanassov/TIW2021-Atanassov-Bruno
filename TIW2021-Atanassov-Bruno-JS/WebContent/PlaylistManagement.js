@@ -357,7 +357,7 @@
                             var track = JSON.parse(req.responseText);
                             self.update(track); // self is the object on which the function is applied
 
-                            self.track_player.style.visibility = "visible";
+                            self.track_player.hidden = false;
                         } else {
                             self.alertmessage.textContent = message;
                         }
@@ -367,8 +367,13 @@
         };
 
         this.reset = function () {
-        	this.alertmessage.textContent = "No tracks available.";
-            this.track_player.style.visibility = "hidden";
+        	// Resets the container only if no track is opened
+        	if(!this.player.src) {
+	        	this.alertmessage.textContent = "No tracks available.";
+	            this.track_player.hidden = true;
+	            
+	            this.alertmessage.hidden = false;
+            }
         }
 
         this.update = function (track) {
