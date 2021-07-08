@@ -36,6 +36,10 @@ table {
 	text-align: center;
 }
 
+#td_botleft > h3 {
+	margin-left: -10%;
+}
+
 #td_botleft table {
 	width: auto;
 }

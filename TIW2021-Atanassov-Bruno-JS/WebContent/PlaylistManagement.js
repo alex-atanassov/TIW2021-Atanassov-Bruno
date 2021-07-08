@@ -213,7 +213,12 @@
             this.alert.textContent = "";
 			this.formalert.textContent = "";
                         
-            //reset add track form
+            this.resetUserTracks();
+            
+        }
+        
+        this.resetUserTracks = function() {
+        	//reset add track form
             trackselect = this.addform.getElementsByTagName("select")[0];
             
             var self = this;
@@ -238,7 +243,6 @@
                     }
                 }
             );
-            
         }
 
         this.update = function (arrayTracks) {
@@ -529,7 +533,7 @@
                                 self.alert.textContent = "You have no albums uploaded";
                                 document.getElementById('1').disabled = "true"; // disables first radio button
                                 return;
-                            } else console.log("AAA"); document.getElementById('1').removeAttribute("disabled");
+                            } else document.getElementById('1').removeAttribute("disabled");
                             
                             // append available user albums to select in fieldset number 2
 							albumselect = self.wizard.getElementsByTagName("select")[1];
@@ -726,11 +730,7 @@
         };
         
         this.refreshNoAutoclick = function () {
-            playlists.reset();
-            playlistTracks.reset();
-            playlists.show(function () {
-                playlists.autoclick();
-            });
+			playlistTracks.resetUserTracks();
             trackForm.reset();
             trackForm.show();
         };
