@@ -124,6 +124,7 @@ public class AlbumDAO {
 			}		
 		} catch(SQLException e) {
 			// re-enable autocommit, since uploadTrack will be skipped
+			connection.rollback();
 			connection.setAutoCommit(true);
 			throw new SQLException(e);
 		}

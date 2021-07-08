@@ -76,11 +76,12 @@ public class TrackDAO {
 			code = pstatement.executeUpdate();
 
 			// required if autocommit is false
-			if(!connection.getAutoCommit())
+			if(connection.getAutoCommit() == false)
 				connection.commit();
 
 		} catch (SQLException e) {
 			// e.printStackTrace();
+			connection.rollback();
 			throw new SQLException(e);
 		} finally {
 			// re-enable autocommit

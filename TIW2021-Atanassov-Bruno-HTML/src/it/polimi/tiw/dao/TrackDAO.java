@@ -81,6 +81,7 @@ public class TrackDAO {
 
 		} catch (SQLException e) {
 			// e.printStackTrace();
+			connection.rollback();
 			throw new SQLException(e);
 		} finally {
 			// re-enable autocommit
